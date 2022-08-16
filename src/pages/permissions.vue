@@ -13,7 +13,7 @@
 				</el-form-item>
 			</el-form>
 			<TableTitle title_text="数据列表">
-				<div class="add_button">添加</div>
+				<div class="add_button" @click="roleSetting('1')">添加</div>
 			</TableTitle>
 			<el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}" :max-height="max_height" v-loading="loading">
 				<el-table-column prop="menu_role_name" label="角色名称" show-overflow-tooltip align="center"></el-table-column>
@@ -28,8 +28,8 @@
 			</el-table-column>
 			<el-table-column label="操作" align="center" width="200" fixed="right">
 				<template slot-scope="scope">
-					<el-button class="button_theme" type="text" size="small">查看</el-button>
-					<el-button class="button_theme" type="text" size="small">权限设置</el-button>
+					<el-button class="button_theme" type="text" size="small" @click="roleSetting('2',scope.row.menu_role_id)">查看</el-button>
+					<el-button class="button_theme" type="text" size="small" @click="roleSetting('3',scope.row.menu_role_id)">权限设置</el-button>
 					<el-button class="button_theme" type="text" size="small">删除</el-button>
 				</template>
 			</el-table-column>
@@ -82,8 +82,8 @@
 	color: #FFFFFF;
 }
 .button_theme{
-    color: #F36478;
-  }
+	color: #F36478;
+}
 </style>
 <script>
 	import resource from '../api/resource.js'
@@ -156,6 +156,10 @@
 						this.$mesage.warning(res.data.msg);
 					}
 				})
+			},
+			//点击添加/查看/编辑
+			roleSetting(type,id){	//1:添加；2:查看；3:编辑
+				this.$router.push(`/role_setting?type=${type}&id=${id}`);
 			}
 		},
 		components:{

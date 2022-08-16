@@ -15,6 +15,7 @@
 				<div class="login_out">退出登录</div>
 			</div>
 		</div>
+		<PageTitle :page_title="page_title" v-if="show_page_title"/>
 		<div class="content" :class="{'display':is_center == true}">
 			<router-view></router-view>
 		</div>
@@ -107,6 +108,7 @@
 }
 </style>
 <script>
+	import PageTitle from '../components/page_title.vue'
 	export default{
 		data(){
 			return{
@@ -128,6 +130,8 @@
 					path:'/permissions'
 				}],									//导航列表
 				active_index:0,						//当前选中的导航下标
+				show_page_title:false,
+				page_title:"",						//页面标题
 			}
 		},
 		watch:{
@@ -137,8 +141,22 @@
 				this.current_path = path;
 				if(path != '/index'){
 					this.is_center = true;
+					// 权限
+					if(path == '/role_setting'){
+						if(router.query.type == '1'){	//添加角色
+							this.page_title = '添加角色'
+						}else if(router.query.type == '2'){	//查看权限
+							this.page_title = '查看权限'
+						}else if(router.query.type == '3'){	//权限设置
+							this.page_title = '权限设置'
+						}
+						this.show_page_title = true;
+					}else{
+						this.show_page_title = false;
+					}
 				}else{
 					this.is_center = false;
+					this.show_page_title = false;
 				}
 			}
 		},
@@ -149,6 +167,9 @@
 				this.active_index = index;
 				console.log(path)
 			}
+		},
+		components:{
+			PageTitle
 		}
 	}
 </script>
