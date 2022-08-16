@@ -6,7 +6,13 @@ let path = {
 	menuroleList:'menurole/list',				//角色列表
 	menuroleEdit:'menurole/edit',				//编辑访问权限
 	menuroleAdd:'menurole/add',					//添加访问权限
-}					
+	menuroleInfo:'menurole/info',				//查看（获取详情）
+	menuroleDel:'menurole/del',					//删除角色
+	menuroleUsers:'menurole/users',				//角色对应用户列表
+	userList:'user/list',						//用户列表
+	userAdd:'user/add',							//添加用户
+	userDel:'user/del',							//删除用户
+}						
 export default{
 	//插画列表
 	goodsList(params){
@@ -39,6 +45,34 @@ export default{
 	//添加访问权限（post）
 	menuroleAddPost(params){
 		return http.post(path.menuroleAdd, params)
+	},
+	//查看（获取详情）
+	menuroleInfo(params){
+		return http.get(path.menuroleInfo, params)
+	},
+	//删除角色
+	menuroleDel(params){
+		return http.post(path.menuroleDel, params)
+	},
+	//角色对应用户列表
+	menuroleUsers(params){
+		return http.get(path.menuroleUsers, params)
+	},
+	//用户列表
+	userList(params){
+		return http.get(path.userList, params)
+	},
+	//添加用户（get）
+	userAddGet(params){
+		return http.get(path.userAdd, params)
+	},
+	//添加用户（post）
+	userAddPost(params){
+		return http.post(path.userAdd, params)
+	},
+	//删除用户
+	userDel(params){
+		return http.post(path.userDel, params)
 	},
 }
 

@@ -74,9 +74,10 @@
 		mounted(){
 			//获取表格最大高度
 			this.onResize();
-			window.addEventListener('resize',() => {
-				this.onResize();
-			})
+			window.addEventListener('resize',this.onResize())
+		},
+		destroyed() {
+			window.removeEventListener("resize", ()=>{});
 		},
 		methods:{
 			//监听屏幕大小变化

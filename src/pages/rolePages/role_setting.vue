@@ -2,22 +2,27 @@
 	<div class="other_container">
 		<el-card class="box_card card_content">
 			<el-form label-position="left" label-width="86px">
-				<el-form-item label="角色名称:" required>
-					<el-input style="width:200px" type="text" placeholder="输入角色名称" size="small" v-model="name"></el-input>
+				<el-form-item label="角色名称:" :required="type != '2'">
+					<el-input style="width:200px" type="text" placeholder="输入角色名称" size="small" v-model="name" :disabled="type == '2'"></el-input>
 				</el-form-item>
-				<el-form-item label="角色备注:" required>
-					<el-input style="width:220px" type="textarea" :rows="3" placeholder="输入备注..." size="small" v-model="remark">
+				<el-form-item label="角色备注:" :required="type != '2'">
+					<el-input style="width:220px" type="textarea" :rows="3" placeholder="输入备注..." size="small" v-model="remark" :disabled="type == '2'">
 					</el-input>
 				</el-form-item>
 				<el-form-item label="权限配置:">
-					<div class="menu_list_box">
+					<div class="menu_list_box" v-if="type == '2'">
+						<div class="menu_item" v-for="item in menu_list">
+							<el-tree :data="item" ref="tree" node-key="menu_id" :props="props"></el-tree>
+						</div>
+					</div>
+					<div class="menu_list_box" v-else>
 						<div class="menu_item" v-for="item in menu_list">
 							<el-tree :data="item" ref="tree" node-key="menu_id" :default-checked-keys="checked_keys" :props="props" show-checkbox @check="checkChange"></el-tree>
 						</div>
 					</div>
 				</el-form-item>
 			</el-form>
-			<div class="save" @click="saveFn">保存</div>
+			<div class="save" @click="saveFn" v-if="type != '2'">保存</div>
 		</el-card>
 	</div>
 </template>
@@ -46,12 +51,30 @@
 			if(this.type == '1'){	//添加
 				//添加get
 				this.menuroleAddGet();
+			}else if(this.type == '2'){	//查看
+				//查看
+				this.menuroleInfo();
 			}else if(this.type == '3'){	//编辑
 				//编辑get
 				this.menuroleEditGet();
 			}
 		},
 		methods:{
+			//查看
+			menuroleInfo(){
+				let arg = {
+					role_id:this.id
+				}
+				resource.menuroleInfo(arg).then(res => {
+					if(res.data.code == 1){
+						this.menu_list = res.data.data.list;
+						this.name = res.data.data.menu_role_name;		//角色名称
+						this.remark = res.data.data.remark;				//备注
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
 			//添加get
 			menuroleAddGet(){
 				resource.menuroleAddGet().then(res => {
