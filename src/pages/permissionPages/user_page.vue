@@ -26,7 +26,6 @@
 				<template slot-scope="scope">
 					<el-button class="button_theme" type="text" size="small" @click="bindStore(scope.row.user_id)">绑定店铺</el-button>
 					<el-button class="button_theme" type="text" size="small" @click="userSet(scope.row.user_id)">权限设置</el-button>
-					<el-button class="button_theme" type="text" size="small" @click="deleteRole(scope.row.menu_role_id)">查看</el-button>
 					<el-button class="button_theme" type="text" size="small" @click="deleteUser(scope.row.user_id)">删除</el-button>
 				</template>
 			</el-table-column>
@@ -36,7 +35,7 @@
 			</el-pagination>
 		</div>
 		<!-- 添加成员 -->
-		<el-dialog title="添加成员" :visible.sync="add_user_dialog" @close="closeDialog">
+		<el-dialog title="添加成员" center width="30%" :visible.sync="add_user_dialog" @close="closeDialog">
 			<el-form>
 				<el-form-item label="选择成员：" required>
 					<el-select size="mini" v-model="user_id" clearable :popper-append-to-body="false" filterable placeholder="请选择成员">
@@ -57,7 +56,7 @@
 			</div>
 		</el-dialog>
 		<!-- 绑定店铺 -->
-		<el-dialog title="绑定店铺" :visible.sync="binding_store_dialog">
+		<el-dialog title="绑定店铺" center width="30%" :visible.sync="binding_store_dialog">
 			<el-form>
 				<el-form-item label="店铺权限：">
 					<el-radio-group v-model="is_all_stores">
@@ -90,27 +89,30 @@
 			</div>
 		</el-dialog>
 		<!-- 权限设置 -->
-		<el-dialog title="权限设置" :visible.sync="permission_dialog">
+		<el-dialog title="权限设置" center width="30%" :visible.sync="permission_dialog">
 			<el-form>
 				<el-form-item label="角色名称：" required>
-					<el-select size="mini" v-model="menu_role_ids" clearable :popper-append-to-body="false" multiple filterable collapse-tags placeholder="选择店铺">
+					<el-select size="mini" v-model="menu_role_ids" clearable :popper-append-to-body="false" multiple filterable collapse-tags placeholder="选择角色">
 						<el-option v-for="item in menu_role_list" :key="item.menu_role_id" :label="item.menu_role_name" :value="item.menu_role_id">
 						</el-option>
 					</el-select>
 				</el-form-item>
 				<el-form-item label="是否启用：">
-					<el-radio-group v-model="status">
-						<el-radio :label="1">是</el-radio>
-						<el-radio :label="0">否</el-radio>
-					</el-radio-group>
-				</el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button size="mini" @click="permission_dialog = false">取 消</el-button>
-				<el-button size="mini" type="primary" @click="commitSetting">确 定</el-button>
-			</div>
-		</el-dialog>
-	</div>
+					<el-switch
+					v-model="status"
+					:active-value="1"
+					:inactive-value="0"
+					active-color="#F36478"
+					inactive-color="#778899">
+				</el-switch>
+			</el-form-item>
+		</el-form>
+		<div slot="footer" class="dialog-footer">
+			<el-button size="mini" @click="permission_dialog = false">取 消</el-button>
+			<el-button size="mini" type="primary" @click="commitSetting">确 定</el-button>
+		</div>
+	</el-dialog>
+</div>
 </template>
 <script>
 	import resource from '../../api/resource.js'
@@ -329,6 +331,10 @@
 			},
 			//提交权限设置
 			commitSetting(){
+				if(this.menu_role_ids.length == 0){
+					this.$message.warning('请选择角色！');
+					return;
+				}
 				let arg = {
 					user_id:this.select_user_id,
 					menu_role_id:this.menu_role_ids.join(','),

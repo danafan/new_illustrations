@@ -14,6 +14,15 @@ let path = {
 	userDel:'user/del',							//删除用户
 	userBinding:'user/binding',					//绑定店铺
 	userSet:'user/set',							//权限设置
+	accessList:'access/accesslist',				//权限列表
+	getMainMenus:'access/getmainmenus',			//所有菜单列表
+	getControllers:'access/getcontrollers',		//获取所有控制器列表
+	getMethods:'access/getmethods',				//获取控制器下所有方法列表
+	ajaxAccess:'access/ajaxaccess',				//获取权限按钮列表
+	accessAdd:'access/add',						//添加权限
+	accessInfo:'access/getinfo',				//获取权限详情
+	accessEdit:'access/edit',					//编辑权限
+	accessDel:'access/del',						//删除权限
 }						
 export default{
 	//插画列表
@@ -91,6 +100,42 @@ export default{
 	//权限设置（post）
 	userSetPost(params){
 		return http.post(path.userSet, params)
+	},
+	//权限列表
+	accessList(params){
+		return http.get(path.accessList, params)
+	},
+	//所有菜单列表
+	getMainMenus(params){
+		return http.get(path.getMainMenus, params)
+	},
+	//获取所有控制器列表
+	getControllers(params){
+		return http.get(path.getControllers, params)
+	},
+	//获取控制器下所有方法列表
+	getMethods(params){
+		return http.get(path.getMethods, params)
+	},
+	//获取权限按钮列表
+	ajaxAccess(params){
+		return http.get(path.ajaxAccess, params)
+	},
+	//添加权限
+	accessAdd(params){
+		return http.post(path.accessAdd, params)
+	},
+	//获取权限详情
+	accessInfo(params){
+		return http.get(path.accessInfo, params)
+	},
+	//编辑权限
+	accessEdit(params){
+		return http.post(path.accessEdit, params)
+	},
+	//删除权限
+	accessDel(params){
+		return http.post(path.accessDel, params)
 	},
 }
 

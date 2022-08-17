@@ -1,36 +1,16 @@
 <template>
 	<div>
-		<el-form :inline="true" size="mini" class="demo-form-inline" id="el_form">
-			<el-form-item label="输入搜索:">
-				<el-input style="width:200px" clearable v-model="role_name" placeholder="请输入"></el-input>
-			</el-form-item>
-			<el-form-item>
-				<el-button type="primary" @click="handleCurrentChange(1)">查询</el-button>
-			</el-form-item>
-		</el-form>
-		<TableTitle title_text="数据列表">
-			<div class="add_button" @click="roleSetting('1')" v-if="button_list.add == 1">添加</div>
+		<TableTitle title_text="数据列表" id="table_title">
+			<div class="add_button" @click="accessSetting('1')" v-if="button_list.add == 1">添加</div>
 		</TableTitle>
 		<el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}" :max-height="max_height" v-loading="loading">
-			<el-table-column prop="menu_role_name" label="角色名称" show-overflow-tooltip align="center"></el-table-column>
-			<el-table-column prop="remark" label="角色备注" show-overflow-tooltip align="center"></el-table-column>
-			<el-table-column label="角色数量" show-overflow-tooltip align="center">
-				<template slot-scope="scope">
-					<el-button class="button_theme" type="text" size="small" @click="getNum(scope.row.menu_role_id)" v-if="button_list.view == 1">{{scope.row.num}}</el-button>
-					<div v-else>{{scope.row.num}}</div>
-				</template>
-			</el-table-column>
-			<el-table-column prop="create_time" width="160" label="添加时间" show-overflow-tooltip align="center"></el-table-column>
-			<el-table-column label="是否启用" align="center" width="100">
-				<template slot-scope="scope">
-					<div>{{scope.row.status == 1?'启用':'禁用'}}</div>
-				</template>
-			</el-table-column>
+			<el-table-column prop="menu_name" label="所属分组" show-overflow-tooltip align="center"></el-table-column>
+			<el-table-column prop="access_name" label="名称" show-overflow-tooltip align="center"></el-table-column>
+			<el-table-column prop="access_codes" label="权限码" show-overflow-tooltip align="center"></el-table-column>
 			<el-table-column label="操作" align="center" width="200" fixed="right">
 				<template slot-scope="scope">
-					<el-button class="button_theme" type="text" size="small" @click="roleSetting('2',scope.row.menu_role_id)" v-if="button_list.detail == 1">查看</el-button>
-					<el-button class="button_theme" type="text" size="small" @click="roleSetting('3',scope.row.menu_role_id)" v-if="button_list.edit == 1">权限设置</el-button>
-					<el-button class="button_theme" type="text" size="small" @click="deleteRole(scope.row.menu_role_id)" v-if="button_list.del == 1">删除</el-button>
+					<el-button class="button_theme" type="text" size="small" @click="accessSetting('2',scope.row.id)" v-if="button_list.edit == 1">编辑</el-button>
+					<el-button class="button_theme" type="text" size="small" @click="accessDel(scope.row.id)" v-if="button_list.del == 1">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -38,7 +18,59 @@
 			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page" :pager-count="11" :page-sizes="[5, 10, 15, 20]" layout="total, sizes, prev, pager, next, jumper" :total="dataObj.total">
 			</el-pagination>
 		</div>
-	</div>
+		<el-dialog :title="`${type == '1'?'添加':'编辑'}权限`" center width="50%" @close="closeDialog" :visible.sync="show_dialog" :close-on-click-modal="false">
+			<el-form size="small" label-width="150px">
+				<el-form-item label="权限资源名称：">
+					<el-input v-model="access_name" style="width:192px" placeholder="请输入权限资源名称"></el-input>
+				</el-form-item>
+				<el-form-item label="所属菜单：">
+					<el-cascader
+					v-model="menu_id"
+					:show-all-levels="false"
+					:options="menu_list"
+					:props="props"
+					@change="changeMenu"
+					></el-cascader>
+				</el-form-item>
+				<el-form-item label="添加权限码：">
+					<el-select v-model="selController" placeholder="请选择">
+						<el-option v-for="item in controller" :key="item" :label="item" :value="item">
+						</el-option>
+					</el-select> / 
+					<el-select v-model="selMethod" placeholder="请选择">
+						<el-option v-for="item in methodList" :key="item" :label="item" :value="item">
+						</el-option>
+					</el-select>
+					<el-button style="margin-left: 20px" type="success" icon="el-icon-plus" circle @click="addAccessCode"></el-button>
+					<div style="margin-top: 10px;">
+						<el-tag style="margin-right: 20px;margin-bottom: 10px" closable v-for="(item,index) in accessCodes" :key="index" type="success" effect="dark" @close="handleClose(index)"> {{ item }}
+						</el-tag>
+					</div>
+				</el-form-item>
+				<el-form-item label="是否按钮：">
+					<el-switch
+					v-model="is_button"
+					:active-value="1"
+					:inactive-value="0"
+					active-color="#F36478"
+					inactive-color="#778899">
+				</el-switch>
+			</el-form-item>
+			<el-form-item label="按钮名称：" v-if="is_button == 1">
+				<el-input v-model="button_name" style='width: 300px;' placeholder="请输入按钮名称"></el-input>
+			</el-form-item>
+			<el-form-item label="选择按钮："  v-if="is_button == 0">
+				<el-checkbox-group v-model="button_access_ids">
+					<el-checkbox :label="item.id" :key="item.id" border v-for="item in access_buts">{{item.access_name}}</el-checkbox>
+				</el-checkbox-group>
+			</el-form-item>
+		</el-form>
+		<span slot="footer" class="dialog-footer">
+			<el-button size="small" @click="show_dialog = false">取消</el-button>
+			<el-button size="small" type="primary" @click="submitFn">确 定</el-button>
+		</span>
+	</el-dialog>
+</div>
 </template>
 <script>
 	import resource from '../../api/resource.js'
@@ -48,16 +80,46 @@
 			return{
 				max_height:0,				//表格最大高度
 				loading:false,
-				role_name:"",	
 				pagesize:10,
 				page:1,
 				dataObj:{},
-				button_list:{}
+				button_list:{},
+				show_dialog:false,			//弹窗
+				id:"",						//点击的权限ID
+				type:'1',					//弹窗类型
+				access_name:"",				//权限资源名称
+				menu_list:[],				//所属菜单列表
+				props:{
+					expandTrigger: 'hover',
+					emitPath:false,
+					label:'menu_name',
+					value:'menu_id',
+					children:'list'
+				},
+				menu_id:"",					//选中的菜单ID
+				controller:[],				//所有控制器列表
+				selController:"",			//当前选择的控制器名称
+				methodList:[],				//控制器下所有方法
+				selMethod:"",				//当前选择的方法名称
+				accessCodes:[],				//选中的所有权限码列表
+				is_button:0,				//是否按钮
+				button_name:"",				//按钮名称
+				access_buts:[],				//权限按钮列表
+				button_access_ids:[],		//选中的权限按钮列表
 			}
 		},
 		created(){
 			//获取列表
 			this.getData();
+		},
+		watch:{
+			selController:function(n,o){
+				if(n != o && n != ''){
+					//获取所有控制器列表
+					this.getMethod();
+					this.selMethod = "";
+				}
+			}
 		},
 		mounted(){
 			//获取表格最大高度
@@ -72,9 +134,9 @@
 			onResize(){
 				this.$nextTick(()=>{
 					let box_card_height = document.getElementById("menu_card").offsetHeight;
-					let el_form_height = document.getElementById("el_form").offsetHeight;
+					let table_title_height = document.getElementById("table_title").offsetHeight;
 					let el_pagination_height = document.getElementById("el_pagination").offsetHeight;
-					this.max_height = box_card_height - el_form_height - el_pagination_height - 40 + 'px';
+					this.max_height = box_card_height - table_title_height - el_pagination_height - 40 + 'px';
 				})
 			},
 			//分页
@@ -91,12 +153,11 @@
 			//获取列表
 			getData(){
 				let arg = {
-					role_name:this.role_name,
 					pagesize:this.pagesize,
 					page:this.page
 				}
 				this.loading = true;
-				resource.menuroleList(arg).then(res => {
+				resource.accessList(arg).then(res => {
 					if(res.data.code == 1){
 						this.loading = false;
 						this.dataObj = res.data.data;
@@ -106,44 +167,200 @@
 					}
 				})
 			},
-			//点击查看数量
-			getNum(role_id){
-				this.$router.push(`/user_list?role_id=${role_id}`)
-			},
-			//点击添加/查看/编辑
-			roleSetting(type,id){	//1:添加；2:查看；3:编辑
-				this.$router.push(`/role_setting?type=${type}&id=${id}`);
-			},
-			//删除
-			deleteRole(role_id){
-				this.$confirm('确认删除该角色?', '提示', {
-					confirmButtonText: '确定',
-					cancelButtonText: '取消',
-					type: 'warning'
-				}).then(() => {
-					//删除
-					this.commitDelete(role_id);
-				}).catch(() => {
-					this.$message({
-						type: 'info',
-						message: '已取消'
-					});          
-				});
-			},
-			//删除
-			commitDelete(role_id){
-				let arg = {
-					role_id:role_id
+			//点击添加/编辑
+			accessSetting(type,id){	//1:添加；2:编辑
+				this.type = type;
+				this.id = id;
+				//获取所有菜单列表
+				this.getMenu();
+				//获取所有控制器列表
+				this.getControllers();
+				if(this.type == '2'){
+					//获取权限详情
+					this.accessInfo();
 				}
-				resource.menuroleDel(arg).then(res => {
+				this.show_dialog = true;
+			},
+			//获取权限详情
+			accessInfo(){
+				let arg = {
+					id:this.id
+				}
+				resource.accessInfo(arg).then(res => {
 					if(res.data.code == 1){
-						this.$message.success(res.data.msg);
-						//获取列表
-						this.getData();
+						let data = res.data.data;
+						this.access_name = data.access_name;
+						this.menu_id = data.menu_id;
+						this.accessCodes = data.access_codes;
+						this.selController = "";		//当前选择的控制器名称
+						this.selMethod = "";			//当前选择的方法名称
+						this.is_button = data.is_button;	//是否按钮
+						this.button_name = data.button_name;
+						let strArr = data.button_access_ids.split(',');
+						let intArr = strArr.map(item => {
+							return +item;
+						})
+						//选择按钮的列表
+						this.changeMenu(this.menu_id,intArr);
 					}else{
 						this.$mesage.warning(res.data.msg);
 					}
 				})
+			},
+			//获取所有菜单列表
+			getMenu(){
+				resource.getMainMenus().then(res => {
+					if(res.data.code == 1){
+						this.menu_list = res.data.data.menu_list;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//获取所有控制器列表
+			getControllers(){
+				resource.getControllers().then(res => {
+					if(res.data.code == 1){
+						this.controller = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//获取所有控制器下面的方法列表
+			getMethod(){
+				let arg = {
+					controller_name:this.selController
+				}
+				resource.getMethods(arg).then(res => {
+					if(res.data.code == 1){
+						this.methodList = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//点击弹框的添加权限码
+			addAccessCode(){
+				if(this.selController == "" || this.selMethod == ""){
+					this.$message.warning("请完善当前权限码");
+				}else{
+					let str = this.selController + "/" + this.selMethod;
+					for(var i = 0;i < this.accessCodes.length;i ++){
+						if(this.accessCodes[i] == str){
+							this.$message.warning('已存在该权限码');
+							return;
+						}
+					}
+					this.accessCodes.push(str);
+				}
+			},
+			//点击某一个关闭
+			handleClose(index){
+				this.accessCodes.splice(index,1);
+			},
+			//选择按钮的列表
+			changeMenu(menu_id,button_access_ids){
+				let arg = {
+					menu_id:menu_id
+				}
+				resource.ajaxAccess(arg).then(res => {
+					if(res.data.code == 1){
+						this.access_buts = res.data.data;
+						if(button_access_ids){
+							this.button_access_ids = button_access_ids;
+						}
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//点击删除
+			accessDel(id){
+				this.$confirm('确认删除该权限?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					resource.accessDel({id:id}).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.getData()
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '取消'
+					});          
+				});
+			},
+			//关闭弹窗
+			closeDialog(){
+				this.access_name = '';
+				this.menu_id = '';
+				this.is_button = 0;	//是否按钮
+				this.button_name = '';
+				this.selController = "";		//当前选择的控制器名称
+				this.selMethod = "";			//当前选择的方法名称
+				this.accessCodes = [];
+				this.button_access_ids = [];
+			},
+			//弹窗提交
+			submitFn(){
+				if(this.access_name == ''){
+					this.$message.warning("请输入权限资源名称");
+				}else if(this.menu_id == ''){
+					this.$message.warning("请选择所属菜单");
+				}else if(this.is_button == 1 && this.button_name == ''){
+					this.$message.warning("请输入按钮名称");
+				}else{
+					if(this.accessCodes.length == 0){
+						if(this.selController == "" || this.selMethod == ""){
+							this.$message.warning("请选择权限码");
+							return;
+						}else{
+							let str = this.selController + "/" + this.selMethod;
+							this.accessCodes.push(str);
+						}
+					}
+					let arg = {
+						access_name:this.access_name,
+						menu_id:this.menu_id,
+						access_codes:JSON.stringify(this.accessCodes),
+						is_button:this.is_button,
+						button_name:this.button_name,
+						button_access_ids:this.button_access_ids.join(',')
+					}
+					if(this.type == "1"){	//添加
+						resource.accessAdd(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								this.show_dialog = false;
+								//获取列表
+								this.getData()
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}else{
+						arg.id = this.id;
+						resource.accessEdit(arg).then(res => {
+							if(res.data.code == 1){
+								this.$message.success(res.data.msg);
+								this.show_dialog = false;
+								//获取列表
+								this.getData()
+							}else{
+								this.$message.warning(res.data.msg);
+							}
+						})
+					}
+					
+				}
 			}
 		},
 		components:{
