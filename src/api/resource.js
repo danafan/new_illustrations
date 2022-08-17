@@ -12,6 +12,8 @@ let path = {
 	userList:'user/list',						//用户列表
 	userAdd:'user/add',							//添加用户
 	userDel:'user/del',							//删除用户
+	userBinding:'user/binding',					//绑定店铺
+	userSet:'user/set',							//权限设置
 }						
 export default{
 	//插画列表
@@ -73,6 +75,22 @@ export default{
 	//删除用户
 	userDel(params){
 		return http.post(path.userDel, params)
+	},
+	//绑定店铺（get）
+	userBindingGet(params){
+		return http.get(path.userBinding, params)
+	},
+	//绑定店铺（post）
+	userBindingPost(params){
+		return http.post(path.userBinding, params)
+	},
+	//权限设置（get）
+	userSetGet(params){
+		return http.get(path.userSet, params)
+	},
+	//权限设置（post）
+	userSetPost(params){
+		return http.post(path.userSet, params)
 	},
 }
 

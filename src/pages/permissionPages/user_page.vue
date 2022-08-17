@@ -24,8 +24,8 @@
 			<el-table-column prop="menu_role_name" label="所属角色" show-overflow-tooltip align="center"></el-table-column>
 			<el-table-column label="操作" align="center" width="200" fixed="right">
 				<template slot-scope="scope">
-					<el-button class="button_theme" type="text" size="small" @click="roleSetting('2',scope.row.menu_role_id)">绑定店铺</el-button>
-					<el-button class="button_theme" type="text" size="small" @click="roleSetting('3',scope.row.menu_role_id)">权限设置</el-button>
+					<el-button class="button_theme" type="text" size="small" @click="bindStore(scope.row.user_id)">绑定店铺</el-button>
+					<el-button class="button_theme" type="text" size="small" @click="userSet(scope.row.user_id)">权限设置</el-button>
 					<el-button class="button_theme" type="text" size="small" @click="deleteRole(scope.row.menu_role_id)">查看</el-button>
 					<el-button class="button_theme" type="text" size="small" @click="deleteUser(scope.row.user_id)">删除</el-button>
 				</template>
@@ -56,6 +56,60 @@
 				<el-button size="mini" type="primary" @click="commitCreate">确 定</el-button>
 			</div>
 		</el-dialog>
+		<!-- 绑定店铺 -->
+		<el-dialog title="绑定店铺" :visible.sync="binding_store_dialog">
+			<el-form>
+				<el-form-item label="店铺权限：">
+					<el-radio-group v-model="is_all_stores">
+						<el-radio :label="1">全部店铺权限</el-radio>
+						<el-radio :label="0">设置店铺权限</el-radio>
+					</el-radio-group>
+				</el-form-item>
+				<el-form-item label="选择部门：" required v-if="is_all_stores == 0">
+					<el-select size="mini" v-model="dept_names" clearable :popper-append-to-body="false" multiple filterable collapse-tags placeholder="选择部门">
+						<el-option v-for="item in dept_list" :key="item.dept_name" :label="item.dept_name" :value="item.dept_name">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="选择店铺：" required v-if="is_all_stores == 0">
+					<el-select size="mini" v-model="shop_codes" clearable :popper-append-to-body="false" multiple filterable collapse-tags placeholder="选择店铺">
+						<el-option v-for="item in shop_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="是否查看记录：">
+					<el-radio-group v-model="view_type">
+						<el-radio :label="1">是</el-radio>
+						<el-radio :label="0">否</el-radio>
+					</el-radio-group>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="binding_store_dialog = false">取 消</el-button>
+				<el-button size="mini" type="primary" @click="commitBind">确 定</el-button>
+			</div>
+		</el-dialog>
+		<!-- 权限设置 -->
+		<el-dialog title="权限设置" :visible.sync="permission_dialog">
+			<el-form>
+				<el-form-item label="角色名称：" required>
+					<el-select size="mini" v-model="menu_role_ids" clearable :popper-append-to-body="false" multiple filterable collapse-tags placeholder="选择店铺">
+						<el-option v-for="item in menu_role_list" :key="item.menu_role_id" :label="item.menu_role_name" :value="item.menu_role_id">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="是否启用：">
+					<el-radio-group v-model="status">
+						<el-radio :label="1">是</el-radio>
+						<el-radio :label="0">否</el-radio>
+					</el-radio-group>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="permission_dialog = false">取 消</el-button>
+				<el-button size="mini" type="primary" @click="commitSetting">确 定</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 <script>
@@ -76,6 +130,18 @@
 				role_list:[],				//所有角色列表
 				user_id:"",					//选中的用户ID
 				role_id:"",					//选中的角色ID
+				binding_store_dialog:false,	//绑定店铺弹窗
+				shop_list:[],				//店铺列表
+				shop_codes:[],				//选中的店铺列表
+				dept_list:[],				//部门列表
+				dept_names:[],				//选中的部门列表
+				is_all_stores:1,			//店铺权限
+				view_type:1,				//是否查看记录
+				select_user_id:"",			//当前点击的用户ID
+				permission_dialog:false,	//权限设置弹窗
+				menu_role_list:[],			//所有权限列表
+				menu_role_ids:[],			//已选中的权限列表
+				status:0,					//是否启用
 			}
 		},
 		created(){
@@ -181,7 +247,7 @@
 					});          
 				});
 			},
-			//删除
+			//提交删除
 			commitDelete(user_id){
 				let arg = {
 					user_id:user_id
@@ -189,6 +255,89 @@
 				resource.userDel(arg).then(res => {
 					if(res.data.code == 1){
 						this.$message.success(res.data.msg);
+						//获取列表
+						this.getData();
+					}else{
+						this.$mesage.warning(res.data.msg);
+					}
+				})
+			},
+			//点击绑定店铺
+			bindStore(user_id){
+				this.select_user_id = user_id;
+				let arg = {
+					user_id:this.select_user_id
+				}
+				resource.userBindingGet(arg).then(res => {
+					if(res.data.code == 1){
+						this.shop_list = res.data.data.shop_list;
+						this.shop_codes = res.data.data.selected_shops;
+						this.dept_list = res.data.data.dept_list;
+						this.dept_names = res.data.data.selected_depts;
+						this.is_all_stores = res.data.data.is_all_stores;
+						this.view_type = res.data.data.view_type;
+						this.binding_store_dialog = true;
+					}else{
+						this.$mesage.warning(res.data.msg);
+					}
+				})
+			},
+			//绑定店铺
+			commitBind(){
+				let arg = {
+					user_id:this.select_user_id,
+					is_all_stores:this.is_all_stores,
+					view_type:this.view_type
+				}
+				if(this.is_all_stores == 0){
+					if(this.dept_names.length == 0){
+						this.$message.warning('请选择部门!');
+						return;
+					}else if(this.shop_codes.length == 0){
+						this.$message.warning('请选择店铺!');
+						return;
+					}else{
+						arg.dept_names = this.dept_names.join(',');
+						arg.shop_codes = this.shop_codes.join(',');
+					}
+				}
+				resource.userBindingPost(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+						this.binding_store_dialog = false;
+					}else{
+						this.$mesage.warning(res.data.msg);
+					}
+				})
+			},
+			//权限设置
+			userSet(user_id){
+				this.select_user_id = user_id;
+				let arg = {
+					user_id:this.select_user_id
+				}
+				resource.userSetGet(arg).then(res => {
+					if(res.data.code == 1){
+						this.menu_role_list = res.data.data.menu_role_list;
+						this.menu_role_ids = res.data.data.info.menu_role_ids;
+						this.status = res.data.data.info.status;
+						this.permission_dialog = true;
+					}else{
+						this.$mesage.warning(res.data.msg);
+					}
+				})
+			},
+			//提交权限设置
+			commitSetting(){
+				let arg = {
+					user_id:this.select_user_id,
+					menu_role_id:this.menu_role_ids.join(','),
+					status:this.status
+				}
+				resource.userSetPost(arg).then(res => {
+					if(res.data.code == 1){
+						this.$message.success(res.data.msg);
+						this.permission_dialog = false;
 						//获取列表
 						this.getData();
 					}else{
