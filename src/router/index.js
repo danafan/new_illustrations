@@ -7,6 +7,7 @@ const index = resolve=>require(['@/pages/index'],resolve)
 const draw_warehouse = resolve=>require(['@/pages/draw_warehouse'],resolve)
 const draw_master = resolve=>require(['@/pages/draw_master'],resolve)
 const selected = resolve=>require(['@/pages/selected'],resolve)
+const detail = resolve=>require(['@/pages/selectedPages/detail'],resolve)
 const permissions = resolve=>require(['@/pages/permissions'],resolve)
 const role_setting = resolve=>require(['@/pages/rolePages/role_setting'],resolve)
 const user_list = resolve=>require(['@/pages/rolePages/user_list'],resolve)
@@ -25,6 +26,7 @@ const router = new Router({
     { path: '/draw_warehouse',name:"画库", component: draw_warehouse},
     { path: '/draw_master',name:"画师", component: draw_master},
     { path: '/selected',name:"选中", component: selected},
+    { path: '/detail',name:"选中详情", component: detail},
     { path: '/permissions',name:"权限", component: permissions},
     { path: '/role_setting',name:"创建/编辑/查看权限", component: role_setting},
     { path: '/user_list',name:"角色对应的用户列表", component: user_list},

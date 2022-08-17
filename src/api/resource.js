@@ -23,6 +23,13 @@ let path = {
 	accessInfo:'access/getinfo',				//获取权限详情
 	accessEdit:'access/edit',					//编辑权限
 	accessDel:'access/del',						//删除权限
+	recordList:'record/getlist',				//选中记录列表
+	bindingSku:'record/binding_sku',			//绑定商品编码
+	recordAgree:'record/agree',					//同意
+	recordRefuse:'record/refuse',				//拒绝
+	ajaxViewShop:'Common/ajaxViewShop',			//获取所有店铺列表
+	recordDetail:'record/record_detail',		//选中记录详情接口
+	sourceDown:'record/source_down',			//下载源文件
 }						
 export default{
 	//插画列表
@@ -136,6 +143,34 @@ export default{
 	//删除权限
 	accessDel(params){
 		return http.post(path.accessDel, params)
+	},
+	//选中记录列表
+	recordList(params){
+		return http.get(path.recordList, params)
+	},
+	//绑定sku
+	bindingSku(params){
+		return http.post(path.bindingSku, params)
+	},
+	//同意
+	recordAgree(params){
+		return http.post(path.recordAgree, params)
+	},
+	//拒绝
+	recordRefuse(params){
+		return http.post(path.recordRefuse, params)
+	},
+	//获取所有店铺
+	ajaxViewShop(params){
+		return http.get(path.ajaxViewShop, params)
+	},
+	//选中记录详情接口
+	recordDetail(params){
+		return http.get(path.recordDetail, params)
+	},
+	//下载源文件
+	sourceDown(params){
+		return http.get(path.sourceDown, params)
 	},
 }
 

@@ -9,10 +9,16 @@
 			</el-form-item>
 		</el-form>
 		<TableTitle title_text="数据列表" id="table_title">
-			<div class="add_button" @click="createUser">添加</div>
+			<div class="add_button" @click="createUser" v-if="button_list.add == 1">添加</div>
 		</TableTitle>
 		<el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}" :max-height="max_height" v-loading="loading">
 			<el-table-column prop="main_dept_name" label="所属部门" show-overflow-tooltip align="center"></el-table-column>
+			<el-table-column prop="binding_stores" label="绑定店铺" show-overflow-tooltip align="center"></el-table-column>
+			<el-table-column label="是否查看记录" align="center" width="100">
+				<template slot-scope="scope">
+					<div>{{scope.row.view_type == 1?'否':'是'}}</div>
+				</template>
+			</el-table-column>
 			<el-table-column prop="ding_user_name" label="姓名" show-overflow-tooltip align="center"></el-table-column>
 			<el-table-column prop="job_no" label="工号" show-overflow-tooltip align="center"></el-table-column>
 			<el-table-column prop="position" label="岗位名称" show-overflow-tooltip align="center"></el-table-column>
@@ -24,9 +30,9 @@
 			<el-table-column prop="menu_role_name" label="所属角色" show-overflow-tooltip align="center"></el-table-column>
 			<el-table-column label="操作" align="center" width="200" fixed="right">
 				<template slot-scope="scope">
-					<el-button class="button_theme" type="text" size="small" @click="bindStore(scope.row.user_id)">绑定店铺</el-button>
-					<el-button class="button_theme" type="text" size="small" @click="userSet(scope.row.user_id)">权限设置</el-button>
-					<el-button class="button_theme" type="text" size="small" @click="deleteUser(scope.row.user_id)">删除</el-button>
+					<el-button class="button_theme" type="text" size="small" @click="bindStore(scope.row.user_id)" v-if="button_list.binding_store == 1">绑定店铺</el-button>
+					<el-button class="button_theme" type="text" size="small" @click="userSet(scope.row.user_id)" v-if="button_list.setting == 1">权限设置</el-button>
+					<el-button class="button_theme" type="text" size="small" @click="deleteUser(scope.row.user_id)" v-if="button_list.del == 1">删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>

@@ -154,6 +154,9 @@
 					}else if(path == '/user_list'){
 						this.page_title = '角色数量';
 						this.show_page_title = true;
+					}else if(path == '/detail'){
+						this.page_title = '插画详情';
+						this.show_page_title = true;
 					}else{
 						this.show_page_title = false;
 					}
