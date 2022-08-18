@@ -20,7 +20,7 @@
 						<el-input class="value" size="small" clearable v-model="alipay_no" placeholder="请输入支付宝账号"></el-input>
 					</el-form-item>
 					<el-form-item label="身份证正面：" required>
-						<UploadFile type="card" img_type="front" @callbackFn="callbackFn" v-if="card_front == ''"/>
+						<UploadFile :is_card="true" img_type="front" @callbackFn="callbackFn" v-if="card_front == ''"/>
 						<div class="view_card_img" @mouseenter="front_del = true" @mouseleave="front_del = false" v-else>
 							<img class="card_img" :src='domain + card_front'>
 							<div class="delete_img" v-if="front_del == true">
@@ -29,7 +29,7 @@
 						</div>
 					</el-form-item>
 					<el-form-item label="身份证反面：" required>
-						<UploadFile type="card" img_type="back" @callbackFn="callbackFn" v-if="card_back == ''"/>
+						<UploadFile :is_card="true" img_type="back" @callbackFn="callbackFn" v-if="card_back == ''"/>
 						<div class="view_card_img" @mouseenter="back_del = true" @mouseleave="back_del = false" v-else>
 							<img class="card_img" :src='domain + card_back'>
 							<div class="delete_img" v-if="back_del == true">
@@ -160,20 +160,6 @@
 				}
 				
 			}
-			//获取详情
-			// recordDetail(record_id){
-			// 	let arg = {
-			// 		record_id:record_id
-			// 	}
-			// 	resource.recordDetail(arg).then(res => {
-			// 		if(res.data.code == 1){
-			// 			this.recoedInfo = res.data.data;
-			// 			this.recoedInfo.sku_ids = this.recoedInfo.sku_ids.length > 0?this.recoedInfo.sku_ids.join(','):'无';
-			// 		}else{
-			// 			this.$message.warning(res.data.msg);
-			// 		}
-			// 	})
-			// },
 		},
 		components:{
 			TableTitle,

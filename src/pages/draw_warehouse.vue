@@ -15,11 +15,14 @@
 					<el-button type="primary" @click="handleCurrentChange(1)">查询</el-button>
 				</el-form-item>
 			</el-form>
+			<TableTitle title_text="数据列表" id="table_title">
+				<div class="add_button" @click="settingFn('1')">上传</div>
+			</TableTitle>
 			<el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}" :max-height="max_height" v-loading="loading">
 				<el-table-column prop="picture_id" label="编号" show-overflow-tooltip align="center"></el-table-column>
 				<el-table-column width="100" label="插画图片" align="center">
 					<template slot-scope="scope">
-						<img class="image" :src="scope.row.preview_images">
+						<img class="image" :src="scope.row.domain + scope.row.images[0]">
 					</template>
 				</el-table-column>
 				<el-table-column prop="title" label="插画标题" show-overflow-tooltip align="center"></el-table-column>
@@ -30,10 +33,10 @@
 				<el-table-column prop="add_time" label="上传时间" show-overflow-tooltip align="center" width="160"></el-table-column>
 				<el-table-column label="操作" align="center" width="100" fixed="right">
 					<template slot-scope="scope">
-						<el-button type="text" size="small">查看</el-button>
-						<el-button type="text" size="small">编辑</el-button>
-						<el-button type="text" size="small">下架</el-button>
-						<el-button type="text" size="small">删除</el-button>
+						<el-button class="button_theme" type="text" size="small">查看</el-button>
+						<el-button class="button_theme" type="text" size="small" @click="settingFn('2',scope.row.picture_id)">编辑</el-button>
+						<el-button class="button_theme" type="text" size="small">下架</el-button>
+						<el-button class="button_theme" type="text" size="small">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -49,9 +52,23 @@
 	width: 88px;
 	height: 88px;
 }
+.add_button{
+	border-radius: 2rem;
+	background: #F36478;
+	width: 64rem;
+	text-align: center;
+	height: 32rem;
+	line-height: 32rem;
+	font-size: 14rem;
+	color: #FFFFFF;
+}
+.button_theme{
+	color: #F36478;
+}
 </style>
 <script>
 	import resource from '../api/resource.js'
+	import TableTitle from '../components/table_title.vue'
 	export default{
 		data(){
 			return{
@@ -84,9 +101,10 @@
 			onResize(){
 				this.$nextTick(()=>{
 					let box_card_height = document.getElementById("box_card").offsetHeight;
+					let table_title_height = document.getElementById("table_title").offsetHeight;
 					let el_form_height = document.getElementById("el_form").offsetHeight;
 					let el_pagination_height = document.getElementById("el_pagination").offsetHeight;
-					this.max_height = box_card_height - el_form_height - el_pagination_height - 40 + 'px';
+					this.max_height = box_card_height - el_form_height - table_title_height - el_pagination_height - 40 + 'px';
 				})
 			},
 			//获取插画分类列表
@@ -120,12 +138,27 @@
 				resource.pictureIndex(arg).then(res => {
 					if(res.data.code == 1){
 						this.loading = false;
-						this.dataObj = res.data.data;
+						let dataObj = res.data.data;
+						dataObj.data.map(item => {
+							item.images = item.preview_images.split(',');
+						})
+						this.dataObj = dataObj;
 					}else{
 						this.$mesage.warning(res.data.msg);
 					}
 				})
 			},
+			//点击上传或编辑
+			settingFn(type,id){
+				if(type == '1'){
+					this.$router.push(`/warehouse_add_edit?type=${type}`);
+				}else{
+					this.$router.push(`/warehouse_add_edit?type=${type}&id=${id}`);
+				}
+			}
+		},
+		components:{
+			TableTitle
 		}
 	}
 </script>

@@ -164,6 +164,13 @@
 							this.page_title = '编辑画师资料';
 						}
 						this.show_page_title = true;
+					}else if(path == '/warehouse_add_edit'){
+						if(router.query.type == '1'){	//上传插画
+							this.page_title = '上传插画';
+						}else if(router.query.type == '2'){	//编辑插画
+							this.page_title = '编辑插画';
+						}
+						this.show_page_title = true;
 					}else{
 						this.show_page_title = false;
 					}

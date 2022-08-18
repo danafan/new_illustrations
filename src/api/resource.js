@@ -36,6 +36,8 @@ let path = {
 	uploadFile:'common/upload',					//上传文件
 	deleteFile:'common/del_file',				//删除文件
 	addPainter:'painter/addpainter',			//上传/编辑画师
+	getPainter:'painter/getpainter',			//所有插画师列表
+	addPicture:'picture/addpicture',			//上传插画
 }						
 export default{
 	//插画列表
@@ -205,6 +207,14 @@ export default{
 	//获取画师详情
 	addPainterGet(params){
 		return http.get(path.addPainter, params)
+	},
+	//所有插画师列表
+	getPainter(params){
+		return http.get(path.getPainter, params)
+	},
+	//上传插画
+	addPicture(params){
+		return http.post(path.addPicture, params)
 	},
 }
 

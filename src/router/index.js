@@ -5,6 +5,7 @@ const tab_menu = resolve=>require(['@/pages/tab_menu'],resolve)
 
 const index = resolve=>require(['@/pages/index'],resolve)
 const draw_warehouse = resolve=>require(['@/pages/draw_warehouse'],resolve)
+const warehouse_add_edit = resolve=>require(['@/pages/warehousePages/warehouse_add_edit'],resolve)
 const draw_master = resolve=>require(['@/pages/draw_master'],resolve)
 const master_add_edit = resolve=>require(['@/pages/masterPages/master_add_edit'],resolve)
 const selected = resolve=>require(['@/pages/selected'],resolve)
@@ -25,6 +26,7 @@ const router = new Router({
     children:[
     { path: '/index',name:"首页", component: index},
     { path: '/draw_warehouse',name:"画库", component: draw_warehouse},
+    { path: '/warehouse_add_edit',name:"画库上传或编辑", component: warehouse_add_edit},
     { path: '/draw_master',name:"画师", component: draw_master},
     { path: '/master_add_edit',name:"画师上传或编辑", component: master_add_edit},
     { path: '/selected',name:"选中", component: selected},

@@ -1,18 +1,20 @@
 <template>
 	<div>
-		<div class="upload_container" :class="{'card_upload':type == 'card'}">
+		<div class="all_container" :class="{'card_upload':is_card == true}" v-if="is_all">
+			<div class="all_text">点击上传源文件</div>
+			<input type="file" ref="imgUpload" class="upload_file" @change="uploadFn(0)">
+		</div>
+		<div class="upload_container" :class="{'card_upload':is_card == true}" v-else>
 			<img class="upload_icon" src="../static/upload_icon.png">
 			<div class="upload_text">点击上传</div>
-			<input type="file" ref="imgUpload" class="upload_file" accept="image/*" :multiple="is_multiple" @change="uploadFn">
+			<input type="file" ref="imgUpload" class="upload_file" accept="image/*" :multiple="is_multiple" @change="uploadFn(1)">
 		</div>
 	</div>
 </template>
 <style lang="less" scoped>
-.card_upload{
-	width: 295rem;
-	height: 188rem;
-}
 .upload_container{
+	width: 136rem;
+	height: 136rem;
 	border-radius: 2rem;
 	border:1px solid #D9D9D9;
 	position: relative;
@@ -21,6 +23,19 @@
 	justify-content:center;
 	align-items:center;
 	color: #666666;
+}
+.card_upload{
+	width: 295rem;
+	height: 188rem;
+}
+.all_container{
+	border:1px solid #EFEFEF;
+	flex:1;
+	text-align: center;
+	height: 66rem;
+	line-height: 66rem;
+	font-size: 14rem;
+	color: #F36478;
 }
 .upload_icon{
 	width: 40rem;
@@ -45,10 +60,15 @@
 	import resource from '../api/resource.js'
 	export default{
 		props:{
-			//类型（card：身份证）
-			type:{
-				type:String,
-				default:''
+			//是否是全部类型（上传插画源文件）
+			is_all:{
+				type:Boolean,
+				default:false
+			},
+			//是否是身份证
+			is_card:{
+				type:Boolean,
+				default:false
 			},
 			//图片类型（front：正面；back：）
 			img_type:{
@@ -73,7 +93,7 @@
 		},
 		methods:{
 			// 上传图片
-			uploadFn(){
+			uploadFn(type){
 				if (this.$refs.imgUpload.files.length > 0) {
 					let files = this.$refs.imgUpload.files;
 					//判断是否多选
@@ -87,7 +107,7 @@
 					for(var i = 0;i < files.length;i ++){
 						let arg = {
 							file:files[i],
-							type:1
+							type:type
 						}
 						resource.uploadFile(arg).then(res => {
 							this.$refs.imgUpload.value = null;
@@ -109,4 +129,4 @@
 
 
 
-	</script>
+</script>
