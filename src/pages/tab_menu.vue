@@ -157,6 +157,13 @@
 					}else if(path == '/detail'){
 						this.page_title = '插画详情';
 						this.show_page_title = true;
+					}else if(path == '/master_add_edit'){
+						if(router.query.type == '1'){	//添加画师
+							this.page_title = '上传画师资料';
+						}else if(router.query.type == '2'){	//编辑画师
+							this.page_title = '编辑画师资料';
+						}
+						this.show_page_title = true;
 					}else{
 						this.show_page_title = false;
 					}

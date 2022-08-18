@@ -2,7 +2,7 @@ import http from './request.js'
 let path = {	
 	goodsList:'index/list',						//插画列表
 	getCate:'picture/getcate',					//获取所有插画分类列表
-	painterIndex:'picture/pictureIndex',		//画库列表
+	pictureIndex:'picture/pictureIndex',		//画库列表
 	menuroleList:'menurole/list',				//角色列表
 	menuroleEdit:'menurole/edit',				//编辑访问权限
 	menuroleAdd:'menurole/add',					//添加访问权限
@@ -30,6 +30,12 @@ let path = {
 	ajaxViewShop:'Common/ajaxViewShop',			//获取所有店铺列表
 	recordDetail:'record/record_detail',		//选中记录详情接口
 	sourceDown:'record/source_down',			//下载源文件
+	recordExport:'record/export',				//选中记录列表导出
+	painterIndex:'painter/painterIndex',		//画师列表
+	delPainter:'painter/delpainter',			//删除画师
+	uploadFile:'common/upload',					//上传文件
+	deleteFile:'common/del_file',				//删除文件
+	addPainter:'painter/addpainter',			//上传/编辑画师
 }						
 export default{
 	//插画列表
@@ -41,8 +47,8 @@ export default{
 		return http.get(path.getCate, params)
 	},
 	//画库列表
-	painterIndex(params){
-		return http.get(path.painterIndex, params)
+	pictureIndex(params){
+		return http.get(path.pictureIndex, params)
 	},
 	//角色列表
 	menuroleList(params){
@@ -171,6 +177,34 @@ export default{
 	//下载源文件
 	sourceDown(params){
 		return http.get(path.sourceDown, params)
+	},
+	//选中记录列表导出
+	recordExport(params){
+		return http.post(path.recordExport, params)
+	},
+	//画师列表
+	painterIndex(params){
+		return http.get(path.painterIndex, params)
+	},
+	//删除画师
+	delPainter(params){
+		return http.post(path.delPainter, params)
+	},
+	//上传文件
+	uploadFile(params){
+		return http.post(path.uploadFile, params)
+	},
+	//删除文件
+	deleteFile(params){
+		return http.post(path.deleteFile, params)
+	},
+	//上传/编辑画师
+	addPainterPost(params){
+		return http.post(path.addPainter, params)
+	},
+	//获取画师详情
+	addPainterGet(params){
+		return http.get(path.addPainter, params)
 	},
 }
 

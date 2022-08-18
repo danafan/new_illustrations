@@ -117,7 +117,7 @@
 					cate:this.cate
 				}
 				this.loading = true;
-				resource.painterIndex(arg).then(res => {
+				resource.pictureIndex(arg).then(res => {
 					if(res.data.code == 1){
 						this.loading = false;
 						this.dataObj = res.data.data;

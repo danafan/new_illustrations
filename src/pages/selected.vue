@@ -27,7 +27,7 @@
 				</el-form-item>
 			</el-form>
 			<TableTitle title_text="数据列表" id="table_title">
-				<div class="add_button">导出</div>
+				<div class="add_button" @click="exportFn">导出</div>
 			</TableTitle>
 			<el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}" :max-height="max_height" v-loading="loading">
 				<el-table-column prop="picture_id" label="编号" show-overflow-tooltip align="center"></el-table-column>
@@ -77,6 +77,8 @@
 </template>
 <script>
 	import resource from '../api/resource.js'
+	import {exportPost} from '../api/export.js'
+	import { MessageBox,Message } from 'element-ui';
 	import TableTitle from '../components/table_title.vue'
 	import {getMonthStartDate,getCurrentDate,getLastMonthStartDate,getLastMonthEndDate} from '../api/date.js'
 	export default{
@@ -169,6 +171,32 @@
 						this.$message.warning(res.data.msg);
 					}
 				})
+			},
+			//导出
+			exportFn(){
+				MessageBox.confirm('确认导出?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText:'取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						search:this.search,
+						shop_code:this.shop_code.join(','),
+						status:this.status,
+						start_date:this.dates && this.dates.length> 0?this.dates[0]:"",
+						end_date:this.dates && this.dates.length> 0?this.dates[1]:"",
+					}
+					resource.recordExport(arg).then(res => {
+						if(res){
+							exportPost("\ufeff" + res.data,'选中记录');
+						}
+					})
+				}).catch(() => {
+					Message({
+						type: 'info',
+						message: '取消导出'
+					});          
+				});
 			},
 			//获取列表
 			getData(){
