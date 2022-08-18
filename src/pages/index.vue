@@ -15,9 +15,9 @@
 			</div>
 		</div>
 		<div class="goods_list">
-			<div class="goods_item" v-for="(item,index) in goods_list" @mouseenter="enter_index = index" @mouseleave="enter_index = null">
-				<img class="goods_item_icon" src="../static/goods_item.png">
-				<div class="look_button" v-if="enter_index == index">查看</div>
+			<div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index" @mouseleave="enter_index = null">
+				<img class="goods_item_icon" :src="item.domain + item.preview_images">
+				<div class="look_button" v-if="enter_index == index" @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">查看</div>
 			</div>
 		</div>
 		<div class="page index_page">
@@ -147,7 +147,6 @@
 		data(){
 			return{
 				search_value:"",	//输入的搜索内容
-				goods_list:10,		//插画商品列表
 				enter_index:null,	//当前鼠标悬浮的下标
 				page:1,
 				pagesize:10,
@@ -173,7 +172,9 @@
 			//获取列表
 			getData(){
 				let arg = {
-					search:this.search_value
+					search:this.search_value,
+					page:this.page,
+					pagesize:this.pagesize
 				}
 				resource.goodsList(arg).then(res => {
 					if(res.data.code == 1){

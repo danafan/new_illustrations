@@ -33,7 +33,7 @@
 				<el-table-column prop="picture_id" label="编号" show-overflow-tooltip align="center"></el-table-column>
 				<el-table-column label="插画图片" align="center">
 					<template slot-scope="scope">
-						<img style="width: 40px;height: 40px" :src="scope.row.domain + scope.row.preview_images">
+						<img style="width: 40px;height: 40px" :src="scope.row.domain + scope.row.image">
 					</template>
 				</el-table-column>
 				<el-table-column prop="title" label="插画标题" show-overflow-tooltip align="center"></el-table-column>

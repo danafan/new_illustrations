@@ -91,18 +91,18 @@
 				preview_images:[],	//已上传的图片列表
 			}
 		},
-		created(){
+		async created(){
 			this.type = this.$route.query.type;
 			this.title_text = this.type == '1'?'上传插画':'编辑插画';
+			//获取所有插画师列表
+			await this.getPainter();
+			//获取插画分类列表
+			await this.getCate();
 			if(this.type == '2'){	//编辑
 				this.id = this.$route.query.id;
 				//获取详情
-				// this.addPainterGet();
+				await this.addPictureGet();
 			}
-			//获取所有插画师列表
-			this.getPainter();
-			//获取插画分类列表
-			this.getCate();
 		},
 		methods:{
 			//获取所有插画师列表
@@ -126,6 +126,43 @@
 						this.cate_list = cate_list;
 					}else{
 						this.$mesage.warning(res.data.msg);
+					}
+				})
+			},
+			//获取插画详情
+			addPictureGet(){
+				let arg = {
+					id:this.id
+				}
+				resource.addPictureGet(arg).then(res => {
+					if(res.data.code == 1){
+						let data = res.data.data;
+						this.title = data.title;
+						this.introduction = data.introduction;
+						this.painter_id = data.painter_id == 0?'':data.painter_id;
+						if(data.cate_id != ""){
+							this.cate_list.map(item => {
+								data.cate_id.map(i => {
+									if(item.cate_id == i){
+										item.is_checked = true;
+									}
+								})
+							})
+						}
+						this.picture_size = data.picture_size;
+						this.labels = data.labels == ''?[]:data.labels.split(',');
+						this.sku_id = data.sku_id.join('\n');
+						this.image = data.source_file;
+						data.preview_images.map(item => {
+							let obj = {
+								domain:data.domain
+							};
+							obj.show_icon = false;
+							obj.urls = item;
+							this.preview_images.push(obj);
+						})
+					}else{
+						this.$message.warning(res.data.msg);
 					}
 				})
 			},
@@ -229,11 +266,10 @@
 						picture_size:this.picture_size,
 						preview_images:preview_images.join(',')
 					}
-					console.log(arg)
 					if(this.type == '2'){		//编辑
 						arg.id = this.id;
 					}
-					resource.addPicture(arg).then(res => {
+					resource.addPicturePost(arg).then(res => {
 						if(res.data.code == 1){
 							this.$message.success(res.data.msg);
 							this.$router.go(-1);

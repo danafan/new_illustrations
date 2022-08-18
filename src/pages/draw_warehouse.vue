@@ -33,10 +33,11 @@
 				<el-table-column prop="add_time" label="上传时间" show-overflow-tooltip align="center" width="160"></el-table-column>
 				<el-table-column label="操作" align="center" width="100" fixed="right">
 					<template slot-scope="scope">
-						<el-button class="button_theme" type="text" size="small">查看</el-button>
+						<el-button class="button_theme" type="text" size="small" @click="$router.push(`/warehouse_detail?id=${scope.row.picture_id}`)">查看</el-button>
 						<el-button class="button_theme" type="text" size="small" @click="settingFn('2',scope.row.picture_id)">编辑</el-button>
-						<el-button class="button_theme" type="text" size="small">下架</el-button>
-						<el-button class="button_theme" type="text" size="small">删除</el-button>
+						<el-button class="button_theme" type="text" size="small" @click="soldoutPicture(scope.row.picture_id)" v-if="scope.row.status == 1">下架</el-button>
+						<el-button class="button_theme" type="text" size="small" @click="groundingPicture(scope.row.picture_id)" v-if="scope.row.status == 2">上架</el-button>
+						<el-button class="button_theme" type="text" size="small" @click="delPicture(scope.row.picture_id)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -147,6 +148,84 @@
 						this.$mesage.warning(res.data.msg);
 					}
 				})
+			},
+			//删除
+			delPicture(id){
+				this.$confirm('确认删除该插画?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						id:id
+					}
+					resource.delPicture(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.getData();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			},
+			//下架插画
+			soldoutPicture(id){
+				this.$confirm('确认下架该插画?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						id:id
+					}
+					resource.soldoutPicture(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.getData();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
+			},
+			//上架插画
+			groundingPicture(id){
+				this.$confirm('确认上架该插画?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					let arg = {
+						id:id
+					}
+					resource.groundingPicture(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							//获取列表
+							this.getData();
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消'
+					});          
+				});
 			},
 			//点击上传或编辑
 			settingFn(type,id){

@@ -38,6 +38,10 @@ let path = {
 	addPainter:'painter/addpainter',			//上传/编辑画师
 	getPainter:'painter/getpainter',			//所有插画师列表
 	addPicture:'picture/addpicture',			//上传插画
+	delPicture:'picture/delpicture',			//删除插画
+	soldoutPicture:'picture/soldoutpicture',	//下架插画
+	groundingPicture:'picture/groundingpicture',//上架插画
+	picDetail:'index/pic_detail',				//首页插画详情接口
 }						
 export default{
 	//插画列表
@@ -212,9 +216,29 @@ export default{
 	getPainter(params){
 		return http.get(path.getPainter, params)
 	},
-	//上传插画
-	addPicture(params){
+	//上传/编辑插画
+	addPicturePost(params){
 		return http.post(path.addPicture, params)
+	},
+	//获取插画详情
+	addPictureGet(params){
+		return http.get(path.addPicture, params)
+	},
+	//删除插画
+	delPicture(params){
+		return http.post(path.delPicture, params)
+	},
+	//下架插画
+	soldoutPicture(params){
+		return http.post(path.soldoutPicture, params)
+	},
+	//上架插画
+	groundingPicture(params){
+		return http.post(path.groundingPicture, params)
+	},
+	//首页插画详情接口
+	picDetail(params){
+		return http.get(path.picDetail, params)
 	},
 }
 

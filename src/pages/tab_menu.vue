@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="page_header">
 			<div class="header_left">
-				<img class="logo_icon" src="../static/home_back.png">
+				<img class="logo_icon" src="../static/logo_icon.png">
 				<div class="tab_list">
 					<div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in router_list" @click="toPage(item.path,index)">{{item.name}}</div>
 				</div>
@@ -44,9 +44,9 @@
 			display: flex;
 			align-items: center;
 			.logo_icon{
-				margin-right: 42px;
-				width: 148px;
-				height: 38px;
+				margin-right: 25px;
+				width: 134px;
+				height: 48px;
 			}
 			.tab_list{
 				display: flex;
@@ -154,7 +154,7 @@
 					}else if(path == '/user_list'){
 						this.page_title = '角色数量';
 						this.show_page_title = true;
-					}else if(path == '/detail'){
+					}else if(path == '/detail' || path == '/warehouse_detail'){
 						this.page_title = '插画详情';
 						this.show_page_title = true;
 					}else if(path == '/master_add_edit'){
