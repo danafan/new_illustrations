@@ -17,6 +17,7 @@
       }
     },
     created(){
+      localStorage.setItem('admin_id','8318');
       this.$router.push('/index');
     },
     methods: {

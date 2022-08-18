@@ -115,18 +115,9 @@
 			},
 			// 点击下载源文件
 			downFile(){
-				// let arg = {
-				// 	record_id:record_id
-				// }
-				// resource.sourceDown(arg).then(res => {
-				// 	if(res.data.code == 1){
-				// 		this.recoedInfo = res.data.data;
-				// 		this.recoedInfo.sku_ids = this.recoedInfo.sku_ids.length > 0?this.recoedInfo.sku_ids.join(','):'无';
-				// 	}else{
-				// 		this.$message.warning(res.data.msg);
-				// 	}
-				// })
-				// window.open('http://producttest.92nu.com/api/record/source_down?record_id=2')
+				let record_id = this.recoedInfo.record_id;
+				let admin_id = localStorage.getItem('admin_id');
+				window.open(`${location.origin}/api/record/source_down?record_id=${record_id}&admin_id=${admin_id}`)
 			}
 		},
 		components:{

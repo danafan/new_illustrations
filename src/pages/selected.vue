@@ -55,7 +55,7 @@
 						<el-button class="button_theme" type="text" size="small" @click="setDialog(scope.row.record_id,'1')" v-if="scope.row.status == 1">绑定</el-button>
 						<el-button class="button_theme" type="text" size="small" @click="setDialog(scope.row.record_id,'2')" v-if="scope.row.status == 0">同意</el-button>
 						<el-button class="button_theme" type="text" size="small" @click="setDialog(scope.row.record_id,'3')" v-if="scope.row.status == 0">拒绝</el-button>
-						<el-button class="button_theme" type="text" size="small">下载</el-button>
+						<el-button class="button_theme" type="text" size="small" @click="downFile(scope.row.record_id)">下载</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -267,6 +267,11 @@
 						}
 					})
 				}
+			},
+			// 点击下载源文件
+			downFile(record_id){
+				let admin_id = localStorage.getItem('admin_id');
+				window.open(`${location.origin}/api/record/source_down?record_id=${record_id}&admin_id=${admin_id}`)
 			}
 		},
 		components:{
