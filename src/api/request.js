@@ -55,7 +55,8 @@ export function middleWare(params,type) {
   // var token = Base64.encode(JSON.stringify(token_obj));
   
   //组织参数
-  var req = {...params,...{admin_id:'8318'}};   
+  var admin_id = !localStorage.getItem("admin_id")?'':localStorage.getItem("admin_id");
+  var req = {...params,...{admin_id:admin_id}};   
   // var req = {...params,...{userid:'014017496357903146'}};   
   // var req = {...params,...{user_id:'15262575868677723'}};   
   // var req = {...params,...{}};   

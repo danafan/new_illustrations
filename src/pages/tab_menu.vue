@@ -2,7 +2,7 @@
 	<div class="container">
 		<div class="page_header">
 			<div class="header_left">
-				<img class="logo_icon" src="../static/home_back.png">
+				<img class="logo_icon" src="../static/logo_icon.png">
 				<div class="tab_list">
 					<div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in router_list" @click="toPage(item.path,index)">{{item.name}}</div>
 				</div>
@@ -15,6 +15,7 @@
 				<div class="login_out">退出登录</div>
 			</div>
 		</div>
+		<PageTitle :page_title="page_title" v-if="show_page_title"/>
 		<div class="content" :class="{'display':is_center == true}">
 			<router-view></router-view>
 		</div>
@@ -43,9 +44,9 @@
 			display: flex;
 			align-items: center;
 			.logo_icon{
-				margin-right: 42px;
-				width: 148px;
-				height: 38px;
+				margin-right: 25px;
+				width: 134px;
+				height: 48px;
 			}
 			.tab_list{
 				display: flex;
@@ -107,6 +108,7 @@
 }
 </style>
 <script>
+	import PageTitle from '../components/page_title.vue'
 	export default{
 		data(){
 			return{
@@ -128,6 +130,8 @@
 					path:'/permissions'
 				}],									//导航列表
 				active_index:0,						//当前选中的导航下标
+				show_page_title:false,
+				page_title:"",						//页面标题
 			}
 		},
 		watch:{
@@ -137,8 +141,42 @@
 				this.current_path = path;
 				if(path != '/index'){
 					this.is_center = true;
+					// 权限
+					if(path == '/role_setting'){
+						if(router.query.type == '1'){	//添加角色
+							this.page_title = '添加角色';
+						}else if(router.query.type == '2'){	//查看权限
+							this.page_title = '查看权限';
+						}else if(router.query.type == '3'){	//权限设置
+							this.page_title = '权限设置';
+						}
+						this.show_page_title = true;
+					}else if(path == '/user_list'){
+						this.page_title = '角色数量';
+						this.show_page_title = true;
+					}else if(path == '/detail' || path == '/warehouse_detail'){
+						this.page_title = '插画详情';
+						this.show_page_title = true;
+					}else if(path == '/master_add_edit'){
+						if(router.query.type == '1'){	//添加画师
+							this.page_title = '上传画师资料';
+						}else if(router.query.type == '2'){	//编辑画师
+							this.page_title = '编辑画师资料';
+						}
+						this.show_page_title = true;
+					}else if(path == '/warehouse_add_edit'){
+						if(router.query.type == '1'){	//上传插画
+							this.page_title = '上传插画';
+						}else if(router.query.type == '2'){	//编辑插画
+							this.page_title = '编辑插画';
+						}
+						this.show_page_title = true;
+					}else{
+						this.show_page_title = false;
+					}
 				}else{
 					this.is_center = false;
+					this.show_page_title = false;
 				}
 			}
 		},
@@ -149,6 +187,9 @@
 				this.active_index = index;
 				console.log(path)
 			}
+		},
+		components:{
+			PageTitle
 		}
 	}
 </script>
