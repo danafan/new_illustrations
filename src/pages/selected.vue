@@ -299,7 +299,7 @@
 			// 点击下载源文件
 			downFile(record_id){
 				let admin_id = localStorage.getItem('admin_id');
-				window.open(`${location.origin}/api/record/source_down?record_id=${record_id}&admin_id=${admin_id}`)
+				window.open(`${location.origin}/api/record/source_down?record_id=${record_id}&type=1`)
 			}
 		},
 		components:{

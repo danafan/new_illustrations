@@ -4,12 +4,14 @@
 			<div class="title" id="title">{{detailInfo.title}}</div>
 			<div class="img_list" :style="{height:list_height}">
 				<el-image
-				 :src="detailInfo.domain + item" v-for="item in detailInfo.preview_images"
-				 fit="fill"></el-image>
+				:src="detailInfo.domain + item" v-for="item in detailInfo.preview_images"
+				fit="fill"></el-image>
 			</div>
 		</el-card>
 		<el-card class="righ_card">
-			<img class="zheng_icon" src="../../static/zheng_icon.png">
+			<div class="top_row">
+				<img class="zheng_icon" src="../../static/zheng_icon.png">
+			</div>
 			<div class="row">
 				<div class="lable">插画简介：</div>
 				<div class="value">{{detailInfo.introduction}}</div>
@@ -34,16 +36,51 @@
 				<div class="lable">文件大小：</div>
 				<div class="value">{{detailInfo.picture_size}}</div>
 			</div>
-			<div class="row">
+			<!-- <div class="row">
 				<div class="lable">尺寸/分辨率：</div>
 				<div class="value">{{detailInfo.picture_size}}</div>
-			</div>
+			</div> -->
 			<div class="row">
 				<div class="lable">上传时间：</div>
 				<div class="value">{{detailInfo.add_time}}</div>
 			</div>
+			<div class="selectFn" @click="show_dialog = true">立即选中</div>
 		</el-card>
-	</div>
+		<!-- 选中插画 -->
+		<el-dialog title="选中信息" center width="50%" @close="closeDialog" :visible.sync="show_dialog" :close-on-click-modal="false">
+			<el-form size="small" label-width="150px">
+				<el-form-item label="店铺：" required>
+					<el-select v-model="shop_code" style="width: 220px" clearable :popper-append-to-body="false" filterable placeholder="请选择店铺">
+						<el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="使用时间：" required>
+					<el-date-picker v-model="usage_time" type="date" clearable value-format="yyyy-MM-dd" placeholder="选择使用时间" :append-to-body="false">
+					</el-date-picker>
+				</el-form-item>
+				<el-form-item label="插画用途：" required>
+					<el-select v-model="purpose_type" style="width: 220px" clearable :popper-append-to-body="false" filterable placeholder="请选择用途">
+						<el-option v-for="item in purposes_list" :key="item.id" :label="item.name" :value="item.id">
+						</el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="备注：">
+					<el-input
+					style="width: 220px"
+					type="textarea"
+					:rows="5"
+					placeholder="请输入备注"
+					v-model="remark">
+				</el-input>
+			</el-form-item>
+		</el-form>
+		<span slot="footer" class="dialog-footer">
+			<el-button size="small" @click="show_dialog = false">取消</el-button>
+			<el-button size="small" type="primary" @click="submitFn">提交</el-button>
+		</span>
+	</el-dialog>
+</div>
 </template>
 <script>
 	import resource from '../../api/resource.js'
@@ -52,12 +89,23 @@
 			return{
 				list_height:0,			//可滑动的高度
 				detailInfo:{},			//详情
+				show_dialog:false,		//选中弹窗
+				store_list:[],			//店铺列表
+				shop_code:"",			//选中的店铺ID
+				usage_time:"",			//使用时间
+				purposes_list:[],		//插画用途列表
+				purpose_type:"",		//选中的插画用途
+				remark:"",				//备注
 			}
 		},
 		created(){
 			this.picture_id = this.$route.query.picture_id;
 			//获取详情
 			this.picDetail();
+			//获取所有店铺列表
+			this.ajaxViewShop();
+			//插画用途
+			this.ajaxPurposes();
 		},
 		mounted(){
 			//获取表格最大高度
@@ -88,6 +136,65 @@
 						this.$mesage.warning(res.data.msg);
 					}
 				})
+			},
+			//获取所有店铺列表
+			ajaxViewShop(){
+				resource.ajaxViewShop().then(res => {
+					if(res.data.code == 1){
+						this.store_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//插画用途
+			ajaxPurposes(){
+				resource.ajaxPurposes().then(res => {
+					if(res.data.code == 1){
+						this.purposes_list = res.data.data;
+					}else{
+						this.$message.warning(res.data.msg);
+					}
+				})
+			},
+			//关闭弹窗
+			closeDialog(){
+				this.shop_code = '';
+				this.usage_time = '';
+				this.purpose_type = '';
+				this.remark = '';
+			},
+			//提交
+			submitFn(){
+				if(this.shop_code == ''){
+					this.$message.warning('请选择店铺');
+				}else if(!this.usage_time){
+					this.$message.warning('请选择使用时间');
+				}else if(this.purpose_type == ''){
+					this.$message.warning('请选择用途');
+				}else{
+					let shop_name = "";
+					let select_store = this.store_list.filter(item => {
+						return item.shop_code == this.shop_code;
+					})
+					shop_name = select_store[0].shop_name;
+					let arg = {
+						picture_id:this.picture_id,
+						shop_code:this.shop_code,
+						shop_name:shop_name,
+						usage_time:this.usage_time,
+						purpose_type:this.purpose_type,
+						remark:this.remark
+					}
+					resource.indexSelect(arg).then(res => {
+						if(res.data.code == 1){
+							this.$message.success(res.data.msg);
+							this.$router.go(-1);
+						}else{
+							this.$message.warning(res.data.msg);
+						}
+					})
+				}
 			}
 			
 		}
@@ -101,7 +208,7 @@
 		flex:1;
 		height: 100%;
 		.title{
-			height: 56rem;
+			padding-bottom: 32rem;
 			font-size: 24rem;
 			color: #000000;
 			font-weight: 500;
@@ -116,14 +223,17 @@
 		margin-left: 24rem;
 		width: 380rem;
 		height: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		.zheng_icon{
-			margin-bottom: 24rem;
-			width: 46rem;
-			height: 46rem;
+		
+		.top_row{
+			display: flex;
+			justify-content: center;
+			.zheng_icon{
+				margin-bottom: 24rem;
+				width: 46rem;
+				height: 46rem;
+			}
 		}
+		
 		.row{
 			margin-bottom: 24rem;
 			display: flex;
@@ -132,6 +242,18 @@
 			.lable{
 				white-space:nowrap;
 			}
+		}
+		.selectFn{
+			margin: 70rem auto;
+			border-radius: 23rem;
+			background: #F36478;
+			width: 222rem;
+			text-align: center;
+			height: 46rem;
+			line-height: 46rem;
+			font-size: 18rem;
+			color: #ffffff;
+			font-weight: 500;
 		}
 	}
 }

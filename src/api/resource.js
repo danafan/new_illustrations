@@ -42,6 +42,8 @@ let path = {
 	soldoutPicture:'picture/soldoutpicture',	//下架插画
 	groundingPicture:'picture/groundingpicture',//上架插画
 	picDetail:'index/pic_detail',				//首页插画详情接口
+	ajaxPurposes:'common/ajax_purposes',		//获取插画用途列表
+	indexSelect:'index/select',					//提交创建插画接口
 }						
 export default{
 	//插画列表
@@ -239,6 +241,14 @@ export default{
 	//首页插画详情接口
 	picDetail(params){
 		return http.get(path.picDetail, params)
+	},
+	//获取插画用途
+	ajaxPurposes(params){
+		return http.get(path.ajaxPurposes, params)
+	},
+	//提交创建插画接口
+	indexSelect(params){
+		return http.post(path.indexSelect, params)
 	},
 }
 

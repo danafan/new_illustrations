@@ -76,7 +76,7 @@
 			downFile(){
 				let id = this.id;
 				let admin_id = localStorage.getItem('admin_id');
-				window.open(`${location.origin}/api/record/source_down?record_id=${id}&admin_id=${admin_id}&type=2`)
+				window.open(`${location.origin}/api/record/source_down?record_id=${id}&type=2`)
 			}
 		},
 		components:{
