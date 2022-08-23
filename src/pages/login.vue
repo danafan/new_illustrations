@@ -18,6 +18,15 @@ export default {
   },
   mounted() {
     this.getAppids();
+    // const { code } = this.$route.query;
+    // console.log(code);
+    // if (code) {
+    //   //登录接口
+    //   this.handleCodeLogin(code);
+    // } else {
+    //   //钉钉二维码
+    //   this.ddLoginInit();
+    // }
   },
   methods: {
     getAppids() {
@@ -35,8 +44,8 @@ export default {
     },
     ddLoginInit(appKey) {
       //钉钉扫码流程：扫码成功登录后会自动跳到这个url页面，url路径会携带code，你拿到这个code，调用登录接口成功就跳转。
-      // let url = `${location.origin}/api/login/dingcallback`;
-      let url = "http://producttest.92nu.com/api/scancodes/ewmlogin";
+      let url = `${location.origin}/api/scancodes/ewmlogin`;
+      // let url = "http://producttest.92nu.com/api/scancodes/ewmlogin";
       // appid 找后端要
       // let appid = "dingkqqsqmlpwlffofe2";
       // let appid = appKey;
@@ -48,7 +57,7 @@ export default {
         goto: goto,
         style: "border:none;background-color:#FFFFFF;margin:0 auto;",
         width: "100%", //官方参数 365
-        height: "400", //官方参数 400
+        height: "350", //官方参数 400
       });
 
       let handleMessage = (event) => {
@@ -68,6 +77,21 @@ export default {
         window.attachEvent("onmessage", handleMessage);
       }
     },
+
+    // handleCodeLogin(code) {
+    //   resource.loginUser(code).then((res) => {
+    //     if (res.data.code == 1) {
+    //       this.$router.push("/tab_menu");
+    //       localStorage.setItem("ding_user_id", response.data.ding_user_id);
+    //       localStorage.setItem("ding_user_name", response.data.ding_user_name);
+    //       localStorage.setItem("secret_key", response.data.secret_key);
+    //       localStorage.setItem("login_token", response.data.login_token);
+    //     } else {
+    //       this.$router.push("/");
+    //       this.$message.warning(res.data.msg);
+    //     }
+    //   });
+    // },
   },
 };
 </script>
@@ -103,8 +127,7 @@ export default {
     font-weight: 500;
     color: #f36478;
     line-height: 33px;
-    margin-left: 143px;
-    margin-top: 42px;
+    margin: 42px auto 0px auto;
   }
 }
 </style>

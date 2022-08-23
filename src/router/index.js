@@ -2,7 +2,6 @@ import Vue from "vue";
 import Router from "vue-router";
 
 const tab_menu = (resolve) => require(["@/pages/tab_menu"], resolve);
-
 const login = (resolve) => require(["@/pages/login"], resolve);
 const index = (resolve) => require(["@/pages/index"], resolve);
 const index_detail = (resolve) =>

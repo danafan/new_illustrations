@@ -17,7 +17,15 @@ export default {
     };
   },
   created() {
-    this.$router.push("/login");
+    // this.$router.push("/tab_menu");
+
+    resource.loginUser().then((res) => {
+      if (res.data.code == "1") {
+        this.$router.push("/index");
+      } else {
+        this.$router.push("/login");
+      }
+    });
   },
   methods: {
     //单独页面刷新

@@ -1,5 +1,7 @@
 import http from "./request.js";
 let path = {
+  getMenu: "access/mymenu", //获取菜单
+  loginUser: "scancodes/ewmlogin", //获取登陆成功后的用户信息
   getAppid: "scancodes/getappkey", //获取appkey
   goodsList: "index/list", //插画列表
   getCate: "picture/getcate", //获取所有插画分类列表
@@ -47,6 +49,14 @@ let path = {
   indexSelect: "index/select", //提交创建插画接口
 };
 export default {
+  //获取菜单
+  getMenu(params) {
+    return http.get(path.getMenu, params);
+  },
+  //获取登陆成功后的用户信息
+  loginUser(params) {
+    return http.get(path.loginUser, params);
+  },
   //获取appkey
   getAppid(params) {
     return http.get(path.getAppid, params);
