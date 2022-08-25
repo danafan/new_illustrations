@@ -22,6 +22,7 @@ const role_setting = (resolve) =>
   require(["@/pages/rolePages/role_setting"], resolve);
 const user_list = (resolve) =>
   require(["@/pages/rolePages/user_list"], resolve);
+const notfound = (resolve) => require(["@/pages/notfound"], resolve);
 
 Vue.use(Router);
 
@@ -32,7 +33,11 @@ const router = new Router({
       component: login,
     },
     {
-      path: "/",
+      path: "/notfound",
+      component: notfound,
+    },
+    {
+      path: "/tab_menu",
       component: tab_menu,
       name: "导航页",
       children: [
@@ -72,20 +77,31 @@ const router = new Router({
           name: "角色对应的用户列表",
           component: user_list,
         },
-        {
-          path: "/user_list",
-          name: "角色对应的用户列表",
-          component: user_list,
-        },
-        {
-          path: "/user_list",
-          name: "角色对应的用户列表",
-          component: user_list,
-        },
+        // {
+        //   path: "/",
+        //   name: "角色对应的用户列表",
+        //   component: user_list,
+        // },
       ],
     },
   ],
 });
+
+// router.beforeEach((to, from, next) => {
+//   const role = localStorage.getItem("login_token");
+//   if (!role && to.path !== "/login") {
+//     next("/login");
+//   } else if (to.matched.some((res) => res.meta.requiresAuth)) {
+//     let menulist = JSON.parse(localStorage.getItem("menulist"));
+//     if (menulist.indexOf(to.path) > -1) {
+//       next();
+//     } else {
+//       next("/notfound");
+//     }
+//   } else {
+//     next();
+//   }
+// });
 
 const originalPush = Router.prototype.push;
 Router.prototype.push = function push(location) {

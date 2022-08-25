@@ -1,7 +1,8 @@
 import http from "./request.js";
 let path = {
   getMenu: "access/mymenu", //获取菜单
-  loginUser: "scancodes/ewmlogin", //获取登陆成功后的用户信息
+  loginUser: "scancodes/getuserinfo", //获取登陆成功后的用户信息
+  loginOut: "/loginquit", //退出登录
   getAppid: "scancodes/getappkey", //获取appkey
   goodsList: "index/list", //插画列表
   getCate: "picture/getcate", //获取所有插画分类列表
@@ -55,7 +56,11 @@ export default {
   },
   //获取登陆成功后的用户信息
   loginUser(params) {
-    return http.get(path.loginUser, params);
+    return http.post(path.loginUser, params);
+  },
+  //退出登录
+  loginOut(params) {
+    return http.get(path.loginOut, params);
   },
   //获取appkey
   getAppid(params) {

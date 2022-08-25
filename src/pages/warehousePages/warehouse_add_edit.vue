@@ -50,7 +50,7 @@
           <el-form-item label="上传图片：" required>
             <div class="cate_list">
               <div class="view_card_img" @mouseenter="item.show_icon = true" @mouseleave="item.show_icon = false"
-                v-for="(item,index) in preview_images">
+                v-for="(item,index) in preview_images" :key="index">
                 <img class="card_img" :src='item.domain + item.urls'>
                 <div class="delete_img" v-if="item.show_icon == true">
                   <img class="delete_icon" src="../../static/delete_icon.png" @click="deleteFile(item.urls,index)">
@@ -125,9 +125,14 @@ export default {
       resource.getCate().then((res) => {
         if (res.data.code == 1) {
           let cate_list = res.data.data;
-          cate_list.map((item) => {
+          let catelistid = cate_list.map((item) => {
             item.is_checked = false;
+            return item.cate_id;
           });
+          console.log(catelistid);
+          // cate_list.map((item) => {
+          //   item.is_checked = false;
+          // });
           this.cate_list = cate_list;
         } else {
           this.$mesage.warning(res.data.msg);

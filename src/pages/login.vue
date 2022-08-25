@@ -18,21 +18,12 @@ export default {
   },
   mounted() {
     this.getAppids();
-    // const { code } = this.$route.query;
-    // console.log(code);
-    // if (code) {
-    //   //登录接口
-    //   this.handleCodeLogin(code);
-    // } else {
-    //   //钉钉二维码
-    //   this.ddLoginInit();
-    // }
   },
   methods: {
     getAppids() {
       resource.getAppid().then((res) => {
         if (res.data.code == "1") {
-          let appKey = res.data.data;
+          let appKey = res.data.data.appkey;
           this.ddLoginInit(appKey);
         } else {
           this.$message({
@@ -44,8 +35,8 @@ export default {
     },
     ddLoginInit(appKey) {
       //钉钉扫码流程：扫码成功登录后会自动跳到这个url页面，url路径会携带code，你拿到这个code，调用登录接口成功就跳转。
-      let url = `${location.origin}/api/scancodes/ewmlogin`;
-      // let url = "http://producttest.92nu.com/api/scancodes/ewmlogin";
+      // let url = `${location.origin}/api/scancodes/ewmlogin`;
+      let url = "http://producttest.92nu.com/api/scancodes/ewmlogin";
       // appid 找后端要
       // let appid = "dingkqqsqmlpwlffofe2";
       // let appid = appKey;
@@ -59,7 +50,6 @@ export default {
         width: "100%", //官方参数 365
         height: "350", //官方参数 400
       });
-
       let handleMessage = (event) => {
         let origin = event.origin;
         if (origin == "https://login.dingtalk.com") {
@@ -77,21 +67,6 @@ export default {
         window.attachEvent("onmessage", handleMessage);
       }
     },
-
-    // handleCodeLogin(code) {
-    //   resource.loginUser(code).then((res) => {
-    //     if (res.data.code == 1) {
-    //       this.$router.push("/tab_menu");
-    //       localStorage.setItem("ding_user_id", response.data.ding_user_id);
-    //       localStorage.setItem("ding_user_name", response.data.ding_user_name);
-    //       localStorage.setItem("secret_key", response.data.secret_key);
-    //       localStorage.setItem("login_token", response.data.login_token);
-    //     } else {
-    //       this.$router.push("/");
-    //       this.$message.warning(res.data.msg);
-    //     }
-    //   });
-    // },
   },
 };
 </script>

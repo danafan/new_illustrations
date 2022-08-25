@@ -5,15 +5,15 @@
         <img class="logo_icon" src="../static/logo_icon.png">
         <div class="tab_list">
           <div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in menulist"
-            @click="toPage(item.path,index)" :key="index">{{item.name}}</div>
+            @click="toPage(item.web_url,index)" :key="index">{{item.menu_name}}</div>
         </div>
       </div>
       <div class="header_right">
         <div class="user_box">
           <img class="user_img" src="../static/home_back.png">
-          <div class="user_name">佩洛西</div>
+          <div class="user_name">{{username}}</div>
         </div>
-        <div class="login_out">退出登录</div>
+        <div class="login_out" @click="loginOut">退出登录</div>
       </div>
     </div>
     <PageTitle :page_title="page_title" v-if="show_page_title" />
@@ -115,26 +115,27 @@ export default {
   data() {
     return {
       is_center: false,
+      username: "", //用户名
       menulist: [
         {
-          name: "首页",
-          path: "/index",
+          menu_name: "首页",
+          web_url: "/index",
         },
         {
-          name: "画库",
-          path: "/draw_warehouse",
+          menu_name: "画库",
+          web_url: "/draw_warehouse",
         },
         {
-          name: "画师",
-          path: "/draw_master",
+          menu_name: "画师",
+          web_url: "/draw_master",
         },
         {
-          name: "选中",
-          path: "/selected",
+          menu_name: "选中",
+          web_url: "/selected",
         },
         {
-          name: "权限",
-          path: "/permissions",
+          menu_name: "权限",
+          web_url: "/permissions",
         },
       ], //导航列表
       active_index: 0, //当前选中的导航下标
@@ -201,18 +202,22 @@ export default {
   },
   methods: {
     //页面切换
-    toPage(path, index) {
-      this.$router.push(path);
+    toPage(web_url, index) {
+      this.$router.push(web_url);
       this.active_index = index;
-      console.log(path);
+      console.log(web_url);
     },
     getUserInfo() {
       resource.loginUser().then((res) => {
+        // console.log(res);
+        // console.log(res.data.data.ding_user_id);
         if (res.data.code == 1) {
-          localStorage.setItem("ding_user_id", response.data.ding_user_id);
-          localStorage.setItem("ding_user_name", response.data.ding_user_name);
-          localStorage.setItem("secret_key", response.data.secret_key);
-          localStorage.setItem("login_token", response.data.login_token);
+          this.username = res.data.data.ding_user_name;
+          this.id = res.data.data.ding_user_id;
+          localStorage.setItem("ding_user_id", res.data.data.ding_user_id);
+          localStorage.setItem("ding_user_name", res.data.data.ding_user_name);
+          localStorage.setItem("secret_key", res.data.data.secret_key);
+          localStorage.setItem("login_token", res.data.data.login_token);
         } else {
           this.$message.warning(res.data.msg);
         }
@@ -220,12 +225,41 @@ export default {
     },
     getMenuList() {
       resource.getMenu().then((res) => {
-        if (ers.data.code == 1) {
+        if (res.data.code == 1) {
           this.menulist = res.data.data;
+          localStorage.setItem("menulist", JSON.stringify(res.data.data));
+          this.toPage(this.menulist[0].web_url, 0);
         } else {
           this.$message.warning(res.data.msg);
         }
       });
+    },
+    loginOut() {
+      this.$confirm("确认退出?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          resource.loginOut({ id: this.id }).then((res) => {
+            if (res.data.code == 1) {
+              localStorage.clear();
+              this.$message({
+                type: "success",
+                message: "已退出",
+              });
+              this.$router.replace("login");
+            } else {
+              this.$message.warning(res.data.msg);
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消退出",
+          });
+        });
     },
   },
   components: {
