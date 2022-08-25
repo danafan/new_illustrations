@@ -58,7 +58,11 @@ const router = new Router({
           name: "插画详情",
           component: warehouse_detail,
         },
-        { path: "/draw_master", name: "画师", component: draw_master },
+        {
+          path: "/draw_master",
+          name: "画师",
+          component: draw_master,
+        },
         {
           path: "/master_add_edit",
           name: "画师上传或编辑",
@@ -66,7 +70,12 @@ const router = new Router({
         },
         { path: "/selected", name: "选中", component: selected },
         { path: "/detail", name: "选中详情", component: detail },
-        { path: "/permissions", name: "权限", component: permissions },
+        {
+          path: "/permissions",
+          name: "权限",
+          component: permissions,
+          meta: { requiresAuth: true },
+        },
         {
           path: "/role_setting",
           name: "创建/编辑/查看权限",
@@ -77,31 +86,28 @@ const router = new Router({
           name: "角色对应的用户列表",
           component: user_list,
         },
-        // {
-        //   path: "/",
-        //   name: "角色对应的用户列表",
-        //   component: user_list,
-        // },
       ],
     },
   ],
 });
 
-// router.beforeEach((to, from, next) => {
-//   const role = localStorage.getItem("login_token");
-//   if (!role && to.path !== "/login") {
-//     next("/login");
-//   } else if (to.matched.some((res) => res.meta.requiresAuth)) {
-//     let menulist = JSON.parse(localStorage.getItem("menulist"));
-//     if (menulist.indexOf(to.path) > -1) {
-//       next();
-//     } else {
-//       next("/notfound");
-//     }
-//   } else {
-//     next();
-//   }
-// });
+router.beforeEach((to, from, next) => {
+  const role = localStorage.getItem("login_token");
+  if (!role && to.path !== "/login") {
+    next("/login");
+  } else if (to.matched.some((res) => res.meta.requiresAuth)) {
+    let menulist = JSON.parse(localStorage.getItem("menulist"));
+    if (menulist.indexOf(to.path) > -1) {
+      if (menulist.children.indexOf(to.path) > -1) {
+        next();
+      }
+    } else {
+      next("/notfound");
+    }
+  } else {
+    next();
+  }
+});
 
 const originalPush = Router.prototype.push;
 Router.prototype.push = function push(location) {

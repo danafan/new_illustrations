@@ -5,12 +5,12 @@
       <div class="banner_content">
         <div class="input_box">
           <div class="box_left">
-            <input class="search_input" v-model="search_value" placeholder="请输入您要查找的关键词">
+            <input class="search_input" v-model="search_value" @change="inputChange" placeholder="请输入您要查找的关键词">
           </div>
-          <div class="search_button" @click="search">搜索</div>
+          <div class="search_button" @click="searchlist">搜索</div>
         </div>
         <div class="show_list">
-          <div class="show_item" @click="btnClick(item)" v-for="(item,index) in cateList" :key="index">{{item}}</div>
+          <div class="show_item" @click="btnClick(item)" v-for="(item,index) in cateList" :key="index">{{item.cate_name}}</div>
         </div>
       </div>
     </div>
@@ -152,20 +152,35 @@ import resource from "../api/resource.js";
 export default {
   data() {
     return {
-      cateList: ["写实风格", "扁平风格", "欧美风格", "儿插风格"],
+      cateList: [], //分类列表
       search_value: "", //输入的搜索内容
       enter_index: null, //当前鼠标悬浮的下标
       page: 1,
       pagesize: 10,
       dataObj: {},
+      cate_name: "",
       cate_id: "",
     };
   },
   created() {
     //获取列表
     this.getData();
+    this.getCateList();
   },
   methods: {
+    inputChange() {
+      this.cate_id = null;
+    },
+    //获取分类列表
+    getCateList() {
+      resource.ajaxCates().then((res) => {
+        if (res.data.code == 1) {
+          this.cateList = res.data.data;
+        } else {
+          this.$mesage.warning(res.data.msg);
+        }
+      });
+    },
     //分页
     handleSizeChange(val) {
       this.pagesize = val;
@@ -192,21 +207,24 @@ export default {
         }
       });
     },
-    search() {
-      let obj = {
-        cate_id: this.cate_id,
-        search: this.search_value,
-      };
+    searchlist() {
+      let obj = {};
+      if (this.cate_id) {
+        obj.cate_id = this.cate_id;
+      } else {
+        obj.search = this.search_value;
+      }
       resource.goodsList(obj).then((res) => {
         if (res.data.code == 1) {
+          console.log(res);
         } else {
           this.$mesage.warning(res.data.msg);
         }
       });
     },
     btnClick(text) {
-      this.search_value = text;
-      this.search();
+      this.search_value = text.cate_name;
+      this.cate_id = text.cate_id;
     },
   },
 };

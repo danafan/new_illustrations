@@ -32,11 +32,12 @@
         <el-table-column prop="labels" label="插画师" show-overflow-tooltip align="center"></el-table-column>
         <el-table-column prop="download_num" label="下载量" show-overflow-tooltip align="center"></el-table-column>
         <el-table-column prop="add_time" label="上传时间" show-overflow-tooltip align="center" width="160"></el-table-column>
-        <el-table-column label="操作" align="center" width="100" fixed="right">
+        <el-table-column label="操作" align="center" width="200" fixed="right">
           <template slot-scope="scope">
             <el-button class="button_theme" type="text" size="small"
               @click="$router.push(`/warehouse_detail?id=${scope.row.picture_id}`)">查看</el-button>
-            <el-button class="button_theme" type="text" size="small" @click="settingFn('2',scope.row.picture_id)">编辑</el-button>
+            <el-button class="button_theme" type="text" size="small" @click="settingFn('2',scope.row.picture_id)">编辑
+            </el-button>
             <el-button class="button_theme" type="text" size="small" @click="soldoutPicture(scope.row.picture_id)"
               v-if="scope.row.status == 1">下架</el-button>
             <el-button class="button_theme" type="text" size="small" @click="groundingPicture(scope.row.picture_id)"

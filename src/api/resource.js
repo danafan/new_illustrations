@@ -1,5 +1,6 @@
 import http from "./request.js";
 let path = {
+  ajaxCates: "common/ajax_cates", //获取分类列表接口
   getMenu: "access/mymenu", //获取菜单
   loginUser: "scancodes/getuserinfo", //获取登陆成功后的用户信息
   loginOut: "/loginquit", //退出登录
@@ -50,6 +51,10 @@ let path = {
   indexSelect: "index/select", //提交创建插画接口
 };
 export default {
+  //获取分类列表接口
+  ajaxCates(params) {
+    return http.get(path.ajaxCates, params);
+  },
   //获取菜单
   getMenu(params) {
     return http.get(path.getMenu, params);

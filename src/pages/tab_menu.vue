@@ -207,10 +207,9 @@ export default {
       this.active_index = index;
       console.log(web_url);
     },
+    //获取用户信息
     getUserInfo() {
       resource.loginUser().then((res) => {
-        // console.log(res);
-        // console.log(res.data.data.ding_user_id);
         if (res.data.code == 1) {
           this.username = res.data.data.ding_user_name;
           this.id = res.data.data.ding_user_id;
@@ -223,6 +222,7 @@ export default {
         }
       });
     },
+    //获取菜单列表
     getMenuList() {
       resource.getMenu().then((res) => {
         if (res.data.code == 1) {
@@ -234,6 +234,7 @@ export default {
         }
       });
     },
+    //退出登录
     loginOut() {
       this.$confirm("确认退出?", "提示", {
         confirmButtonText: "确定",
