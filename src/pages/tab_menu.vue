@@ -197,7 +197,7 @@ export default {
     },
   },
   created() {
-    this.getUserInfo();
+    // this.getUserInfo();
     this.getMenuList();
   },
   methods: {
@@ -208,20 +208,20 @@ export default {
       console.log(web_url);
     },
     //获取用户信息
-    getUserInfo() {
-      resource.loginUser().then((res) => {
-        if (res.data.code == 1) {
-          this.username = res.data.data.ding_user_name;
-          this.id = res.data.data.ding_user_id;
-          localStorage.setItem("ding_user_id", res.data.data.ding_user_id);
-          localStorage.setItem("ding_user_name", res.data.data.ding_user_name);
-          localStorage.setItem("secret_key", res.data.data.secret_key);
-          localStorage.setItem("login_token", res.data.data.login_token);
-        } else {
-          this.$message.warning(res.data.msg);
-        }
-      });
-    },
+    // getUserInfo() {
+    //   resource.loginUser().then((res) => {
+    //     if (res.data.code == 1) {
+    //       this.username = res.data.data.ding_user_name;
+    //       this.id = res.data.data.ding_user_id;
+    //       localStorage.setItem("ding_user_id", res.data.data.ding_user_id);
+    //       localStorage.setItem("ding_user_name", res.data.data.ding_user_name);
+    //       localStorage.setItem("secret_key", res.data.data.secret_key);
+    //       localStorage.setItem("login_token", res.data.data.login_token);
+    //     } else {
+    //       this.$message.warning(res.data.msg);
+    //     }
+    //   });
+    // },
     //获取菜单列表
     getMenuList() {
       resource.getMenu().then((res) => {
