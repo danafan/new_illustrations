@@ -106,8 +106,8 @@ export default {
     position: absolute;
     top: 20%;
     left: 60%;
-    width: 477px;
-    height: 532px;
+    width: 300px;
+    height: 400px;
     background: #ffffff;
     border-radius: 8px;
     border: 1px solid #ebebeb;
