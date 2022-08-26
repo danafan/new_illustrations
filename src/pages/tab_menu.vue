@@ -197,36 +197,26 @@ export default {
     },
   },
   created() {
-    // this.getUserInfo();
     this.getMenuList();
+    this.username = localStorage.getItem("ding_user_name");
   },
   methods: {
     //页面切换
     toPage(web_url, index) {
       this.$router.push(web_url);
       this.active_index = index;
-      console.log(web_url);
     },
-    //获取用户信息
-    // getUserInfo() {
-    //   resource.loginUser().then((res) => {
-    //     if (res.data.code == 1) {
-    //       this.username = res.data.data.ding_user_name;
-    //       this.id = res.data.data.ding_user_id;
-    //       localStorage.setItem("ding_user_id", res.data.data.ding_user_id);
-    //       localStorage.setItem("ding_user_name", res.data.data.ding_user_name);
-    //       localStorage.setItem("secret_key", res.data.data.secret_key);
-    //       localStorage.setItem("login_token", res.data.data.login_token);
-    //     } else {
-    //       this.$message.warning(res.data.msg);
-    //     }
-    //   });
-    // },
     //获取菜单列表
     getMenuList() {
       resource.getMenu().then((res) => {
         if (res.data.code == 1) {
           this.menulist = res.data.data;
+          // console.log(this.menulist);
+          // this.menulists = res.data.data[4].list;
+          // let listall = this.menulist.map((item) => item.web_url);
+          // let listalls = this.menulists.map((item) => item.web_url);
+          // let allList = listall.concat(listalls);
+          // console.log(allList);
           localStorage.setItem("menulist", JSON.stringify(res.data.data));
           this.toPage(this.menulist[0].web_url, 0);
         } else {

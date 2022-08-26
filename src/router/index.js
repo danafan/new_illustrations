@@ -33,10 +33,6 @@ const router = new Router({
       component: login,
     },
     {
-      path: "/notfound",
-      component: notfound,
-    },
-    {
       path: "/tab_menu",
       component: tab_menu,
       name: "导航页",
@@ -86,6 +82,10 @@ const router = new Router({
           name: "角色对应的用户列表",
           component: user_list,
         },
+        {
+          path: "/notfound",
+          component: notfound,
+        },
       ],
     },
   ],
@@ -95,12 +95,12 @@ router.beforeEach((to, from, next) => {
   const role = localStorage.getItem("login_token");
   if (!role && to.path !== "/login") {
     next("/login");
-  } else if (to.matched.some((res) => res.meta.requiresAuth)) {
-    let menulist = JSON.parse(localStorage.getItem("menulist"));
-    if (menulist.indexOf(to.path) > -1) {
-      if (menulist.children.indexOf(to.path) > -1) {
-        next();
-      }
+  } else if (to.matched.some((record) => record.meta.requiresAuth)) {
+    let menulist = JSON.parse(localStorage.getItem("allList"));
+    console.log(menulist);
+    let result = findResult(menulist, to.path.split("/")[1]);
+    if (result != "") {
+      next();
     } else {
       next("/notfound");
     }
@@ -108,6 +108,24 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
+function findResult(tableTree, tag) {
+  console.log(tag);
+  let result = "";
+
+  for (let index = 0; index < tableTree.length; index++) {
+    const element = tableTree[index];
+    if (element.list && element.list.length > 0) {
+      result = findResult(element.list, tag);
+    } else {
+      if (element.web_url == tag) {
+        result = element.web_url;
+        return;
+      }
+    }
+  }
+  return result;
+}
 
 const originalPush = Router.prototype.push;
 Router.prototype.push = function push(location) {
