@@ -141,6 +141,7 @@ export default {
       active_index: 0, //当前选中的导航下标
       show_page_title: false,
       page_title: "", //页面标题
+      list: [],
     };
   },
   watch: {
@@ -211,18 +212,25 @@ export default {
       resource.getMenu().then((res) => {
         if (res.data.code == 1) {
           this.menulist = res.data.data;
-          // console.log(this.menulist);
-          // this.menulists = res.data.data[4].list;
-          // let listall = this.menulist.map((item) => item.web_url);
-          // let listalls = this.menulists.map((item) => item.web_url);
-          // let allList = listall.concat(listalls);
-          // console.log(allList);
+          //找到所有web_url
+          this.findResult(this.menulist);
           localStorage.setItem("menulist", JSON.stringify(res.data.data));
+          localStorage.setItem("pathlist", JSON.stringify(this.list));
           this.toPage(this.menulist[0].web_url, 0);
         } else {
           this.$message.warning(res.data.msg);
         }
       });
+    },
+    //找到所有web_url
+    findResult(menulist) {
+      for (let index = 0; index < menulist.length; index++) {
+        const element = menulist[index];
+        this.list.push(element.web_url);
+        if (element.list && element.list.length > 0) {
+          this.findResult(element.list);
+        }
+      }
     },
     //退出登录
     loginOut() {
@@ -239,7 +247,7 @@ export default {
                 type: "success",
                 message: "已退出",
               });
-              this.$router.replace("login");
+              this.$router.replace("/login");
             } else {
               this.$message.warning(res.data.msg);
             }

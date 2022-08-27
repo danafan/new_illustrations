@@ -23,6 +23,12 @@ const role_setting = (resolve) =>
 const user_list = (resolve) =>
   require(["@/pages/rolePages/user_list"], resolve);
 const notfound = (resolve) => require(["@/pages/notfound"], resolve);
+const role_page = (resolve) =>
+  require(["@/pages/permissionPages/role_page"], resolve);
+const user_page = (resolve) =>
+  require(["@/pages/permissionPages/user_page"], resolve);
+const entry_page = (resolve) =>
+  require(["@/pages/permissionPages/entry_page"], resolve);
 
 Vue.use(Router);
 
@@ -70,7 +76,6 @@ const router = new Router({
           path: "/permissions",
           name: "权限",
           component: permissions,
-          meta: { requiresAuth: true },
         },
         {
           path: "/role_setting",
@@ -95,37 +100,21 @@ router.beforeEach((to, from, next) => {
   const role = localStorage.getItem("login_token");
   if (!role && to.path !== "/login") {
     next("/login");
-  } else if (to.matched.some((record) => record.meta.requiresAuth)) {
-    let menulist = JSON.parse(localStorage.getItem("allList"));
-    console.log(menulist);
-    let result = findResult(menulist, to.path.split("/")[1]);
-    if (result != "") {
-      next();
-    } else {
-      next("/notfound");
-    }
-  } else {
+  }
+  const pathlist = localStorage.getItem("pathlist");
+  if (
+    JSON.parse(pathlist) != null &&
+    JSON.parse(pathlist).indexOf(to.path.split("/")[1]) > -1
+  ) {
     next();
+  } else if (to.path == "/notfound") {
+    next();
+  } else if (to.path == "/login") {
+    next();
+  } else {
+    next("/notfound");
   }
 });
-
-function findResult(tableTree, tag) {
-  console.log(tag);
-  let result = "";
-
-  for (let index = 0; index < tableTree.length; index++) {
-    const element = tableTree[index];
-    if (element.list && element.list.length > 0) {
-      result = findResult(element.list, tag);
-    } else {
-      if (element.web_url == tag) {
-        result = element.web_url;
-        return;
-      }
-    }
-  }
-  return result;
-}
 
 const originalPush = Router.prototype.push;
 Router.prototype.push = function push(location) {

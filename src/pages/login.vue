@@ -4,7 +4,7 @@
       <img src="../static/home_back.png" />
       <div class="content">
         <div class="text">钉钉扫码一键登录</div>
-        <div id="login_container" style="transform: scale(1.0)"></div>
+        <div id="login_container"></div>
       </div>
     </div>
   </div>
