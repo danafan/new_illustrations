@@ -16,9 +16,6 @@ export default {
   data() {
     return {};
   },
-  created() {
-    this.getUserInfo();
-  },
   mounted() {
     this.getAppids();
   },
@@ -69,20 +66,6 @@ export default {
       } else if (typeof window.attachEvent != "undefined") {
         window.attachEvent("onmessage", handleMessage);
       }
-    },
-    getUserInfo() {
-      resource.loginUser().then((res) => {
-        if (res.data.code == 1) {
-          this.username = res.data.data.ding_user_name;
-          this.id = res.data.data.ding_user_id;
-          localStorage.setItem("ding_user_id", res.data.data.ding_user_id);
-          localStorage.setItem("ding_user_name", res.data.data.ding_user_name);
-          localStorage.setItem("secret_key", res.data.data.secret_key);
-          localStorage.setItem("login_token", res.data.data.login_token);
-        } else {
-          this.$message.warning(res.data.msg);
-        }
-      });
     },
   },
 };
