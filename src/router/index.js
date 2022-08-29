@@ -39,6 +39,10 @@ const router = new Router({
       component: login,
     },
     {
+      path: "/notfound",
+      component: notfound,
+    },
+    {
       path: "/tab_menu",
       component: tab_menu,
       name: "导航页",
@@ -87,10 +91,6 @@ const router = new Router({
           name: "角色对应的用户列表",
           component: user_list,
         },
-        {
-          path: "/notfound",
-          component: notfound,
-        },
       ],
     },
   ],
@@ -101,15 +101,28 @@ router.beforeEach((to, from, next) => {
   if (!role && to.path !== "/login") {
     next("/login");
   }
+  let routelist = [
+    "warehouse_add_edit",
+    "warehouse_detail",
+    "master_add_edit",
+    "detail",
+    "index_detail",
+  ];
   const pathlist = localStorage.getItem("pathlist");
+  console.log(pathlist);
   if (
     JSON.parse(pathlist) != null &&
     JSON.parse(pathlist).indexOf(to.path.split("/")[1]) > -1
   ) {
     next();
-  } else if (to.path == "/notfound") {
+  } else if (
+    routelist != null &&
+    routelist.indexOf(to.path.split("/")[1]) > -1
+  ) {
     next();
   } else if (to.path == "/login") {
+    next();
+  } else if (to.path == "/notfound") {
     next();
   } else {
     next("/notfound");

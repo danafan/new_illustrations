@@ -18,7 +18,8 @@
       <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
         @mouseleave="enter_index = null" :key="index">
         <img class="goods_item_icon" :src="item.domain + item.preview_images">
-        <div class="look_button" v-if="enter_index == index" @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">
+        <div class="look_button" v-if="enter_index == index && button_list.detail==1"
+          @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">
           查看</div>
       </div>
     </div>
@@ -160,6 +161,7 @@ export default {
       dataObj: {},
       cate_name: "",
       cate_id: "",
+      button_list: {},
     };
   },
   created() {
@@ -202,6 +204,7 @@ export default {
       resource.goodsList(arg).then((res) => {
         if (res.data.code == 1) {
           this.dataObj = res.data.data;
+          this.button_list = res.data.data.button_list;
         } else {
           this.$mesage.warning(res.data.msg);
         }

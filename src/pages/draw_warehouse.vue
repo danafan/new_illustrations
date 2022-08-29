@@ -16,7 +16,7 @@
         </el-form-item>
       </el-form>
       <TableTitle title_text="数据列表" id="table_title">
-        <div class="add_button" @click="settingFn('1')">上传</div>
+        <div class="add_button" @click="settingFn('1')" v-if="button_list.add==1">上传</div>
       </TableTitle>
       <el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}"
         :max-height="max_height" v-loading="loading">
@@ -35,14 +35,16 @@
         <el-table-column label="操作" align="center" width="200" fixed="right">
           <template slot-scope="scope">
             <el-button class="button_theme" type="text" size="small"
-              @click="$router.push(`/warehouse_detail?id=${scope.row.picture_id}`)">查看</el-button>
-            <el-button class="button_theme" type="text" size="small" @click="settingFn('2',scope.row.picture_id)">编辑
+              @click="$router.push(`/warehouse_detail?id=${scope.row.picture_id}`)" v-if="button_list.check==1">查看</el-button>
+            <el-button class="button_theme" type="text" size="small" @click="settingFn('2',scope.row.picture_id)"
+              v-if="button_list.edit==1">编辑
             </el-button>
             <el-button class="button_theme" type="text" size="small" @click="soldoutPicture(scope.row.picture_id)"
-              v-if="scope.row.status == 1">下架</el-button>
+              v-if="scope.row.status == 1 && button_list.output==1">下架</el-button>
             <el-button class="button_theme" type="text" size="small" @click="groundingPicture(scope.row.picture_id)"
-              v-if="scope.row.status == 2">上架</el-button>
-            <el-button class="button_theme" type="text" size="small" @click="delPicture(scope.row.picture_id)">删除</el-button>
+              v-if="scope.row.status == 2 && button_list.input==1">上架</el-button>
+            <el-button class="button_theme" type="text" size="small" @click="delPicture(scope.row.picture_id)"
+              v-if="button_list.delete==1">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -83,6 +85,7 @@
 }
 </style>
 <script>
+import { Button } from "element-ui";
 import resource from "../api/resource.js";
 import TableTitle from "../components/table_title.vue";
 export default {
@@ -96,6 +99,7 @@ export default {
       loading: false,
       max_height: 0,
       dataObj: {},
+      button_list: {},
     };
   },
   created() {
@@ -157,6 +161,8 @@ export default {
       let arg = {
         search: this.search,
         cate: this.cate,
+        page: this.page,
+        pagesize: this.pagesize,
       };
       this.loading = true;
       resource.pictureIndex(arg).then((res) => {
@@ -167,6 +173,7 @@ export default {
             item.images = item.preview_images.split(",");
           });
           this.dataObj = dataObj;
+          this.button_list = res.data.data.button_list;
         } else {
           this.$mesage.warning(res.data.msg);
         }

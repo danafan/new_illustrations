@@ -276,18 +276,27 @@ export default {
           picture_size: this.picture_size,
           preview_images: preview_images.join(","),
         };
-        if (this.type == "2") {
+        if (this.type == "1") {
+          resource.addPicturePost(arg).then((res) => {
+            if (res.data.code == 1) {
+              this.$message.success(res.data.msg);
+              this.$router.go(-1);
+            } else {
+              this.$message.warning(res.data.msg);
+            }
+          });
+        } else {
           //编辑
           arg.id = this.id;
+          resource.editPicture(arg).then((res) => {
+            if (res.data.code == 1) {
+              this.$message.success(res.data.msg);
+              this.$router.go(-1);
+            } else {
+              this.$message.warning(res.data.msg);
+            }
+          });
         }
-        resource.addPicturePost(arg).then((res) => {
-          if (res.data.code == 1) {
-            this.$message.success(res.data.msg);
-            this.$router.go(-1);
-          } else {
-            this.$message.warning(res.data.msg);
-          }
-        });
       }
     },
   },
