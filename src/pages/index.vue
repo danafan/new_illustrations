@@ -17,6 +17,7 @@
     <div class="goods_list">
       <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
         @mouseleave="enter_index = null" :key="index">
+        <div class="title">{{title}}</div>
         <img class="goods_item_icon" :src="item.domain + item.preview_images">
         <div class="look_button" v-if="enter_index == index && button_list.detail==1"
           @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">
@@ -120,12 +121,22 @@
       position: relative;
       width: 345rem;
       height: 535rem;
-      .goods_item_icon {
+      .title {
         position: absolute;
-        width: 100%;
-        height: 100%;
+        top: 30rem;
+        left: 105rem;
+        width: 144rem;
+        height: 24rem;
+        font-size: 24rem;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 24rem;
+      }
+      .goods_item_icon {
         top: 0;
         left: 0;
+        max-width: 345rem;
+        max-height: 100%;
       }
       .look_button {
         border-radius: 27rem;
@@ -162,6 +173,7 @@ export default {
       cate_name: "",
       cate_id: "",
       button_list: {},
+      title: "", //标题
     };
   },
   created() {
@@ -195,35 +207,36 @@ export default {
       this.getData();
     },
     //获取列表
-    getData() {
-      let arg = {
-        search: this.search_value,
-        page: this.page,
-        pagesize: this.pagesize,
-      };
-      resource.goodsList(arg).then((res) => {
+    getData(obj) {
+      // let arg = {
+      //   search: this.search_value,
+      //   page: this.page,
+      //   pagesize: this.pagesize,
+      // };
+      resource.goodsList(obj).then((res) => {
         if (res.data.code == 1) {
           this.dataObj = res.data.data;
           this.button_list = res.data.data.button_list;
+          this.title = res.data.data.data[0].title;
+          if (this.dataObj.length == 0) {
+            this.dataObj = [];
+          }
         } else {
           this.$mesage.warning(res.data.msg);
         }
       });
     },
     searchlist() {
-      let obj = {};
+      let obj = {
+        page: this.page,
+        pagesize: this.pagesize,
+      };
       if (this.cate_id) {
         obj.cate_id = this.cate_id;
       } else {
         obj.search = this.search_value;
       }
-      resource.goodsList(obj).then((res) => {
-        if (res.data.code == 1) {
-          console.log(res);
-        } else {
-          this.$mesage.warning(res.data.msg);
-        }
-      });
+      this.getData(obj);
     },
     btnClick(text) {
       this.search_value = text.cate_name;

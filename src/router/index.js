@@ -53,7 +53,11 @@ const router = new Router({
           name: "首页查看插画",
           component: index_detail,
         },
-        { path: "/draw_warehouse", name: "画库", component: draw_warehouse },
+        {
+          path: "/draw_warehouse",
+          name: "画库",
+          component: draw_warehouse,
+        },
         {
           path: "/warehouse_add_edit",
           name: "画库上传或编辑",
@@ -107,9 +111,9 @@ router.beforeEach((to, from, next) => {
     "master_add_edit",
     "detail",
     "index_detail",
+    "tab_menu",
   ];
   const pathlist = localStorage.getItem("pathlist");
-  console.log(pathlist);
   if (
     JSON.parse(pathlist) != null &&
     JSON.parse(pathlist).indexOf(to.path.split("/")[1]) > -1
@@ -120,9 +124,9 @@ router.beforeEach((to, from, next) => {
     routelist.indexOf(to.path.split("/")[1]) > -1
   ) {
     next();
-  } else if (to.path == "/login") {
-    next();
   } else if (to.path == "/notfound") {
+    next();
+  } else if (to.path == "/login") {
     next();
   } else {
     next("/notfound");

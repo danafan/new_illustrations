@@ -12,24 +12,25 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="日期:">
-          <el-date-picker v-model="dates" type="daterange" unlink-panels value-format="yyyy-MM-dd" range-separator="至"
-            start-placeholder="开始日期" end-placeholder="结束日期" :append-to-body="false" :picker-options="pickerOptions">
-          </el-date-picker>
-        </el-form-item>
         <el-form-item label="状态：">
           <el-select size="mini" v-model="status" clearable :popper-append-to-body="false" placeholder="全部">
-            <el-option label="0" value="待处理"></el-option>
-            <el-option label="1" value="已处理"></el-option>
-            <el-option label="2" value="已拒绝"></el-option>
+            <el-option label="待处理" value="0"></el-option>
+            <el-option label="已同意" value="1"></el-option>
+            <el-option label="已拒绝" value="2"></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="日期:">
+          <el-date-picker v-model="dates" align="right" type="daterange" unlink-panels value-format="yyyy-MM-dd"
+            range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :append-to-body="false"
+            :picker-options="pickerOptions">
+          </el-date-picker>
         </el-form-item>
         <el-form-item>
           <el-button class="query" @click="handleCurrentChange(1)">查询</el-button>
         </el-form-item>
       </el-form>
       <TableTitle title_text="数据列表" id="table_title">
-        <div class="add_button" @click="exportFn" v-if="button_list.export==0">导出</div>
+        <div class="add_button" @click="exportFn" v-if="button_list.export==1">导出</div>
       </TableTitle>
       <el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}"
         :max-height="max_height" v-loading="loading">
@@ -55,15 +56,15 @@
         <el-table-column label="操作" align="center" width="200" fixed="right">
           <template slot-scope="scope">
             <el-button class="button_theme" type="text" size="small"
-              @click="$router.push(`/detail?record_id=${scope.row.record_id}`)" v-if="button_list.detail==0">查看</el-button>
+              @click="$router.push(`/detail?record_id=${scope.row.record_id}`)" v-if="button_list.detail==1">查看</el-button>
             <el-button class="button_theme" type="text" size="small" @click="setDialog(scope.row.record_id,'1')"
-              v-if="scope.row.status == 1 && button_list.binding==0">绑定</el-button>
+              v-if="scope.row.status == 1 && button_list.binding==1">绑定</el-button>
             <el-button class="button_theme" type="text" size="small" @click="setDialog(scope.row.record_id,'2')"
               v-if="scope.row.status == 0">同意</el-button>
             <el-button class="button_theme" type="text" size="small" @click="setDialog(scope.row.record_id,'3')"
               v-if="scope.row.status == 0">拒绝</el-button>
             <el-button class="button_theme" type="text" size="small" @click="downFile(scope.row.record_id)"
-              v-if="button_list.download==0">下载</el-button>
+              v-if="button_list.download==1">下载</el-button>
           </template>
         </el-table-column>
       </el-table>

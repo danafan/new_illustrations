@@ -5,7 +5,7 @@
         <img class="logo_icon" src="../static/logo_icon.png">
         <div class="tab_list">
           <div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in menulist"
-            @click="toPage(item.web_url,index)" :key="index">{{item.menu_name}}</div>
+            @click="toPage(item.web_url,index)" :key="index">{{item.menu_name}} </div>
         </div>
       </div>
       <div class="header_right">
@@ -206,6 +206,10 @@ export default {
     toPage(web_url, index) {
       this.$router.push(web_url);
       this.active_index = index;
+      localStorage.setItem(
+        "activeMenu",
+        JSON.stringify({ url: web_url, index })
+      );
     },
     //获取菜单列表
     getMenuList() {
@@ -216,7 +220,20 @@ export default {
           this.findResult(this.menulist);
           localStorage.setItem("menulist", JSON.stringify(res.data.data));
           localStorage.setItem("pathlist", JSON.stringify(this.list));
-          this.toPage(this.menulist[0].web_url, 0);
+          // this.toPage(this.menulist[0].web_url, 0);
+          // if (localStorage.getItem("")) {
+          //   this.toPage(this.menulist[0].web_url, 0);
+          //   localStorage.setItem();
+          // } else {
+          // }
+          const activeMenu = localStorage.getItem("activeMenu");
+          if (!activeMenu) {
+            const firstUrl = this.menulist[0].web_url;
+            this.toPage(firstUrl, 0);
+          } else {
+            const { url, index } = JSON.parse(activeMenu);
+            this.toPage(url, index);
+          }
         } else {
           this.$message.warning(res.data.msg);
         }
