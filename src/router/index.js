@@ -57,6 +57,10 @@ const router = new Router({
           path: "/draw_warehouse",
           name: "画库",
           component: draw_warehouse,
+          meta: {
+            keepAlive: true,
+            isBack: false,
+          },
         },
         {
           path: "/warehouse_add_edit",
@@ -72,13 +76,23 @@ const router = new Router({
           path: "/draw_master",
           name: "画师",
           component: draw_master,
+          meta: {
+            keepAlive: true,
+          },
         },
         {
           path: "/master_add_edit",
           name: "画师上传或编辑",
           component: master_add_edit,
         },
-        { path: "/selected", name: "选中", component: selected },
+        {
+          path: "/selected",
+          name: "选中",
+          component: selected,
+          meta: {
+            keepAlive: true,
+          },
+        },
         { path: "/detail", name: "选中详情", component: detail },
         {
           path: "/permissions",

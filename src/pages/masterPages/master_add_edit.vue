@@ -153,28 +153,21 @@ export default {
         //   //编辑
         //   arg.id = this.id;
         // }
-        resource.addPainterPost(arg).then((res) => {
-          if (res.data.code == 1) {
-            this.$message.success(res.data.msg);
-            this.$router.go(-1);
-          } else {
-            this.$message.warning(res.data.msg);
-          }
-        });
-        if (this.type == "2") {
-          let obj = {
-            id: this.id,
-            name: this.name,
-            phone: this.phone,
-            wechart_no: this.wechart_no,
-            email: this.email,
-            alipay_no: this.alipay_no,
-            card_front: this.card_front,
-            card_back: this.card_back,
-          };
-          resource.editPainter(obj).then((res) => {
+        if (this.type == "1") {
+          resource.addPainterPost(arg).then((res) => {
             if (res.data.code == 1) {
               this.$message.success(res.data.msg);
+              this.$router.go(-1);
+            } else {
+              this.$message.warning(res.data.msg);
+            }
+          });
+        } else {
+          arg.id = this.id;
+          resource.editPainter(arg).then((res) => {
+            if (res.data.code == 1) {
+              this.$message.success(res.data.msg);
+              this.$router.go(-1);
             } else {
               this.$message.warning(res.data.msg);
             }

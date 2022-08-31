@@ -11,6 +11,12 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="状态:">
+          <el-select size="mini" v-model="status" clearable :popper-append-to-body="false" placeholder="全部">
+            <el-option label="已下架" value="2"></el-option>
+            <el-option label="未下架" value="1"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button class="query" @click="handleCurrentChange(1)">查询</el-button>
         </el-form-item>
@@ -29,7 +35,7 @@
         <el-table-column prop="title" label="插画标题" show-overflow-tooltip align="center"></el-table-column>
         <el-table-column prop="cate_id" label="插画分类" show-overflow-tooltip align="center"></el-table-column>
         <el-table-column prop="labels" label="插画标签" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column prop="labels" label="插画师" show-overflow-tooltip align="center"></el-table-column>
+        <el-table-column prop="painter_name" label="插画师" show-overflow-tooltip align="center"></el-table-column>
         <el-table-column prop="download_num" label="下载量" show-overflow-tooltip align="center"></el-table-column>
         <el-table-column prop="add_time" label="上传时间" show-overflow-tooltip align="center" width="160"></el-table-column>
         <el-table-column label="操作" align="center" width="200" fixed="right">
@@ -39,10 +45,10 @@
             <el-button class="button_theme" type="text" size="small" @click="settingFn('2',scope.row.picture_id)"
               v-if="button_list.edit==1">编辑
             </el-button>
-            <el-button class="button_theme" type="text" size="small" @click="soldoutPicture(scope.row.picture_id)"
-              v-if="scope.row.status == 1 && button_list.output==1">下架</el-button>
             <el-button class="button_theme" type="text" size="small" @click="groundingPicture(scope.row.picture_id)"
               v-if="scope.row.status == 2 && button_list.input==1">上架</el-button>
+            <el-button class="button_theme" type="text" size="small" @click="soldoutPicture(scope.row.picture_id)"
+              v-if="scope.row.status == 1 && button_list.output==1">下架</el-button>
             <el-button class="button_theme" type="text" size="small" @click="delPicture(scope.row.picture_id)"
               v-if="button_list.delete==1">删除</el-button>
           </template>
@@ -100,6 +106,7 @@ export default {
       max_height: 0,
       dataObj: {},
       button_list: {},
+      status: "", //状态
     };
   },
   created() {
@@ -163,6 +170,7 @@ export default {
         cate: this.cate,
         page: this.page,
         pagesize: this.pagesize,
+        status: this.status,
       };
       this.loading = true;
       resource.pictureIndex(arg).then((res) => {
@@ -270,6 +278,24 @@ export default {
       } else {
         this.$router.push(`/warehouse_add_edit?type=${type}&id=${id}`);
       }
+    },
+
+    activated() {
+      if (!this.$route.meta.isBack) {
+        this.getData = [];
+        this.pageNum = 1;
+        this.getData();
+      }
+      this.$route.meta.isBack = false;
+    },
+
+    beforeRouteLeave(to, from, next) {
+      if (to.path == "/warehouse_add_edit") {
+        from.meta.isBack = true;
+      } else {
+        from.meta.isBack = false;
+      }
+      next();
     },
   },
   components: {

@@ -57,6 +57,7 @@
           font-size: 18px;
           color: #333333;
           font-weight: 500;
+          cursor: pointer;
         }
         .active_item {
           color: #f36478;
@@ -85,6 +86,7 @@
         margin-left: 32px;
         font-size: 16px;
         color: #f36478;
+        cursor: pointer;
       }
     }
   }
@@ -166,6 +168,9 @@ export default {
           this.show_page_title = true;
         } else if (path == "/user_list") {
           this.page_title = "角色数量";
+          this.show_page_title = true;
+        } else if (path == "/index_detail") {
+          this.page_title = "查看插画";
           this.show_page_title = true;
         } else if (path == "/detail" || path == "/warehouse_detail") {
           this.page_title = "插画详情";

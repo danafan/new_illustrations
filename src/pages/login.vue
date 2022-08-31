@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="loginBox">
-      <img src="../static/home_back.png" />
+      <!-- <img src="../static/home_back.png" /> -->
       <div class="content">
         <div class="text">钉钉扫码一键登录</div>
         <div id="login_container"></div>
@@ -74,17 +74,20 @@ export default {
 <style lang="less" scoped>
 .loginBox {
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
+  margin: 0px;
+  background: url(../static/home_back.png) no-repeat;
+  background-size: cover;
+  overflow: hidden;
+  // img {
+  //   position: absolute;
+  //   top: 0;
+  //   left: 0;
+  //   background-size: cover;
+  //   width: 100%;
+  //   height: 100%;
+  // }
   .content {
     position: absolute;
     top: 20%;

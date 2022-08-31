@@ -327,6 +327,8 @@ export default {
         if (res.data.code == 1) {
           this.$message.success(res.data.msg);
           this.binding_store_dialog = false;
+          //获取列表
+          this.getData();
         } else {
           this.$mesage.warning(res.data.msg);
         }

@@ -17,7 +17,7 @@
     <div class="goods_list">
       <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
         @mouseleave="enter_index = null" :key="index">
-        <div class="title">{{title}}</div>
+        <div class="title">{{item.title}}</div>
         <img class="goods_item_icon" :src="item.domain + item.preview_images">
         <div class="look_button" v-if="enter_index == index && button_list.detail==1"
           @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">
@@ -88,6 +88,7 @@
           font-size: 24rem;
           color: #ffffff;
           font-weight: 500;
+          cursor: pointer;
         }
       }
       .show_list {
@@ -96,6 +97,7 @@
         display: flex;
         .show_item {
           margin-right: 8px;
+          cursor: pointer;
         }
         .show_item {
           border-radius: 15rem;
@@ -124,7 +126,9 @@
       .title {
         position: absolute;
         top: 30rem;
-        left: 105rem;
+        left: 0;
+        right: 0;
+        margin: auto;
         width: 144rem;
         height: 24rem;
         font-size: 24rem;
@@ -151,6 +155,7 @@
         line-height: 54rem;
         color: #ffffff;
         font-size: 24rem;
+        cursor: pointer;
       }
     }
   }
@@ -208,16 +213,11 @@ export default {
     },
     //获取列表
     getData(obj) {
-      // let arg = {
-      //   search: this.search_value,
-      //   page: this.page,
-      //   pagesize: this.pagesize,
-      // };
       resource.goodsList(obj).then((res) => {
         if (res.data.code == 1) {
           this.dataObj = res.data.data;
           this.button_list = res.data.data.button_list;
-          this.title = res.data.data.data[0].title;
+          this.title = this.dataObj.data.map((item) => item.title);
           if (this.dataObj.length == 0) {
             this.dataObj = [];
           }
@@ -239,8 +239,8 @@ export default {
       this.getData(obj);
     },
     btnClick(text) {
-      this.search_value = text.cate_name;
       this.cate_id = text.cate_id;
+      this.searchlist();
     },
   },
 };

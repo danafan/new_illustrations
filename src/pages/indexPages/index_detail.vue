@@ -3,7 +3,7 @@
     <el-card class="left_card" id="left_card">
       <div class="title" id="title">{{detailInfo.title}}</div>
       <div class="img_list" :style="{height:list_height}">
-        <el-image :src="detailInfo.domain + item" v-for="(item,index) in detailInfo.preview_images" :key="index" fit="fill">
+        <el-image :src="detailInfo.domain + item" v-for="(item,index) in detailInfo.preview_images" :key="index" fit="contain">
         </el-image>
       </div>
     </el-card>
