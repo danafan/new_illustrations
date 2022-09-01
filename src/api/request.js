@@ -10,14 +10,14 @@ export function middleWare(params, type) {
   }
 
   var ding_user_id = !localStorage.getItem("ding_user_id")
-    ? ""
-    : localStorage.getItem("ding_user_id");
+  ? ""
+  : localStorage.getItem("ding_user_id");
   var login_token = !localStorage.getItem("login_token")
-    ? ""
-    : localStorage.getItem("login_token");
+  ? ""
+  : localStorage.getItem("login_token");
   var secret_key = !localStorage.getItem("secret_key")
-    ? ""
-    : localStorage.getItem("secret_key");
+  ? ""
+  : localStorage.getItem("secret_key");
 
   // 生成签名
   var sign_target = {
@@ -51,10 +51,10 @@ export function middleWare(params, type) {
       key != "without_describe" &&
       key != "special_content" &&
       key != "operation_remark"
-    ) {
+      ) {
       sign_arr.push(`${key}=${sort_obj[key]}`);
-    }
   }
+}
   //sign
   var sign = md5(sign_arr.join("&"));
 
@@ -93,4 +93,9 @@ export default {
     var str = middleWare(params, "get");
     return axios.get(`${path}?${str}`);
   },
+  //下载专用
+  downLoad(path, params = {}) {
+    var str = middleWare(params, "get");
+    window.open(`${location.origin}/api/${path}?${str}`);
+  }
 };

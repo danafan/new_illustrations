@@ -96,6 +96,7 @@ import {
   getLastMonthStartDate,
   getLastMonthEndDate,
 } from "../api/date.js";
+import http from "../api/request.js";
 export default {
   data() {
     return {
@@ -335,10 +336,11 @@ export default {
     },
     // 点击下载源文件
     downFile(record_id) {
-      let admin_id = localStorage.getItem("admin_id");
-      window.open(
-        `${location.origin}/api/record/source_down?record_id=${record_id}&type=1`
-      );
+      let params = {
+        type:1,
+        record_id:record_id
+      }
+      http.downLoad('record/source_down',params);
     },
   },
   components: {

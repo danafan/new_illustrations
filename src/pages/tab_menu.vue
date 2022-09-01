@@ -10,7 +10,7 @@
       </div>
       <div class="header_right">
         <div class="user_box">
-          <img class="user_img" src="../static/home_back.png">
+          <img class="user_img" src="../static/user_img.png">
           <div class="user_name">{{username}}</div>
         </div>
         <div class="login_out" @click="loginOut">退出登录</div>
@@ -36,7 +36,7 @@
     padding-left: 48px;
     padding-right: 28px;
     width: 100%;
-    height: 70px;
+    height: 60px;
     background-color: #ffffff;
     display: flex;
     align-items: center;
@@ -54,7 +54,7 @@
         align-items: center;
         .tab_item {
           margin-right: 34px;
-          font-size: 18px;
+          font-size: 14px;
           color: #333333;
           font-weight: 500;
           cursor: pointer;
@@ -72,19 +72,19 @@
         align-items: center;
         .user_img {
           border-radius: 50%;
-          width: 42px;
-          height: 42px;
+          width: 24px;
+          height: 24px;
         }
         .user_name {
           margin-left: 8px;
-          font-size: 18px;
+          font-size: 14px;
           color: #333333;
           font-weight: 500;
         }
       }
       .login_out {
         margin-left: 32px;
-        font-size: 16px;
+        font-size: 14px;
         color: #f36478;
         cursor: pointer;
       }
@@ -102,8 +102,8 @@
     height: 70px;
   }
   .display {
-    padding-top: 48rem;
-    padding-bottom: 48rem;
+    padding-top: 20rem;
+    padding-bottom: 20rem;
     display: flex;
     align-items: center;
     justify-content: center;

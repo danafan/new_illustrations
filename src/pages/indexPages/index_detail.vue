@@ -3,8 +3,10 @@
     <el-card class="left_card" id="left_card">
       <div class="title" id="title">{{detailInfo.title}}</div>
       <div class="img_list" :style="{height:list_height}">
-        <el-image :src="detailInfo.domain + item" v-for="(item,index) in detailInfo.preview_images" :key="index" fit="contain">
-        </el-image>
+        <div class="img_content">
+          <el-image :src="item" v-for="(item,index) in preview_images" :key="index" fit="contain" :preview-src-list="preview_images">
+          </el-image>
+        </div>
       </div>
     </el-card>
     <el-card class="righ_card">
@@ -50,40 +52,40 @@
       <el-form size="small" label-width="150px">
         <el-form-item label="店铺：" required>
           <el-select v-model="shop_code" style="width: 220px" clearable :popper-append-to-body="false" filterable
-            placeholder="请选择店铺">
-            <el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="使用时间：" required>
-          <el-date-picker v-model="usage_time" type="date" clearable value-format="yyyy-MM-dd" placeholder="选择使用时间"
-            :append-to-body="false">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="插画用途：" required>
-          <el-select v-model="purpose_type" style="width: 220px" clearable :popper-append-to-body="false" filterable
-            placeholder="请选择用途">
-            <el-option v-for="item in purposes_list" :key="item.id" :label="item.name" :value="item.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="备注：">
-          <el-input style="width: 220px" type="textarea" :rows="5" placeholder="请输入备注" v-model="remark">
-          </el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button size="small" @click="show_dialog = false">取消</el-button>
-        <el-button size="small" type="primary" @click="submitFn">提交</el-button>
-      </span>
-    </el-dialog>
-  </div>
+          placeholder="请选择店铺">
+          <el-option v-for="item in store_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="使用时间：" required>
+        <el-date-picker v-model="usage_time" type="date" clearable value-format="yyyy-MM-dd" placeholder="选择使用时间"
+        :append-to-body="false">
+      </el-date-picker>
+    </el-form-item>
+    <el-form-item label="插画用途：" required>
+      <el-select v-model="purpose_type" style="width: 220px" clearable :popper-append-to-body="false" filterable
+      placeholder="请选择用途">
+      <el-option v-for="item in purposes_list" :key="item.id" :label="item.name" :value="item.id">
+      </el-option>
+    </el-select>
+  </el-form-item>
+  <el-form-item label="备注：">
+    <el-input style="width: 220px" type="textarea" :rows="5" placeholder="请输入备注" v-model="remark">
+    </el-input>
+  </el-form-item>
+</el-form>
+<span slot="footer" class="dialog-footer">
+  <el-button size="small" @click="show_dialog = false">取消</el-button>
+  <el-button size="small" type="primary" @click="submitFn">提交</el-button>
+</span>
+</el-dialog>
+</div>
 </template>
 <script>
-import resource from "../../api/resource.js";
-export default {
-  data() {
-    return {
+  import resource from "../../api/resource.js";
+  export default {
+    data() {
+      return {
       list_height: 0, //可滑动的高度
       detailInfo: {}, //详情
       show_dialog: false, //选中弹窗
@@ -92,6 +94,7 @@ export default {
       usage_time: "", //使用时间
       purposes_list: [], //插画用途列表
       purpose_type: "", //选中的插画用途
+      preview_images:[],  //图片列表
       remark: "", //备注
     };
   },
@@ -129,6 +132,11 @@ export default {
       resource.picDetail(arg).then((res) => {
         if (res.data.code == 1) {
           this.detailInfo = res.data.data;
+          let preview_images = [];
+          this.detailInfo.preview_images.map(item => {
+            preview_images.push(this.detailInfo.domain + item)
+          })
+          this.preview_images = preview_images;
         } else {
           this.$mesage.warning(res.data.msg);
         }
@@ -204,15 +212,21 @@ export default {
     flex: 1;
     height: 100%;
     .title {
-      padding-bottom: 32rem;
-      font-size: 24rem;
+      width: 100%;
+      display: block;
+      margin-bottom: 20rem;
+      font-size: 18rem;
       color: #000000;
       font-weight: 500;
     }
     .img_list {
       overflow-y: scroll;
-      display: flex;
-      flex-direction: column;
+      .img_content{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
     }
   }
   .righ_card {
