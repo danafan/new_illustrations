@@ -110,6 +110,8 @@ export default {
     };
   },
   created() {
+    this.search = this.$route.params.search || "";
+    console.log(this.$route);
     //获取插画分类列表
     this.getCate();
     //获取画库列表
@@ -120,6 +122,21 @@ export default {
     this.onResize();
     window.addEventListener("resize", this.onResize());
   },
+  // activated() {
+  //   if (!this.$route.meta.isBack) {
+  //     //不许要缓存的话
+  //     this.dataObj = {};
+  //     this.getData();
+  //   }
+  // },
+  // beforeRouteLeave(to, from, next) {
+  //   if (to.path == "/warehouse_add_edit") {
+  //     from.meta.isBack = true;
+  //   } else {
+  //     from.meta.isBack = false;
+  //   }
+  //   next();
+  // },
   destroyed() {
     window.removeEventListener("resize", () => {});
   },
@@ -276,28 +293,20 @@ export default {
       if (type == "1") {
         this.$router.push(`/warehouse_add_edit?type=${type}`);
       } else {
-        this.$router.push(`/warehouse_add_edit?type=${type}&id=${id}`);
+        // this.$router.push(`/warehouse_add_edit?type=${type}&id=${id}`);
+        this.$router.push({
+          path: "/warehouse_add_edit",
+          query: {
+            type,
+            id,
+            search: this.search,
+          },
+        });
       }
     },
   },
   components: {
     TableTitle,
-  },
-  activated() {
-    if (!this.$route.meta.isBack) {
-      //不许要缓存的话
-      this.getData();
-    }
-    this.$route.meta.isBack = false;
-  },
-  deactivated() {},
-  beforeRouteLeave(to, from, next) {
-    if (to.path == "/warehouse_add_edit") {
-      from.meta.isBack = true;
-    } else {
-      from.meta.isBack = false;
-    }
-    next();
   },
 };
 </script>

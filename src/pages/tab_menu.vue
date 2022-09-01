@@ -118,28 +118,7 @@ export default {
     return {
       is_center: false,
       username: "", //用户名
-      menulist: [
-        {
-          menu_name: "首页",
-          web_url: "/index",
-        },
-        {
-          menu_name: "画库",
-          web_url: "/draw_warehouse",
-        },
-        {
-          menu_name: "画师",
-          web_url: "/draw_master",
-        },
-        {
-          menu_name: "选中",
-          web_url: "/selected",
-        },
-        {
-          menu_name: "权限",
-          web_url: "/permissions",
-        },
-      ], //导航列表
+      menulist: [], //导航列表
       active_index: 0, //当前选中的导航下标
       show_page_title: false,
       page_title: "", //页面标题
@@ -232,13 +211,13 @@ export default {
           // } else {
           // }
           const activeMenu = localStorage.getItem("activeMenu");
-          if (!activeMenu) {
-            const firstUrl = this.menulist[0].web_url;
-            this.toPage(firstUrl, 0);
-          } else {
-            const { url, index } = JSON.parse(activeMenu);
-            this.toPage(url, index);
-          }
+          console.log(activeMenu);
+          console.log(this.menulist);
+          this.menulist.map((item, index) => {
+            if (activeMenu.indexOf(item.web_url) > -1) {
+              this.active_index = index;
+            }
+          });
         } else {
           this.$message.warning(res.data.msg);
         }

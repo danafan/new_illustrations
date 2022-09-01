@@ -55,12 +55,12 @@ const router = new Router({
         },
         {
           path: "/draw_warehouse",
-          name: "画库",
+          name: "/draw_warehouse",
           component: draw_warehouse,
-          meta: {
-            keepAlive: true,
-            isBack: false,
-          },
+          // meta: {
+          //   keepAlive: true,
+          //   isBack: false,
+          // },
         },
         {
           path: "/warehouse_add_edit",

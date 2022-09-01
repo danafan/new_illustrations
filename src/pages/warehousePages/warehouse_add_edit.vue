@@ -293,7 +293,13 @@ export default {
           resource.editPicture(arg).then((res) => {
             if (res.data.code == 1) {
               this.$message.success(res.data.msg);
-              this.$router.go(-1);
+              // this.$router.go(-1);
+              this.$router.push({
+                name: "/draw_warehouse",
+                params: {
+                  search: this.$route.query.search,
+                },
+              });
             } else {
               this.$message.warning(res.data.msg);
             }

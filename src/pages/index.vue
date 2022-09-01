@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div class="goods_list">
+    <div class="goods_list" v-if="this.total !==0">
       <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
         @mouseleave="enter_index = null" :key="index">
         <div class="title">{{item.title}}</div>
@@ -24,6 +24,7 @@
           查看</div>
       </div>
     </div>
+    <div class="goods_text" v-else>暂无数据</div>
     <div class="page index_page">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page" :pager-count="11"
         :page-sizes="[5, 10, 15, 20]" layout="total, sizes, prev, pager, next, jumper" :total="dataObj.total">
@@ -159,6 +160,11 @@
       }
     }
   }
+  .goods_text {
+    text-align: center;
+    margin-top: 50rem;
+    font-size: 15rem;
+  }
   .index_page {
     padding-right: 48rem;
   }
@@ -179,6 +185,7 @@ export default {
       cate_id: "",
       button_list: {},
       title: "", //标题
+      total: "",
     };
   },
   created() {
@@ -216,10 +223,11 @@ export default {
       resource.goodsList(obj).then((res) => {
         if (res.data.code == 1) {
           this.dataObj = res.data.data;
+          this.total = res.data.data.total;
           this.button_list = res.data.data.button_list;
           this.title = this.dataObj.data.map((item) => item.title);
           if (this.dataObj.length == 0) {
-            this.dataObj = [];
+            this.dataObj = {};
           }
         } else {
           this.$mesage.warning(res.data.msg);
