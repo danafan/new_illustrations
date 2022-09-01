@@ -14,7 +14,8 @@
 import resource from "./api/resource";
 export default {
   created() {
-    this.getUserInfo();
+    this.$router.push('/tab_menu')
+    // this.getUserInfo();
   },
   watch: {
     $route(to, from) {
