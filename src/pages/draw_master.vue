@@ -10,7 +10,7 @@
         </el-form-item>
       </el-form>
       <TableTitle title_text="数据列表" id="table_title">
-        <div class="add_button" @click="masterSetting('1')">添加</div>
+        <div class="add_button" @click="masterSetting('1')" v-if="button_list.add==1">添加</div>
       </TableTitle>
       <el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}"
         :max-height="max_height" v-loading="loading">
@@ -32,8 +32,10 @@
         <el-table-column prop="add_time" label="上传时间" show-overflow-tooltip align="center"></el-table-column>
         <el-table-column label="操作" align="center" width="120" fixed="right">
           <template slot-scope="scope">
-            <el-button class="button_theme" type="text" size="small" @click="masterSetting('2',scope.row.id)">编辑</el-button>
-            <el-button class="button_theme" type="text" size="small" @click="deleteMaster(scope.row.id)">删除</el-button>
+            <el-button class="button_theme" type="text" size="small" @click="masterSetting('2',scope.row.id)"
+              v-if="button_list.edit==1">编辑</el-button>
+            <el-button class="button_theme" type="text" size="small" @click="deleteMaster(scope.row.id)"
+              v-if="button_list.delete==1">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -114,7 +116,7 @@ export default {
         if (res.data.code == 1) {
           this.loading = false;
           this.dataObj = res.data.data;
-          // this.button_list = this.dataObj.button_list;
+          this.button_list = res.data.data.button_list;
         } else {
           this.$mesage.warning(res.data.msg);
         }

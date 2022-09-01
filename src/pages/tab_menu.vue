@@ -5,7 +5,7 @@
         <img class="logo_icon" src="../static/logo_icon.png">
         <div class="tab_list">
           <div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in menulist"
-            @click="toPage(item.web_url,index)" :key="index">{{item.menu_name}}</div>
+            @click="toPage(item.web_url,index)" :key="index">{{item.menu_name}} </div>
         </div>
       </div>
       <div class="header_right">
@@ -57,6 +57,7 @@
           font-size: 18px;
           color: #333333;
           font-weight: 500;
+          cursor: pointer;
         }
         .active_item {
           color: #f36478;
@@ -85,6 +86,7 @@
         margin-left: 32px;
         font-size: 16px;
         color: #f36478;
+        cursor: pointer;
       }
     }
   }
@@ -141,6 +143,7 @@ export default {
       active_index: 0, //当前选中的导航下标
       show_page_title: false,
       page_title: "", //页面标题
+      list: [],
     };
   },
   watch: {
@@ -165,6 +168,9 @@ export default {
           this.show_page_title = true;
         } else if (path == "/user_list") {
           this.page_title = "角色数量";
+          this.show_page_title = true;
+        } else if (path == "/index_detail") {
+          this.page_title = "查看插画";
           this.show_page_title = true;
         } else if (path == "/detail" || path == "/warehouse_detail") {
           this.page_title = "插画详情";
@@ -204,8 +210,10 @@ export default {
     //页面切换
     toPage(web_url, index) {
       this.$router.push(web_url);
-      this.active_index = index;
-      console.log(web_url);
+      localStorage.setItem(
+        "activeMenu",
+        JSON.stringify({ url: web_url, index })
+      );
     },
     //获取用户信息
     // getUserInfo() {
@@ -227,12 +235,38 @@ export default {
       resource.getMenu().then((res) => {
         if (res.data.code == 1) {
           this.menulist = res.data.data;
+          //找到所有web_url
+          this.findResult(this.menulist);
           localStorage.setItem("menulist", JSON.stringify(res.data.data));
-          this.toPage(this.menulist[0].web_url, 0);
+          localStorage.setItem("pathlist", JSON.stringify(this.list));
+          // this.toPage(this.menulist[0].web_url, 0);
+          // if (localStorage.getItem("")) {
+          //   this.toPage(this.menulist[0].web_url, 0);
+          //   localStorage.setItem();
+          // } else {
+          // }
+          const activeMenu = localStorage.getItem("activeMenu");
+          if (!activeMenu) {
+            const firstUrl = this.menulist[0].web_url;
+            this.toPage(firstUrl, 0);
+          } else {
+            const { url, index } = JSON.parse(activeMenu);
+            this.toPage(url, index);
+          }
         } else {
           this.$message.warning(res.data.msg);
         }
       });
+    },
+    //找到所有web_url
+    findResult(menulist) {
+      for (let index = 0; index < menulist.length; index++) {
+        const element = menulist[index];
+        this.list.push(element.web_url);
+        if (element.list && element.list.length > 0) {
+          this.findResult(element.list);
+        }
+      }
     },
     //退出登录
     loginOut() {
@@ -249,7 +283,7 @@ export default {
                 type: "success",
                 message: "已退出",
               });
-              this.$router.replace("login");
+              this.$router.replace("/login");
             } else {
               this.$message.warning(res.data.msg);
             }

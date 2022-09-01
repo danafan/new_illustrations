@@ -23,6 +23,12 @@ const role_setting = (resolve) =>
 const user_list = (resolve) =>
   require(["@/pages/rolePages/user_list"], resolve);
 const notfound = (resolve) => require(["@/pages/notfound"], resolve);
+const role_page = (resolve) =>
+  require(["@/pages/permissionPages/role_page"], resolve);
+const user_page = (resolve) =>
+  require(["@/pages/permissionPages/user_page"], resolve);
+const entry_page = (resolve) =>
+  require(["@/pages/permissionPages/entry_page"], resolve);
 
 Vue.use(Router);
 
@@ -47,34 +53,57 @@ const router = new Router({
           name: "首页查看插画",
           component: index_detail,
         },
-        { path: "/draw_warehouse", name: "画库", component: draw_warehouse },
+        {
+          path: "/draw_warehouse",
+          name: "画库",
+          component: draw_warehouse,
+          meta: {
+            keepAlive: true,
+            isBack: false,
+          },
+        },
         {
           path: "/warehouse_add_edit",
           name: "画库上传或编辑",
           component: warehouse_add_edit,
+          // meta: {
+          //   keepAlive: true,
+          // },
         },
         {
           path: "/warehouse_detail",
           name: "插画详情",
           component: warehouse_detail,
+          // meta: {
+          //   keepAlive: true,
+          // },
         },
         {
           path: "/draw_master",
           name: "画师",
           component: draw_master,
+          meta: {
+            keepAlive: true,
+          },
         },
         {
           path: "/master_add_edit",
           name: "画师上传或编辑",
           component: master_add_edit,
         },
-        { path: "/selected", name: "选中", component: selected },
+        {
+          path: "/selected",
+          name: "选中",
+          component: selected,
+          meta: {
+            keepAlive: true,
+          },
+        },
         { path: "/detail", name: "选中详情", component: detail },
         {
           path: "/permissions",
           name: "权限",
           component: permissions,
-          meta: { requiresAuth: true },
         },
         {
           path: "/role_setting",
@@ -95,17 +124,32 @@ router.beforeEach((to, from, next) => {
   const role = localStorage.getItem("login_token");
   if (!role && to.path !== "/login") {
     next("/login");
-  } else if (to.matched.some((res) => res.meta.requiresAuth)) {
-    let menulist = JSON.parse(localStorage.getItem("menulist"));
-    if (menulist.indexOf(to.path) > -1) {
-      if (menulist.children.indexOf(to.path) > -1) {
-        next();
-      }
-    } else {
-      next("/notfound");
-    }
-  } else {
+  }
+  let routelist = [
+    "warehouse_add_edit",
+    "warehouse_detail",
+    "master_add_edit",
+    "detail",
+    "index_detail",
+    "tab_menu",
+  ];
+  const pathlist = localStorage.getItem("pathlist");
+  if (
+    JSON.parse(pathlist) != null &&
+    JSON.parse(pathlist).indexOf(to.path.split("/")[1]) > -1
+  ) {
     next();
+  } else if (
+    routelist != null &&
+    routelist.indexOf(to.path.split("/")[1]) > -1
+  ) {
+    next();
+  } else if (to.path == "/notfound") {
+    next();
+  } else if (to.path == "/login") {
+    next();
+  } else {
+    next("/notfound");
   }
 });
 

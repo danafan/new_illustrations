@@ -11,7 +11,7 @@
             <el-input type="textarea" :rows="5" size="small" clearable v-model="introduction"
               placeholder="（必填）有了作品简历，大家对您的作品更感兴趣了"></el-input>
           </el-form-item>
-          <el-form-item label="插画师：">
+          <el-form-item label="插画师：" required>
             <el-select v-model="painter_id" clearable :popper-append-to-body="false" placeholder="请选择插画师">
               <el-option v-for="item in painter_list" :key="item.painter_id" :label="item.painter_name" :value="item.painter_id">
               </el-option>
@@ -241,6 +241,8 @@ export default {
     saveFn() {
       if (this.title == "") {
         this.$message.warning("请输入插画标题");
+      } else if (this.painter_id == "") {
+        this.$message.warning("请选择插画师");
       } else if (this.image == "") {
         this.$message.warning("请上传源文件");
       } else if (this.preview_images.length == 0) {
@@ -276,18 +278,27 @@ export default {
           picture_size: this.picture_size,
           preview_images: preview_images.join(","),
         };
-        if (this.type == "2") {
+        if (this.type == "1") {
+          resource.addPicturePost(arg).then((res) => {
+            if (res.data.code == 1) {
+              this.$message.success(res.data.msg);
+              this.$router.go(-1);
+            } else {
+              this.$message.warning(res.data.msg);
+            }
+          });
+        } else {
           //编辑
           arg.id = this.id;
+          resource.editPicture(arg).then((res) => {
+            if (res.data.code == 1) {
+              this.$message.success(res.data.msg);
+              this.$router.go(-1);
+            } else {
+              this.$message.warning(res.data.msg);
+            }
+          });
         }
-        resource.addPicturePost(arg).then((res) => {
-          if (res.data.code == 1) {
-            this.$message.success(res.data.msg);
-            this.$router.go(-1);
-          } else {
-            this.$message.warning(res.data.msg);
-          }
-        });
       }
     },
   },

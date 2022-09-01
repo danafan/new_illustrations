@@ -17,8 +17,10 @@
     <div class="goods_list">
       <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
         @mouseleave="enter_index = null" :key="index">
+        <div class="title">{{item.title}}</div>
         <img class="goods_item_icon" :src="item.domain + item.preview_images">
-        <div class="look_button" v-if="enter_index == index" @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">
+        <div class="look_button" v-if="enter_index == index && button_list.detail==1"
+          @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">
           查看</div>
       </div>
     </div>
@@ -86,6 +88,7 @@
           font-size: 24rem;
           color: #ffffff;
           font-weight: 500;
+          cursor: pointer;
         }
       }
       .show_list {
@@ -94,6 +97,7 @@
         display: flex;
         .show_item {
           margin-right: 8px;
+          cursor: pointer;
         }
         .show_item {
           border-radius: 15rem;
@@ -119,12 +123,24 @@
       position: relative;
       width: 345rem;
       height: 535rem;
-      .goods_item_icon {
+      .title {
         position: absolute;
-        width: 100%;
-        height: 100%;
+        top: 30rem;
+        left: 0;
+        right: 0;
+        margin: auto;
+        width: 144rem;
+        height: 24rem;
+        font-size: 24rem;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 24rem;
+      }
+      .goods_item_icon {
         top: 0;
         left: 0;
+        max-width: 345rem;
+        max-height: 100%;
       }
       .look_button {
         border-radius: 27rem;
@@ -139,6 +155,7 @@
         line-height: 54rem;
         color: #ffffff;
         font-size: 24rem;
+        cursor: pointer;
       }
     }
   }
@@ -160,6 +177,8 @@ export default {
       dataObj: {},
       cate_name: "",
       cate_id: "",
+      button_list: {},
+      title: "", //标题
     };
   },
   created() {
@@ -193,38 +212,35 @@ export default {
       this.getData();
     },
     //获取列表
-    getData() {
-      let arg = {
-        search: this.search_value,
-        page: this.page,
-        pagesize: this.pagesize,
-      };
-      resource.goodsList(arg).then((res) => {
+    getData(obj) {
+      resource.goodsList(obj).then((res) => {
         if (res.data.code == 1) {
           this.dataObj = res.data.data;
+          this.button_list = res.data.data.button_list;
+          this.title = this.dataObj.data.map((item) => item.title);
+          if (this.dataObj.length == 0) {
+            this.dataObj = [];
+          }
         } else {
           this.$mesage.warning(res.data.msg);
         }
       });
     },
     searchlist() {
-      let obj = {};
+      let obj = {
+        page: this.page,
+        pagesize: this.pagesize,
+      };
       if (this.cate_id) {
         obj.cate_id = this.cate_id;
       } else {
         obj.search = this.search_value;
       }
-      resource.goodsList(obj).then((res) => {
-        if (res.data.code == 1) {
-          console.log(res);
-        } else {
-          this.$mesage.warning(res.data.msg);
-        }
-      });
+      this.getData(obj);
     },
     btnClick(text) {
-      this.search_value = text.cate_name;
       this.cate_id = text.cate_id;
+      this.searchlist();
     },
   },
 };

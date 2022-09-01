@@ -1,33 +1,23 @@
 <template>
   <div id="app">
-    <router-view v-if="isRouterAlive"></router-view>
+    <!-- <router-view v-if="isRouterAlive"></router-view> -->
+    <!-- <router-view v-if="$route.meta.keepAlive"> -->
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive">
+      </router-view>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 
 <script>
 import resource from "./api/resource";
 export default {
-  provide() {
-    return {
-      reload: this.reload,
-    };
-  },
-  data() {
-    return {
-      isRouterAlive: true,
-    };
-  },
   created() {
-    this.getUserInfo();
+    this.$router.push('/tab_menu')
+    // this.getUserInfo();
   },
   methods: {
-    //单独页面刷新
-    reload() {
-      this.isRouterAlive = false;
-      this.$nextTick(function () {
-        this.isRouterAlive = true;
-      });
-    },
     //获取用户信息
     getUserInfo() {
       resource.loginUser().then((res) => {
@@ -38,7 +28,6 @@ export default {
           localStorage.setItem("ding_user_name", res.data.data.ding_user_name);
           localStorage.setItem("secret_key", res.data.data.secret_key);
           localStorage.setItem("login_token", res.data.data.login_token);
-          this.$router.push("/tab_menu");
         } else {
           this.$message.warning(res.data.msg);
         }

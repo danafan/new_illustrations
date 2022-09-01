@@ -70,7 +70,7 @@ export function middleWare(params, type) {
 
   //组织参数
   // var req = { ...params, ...{ sign: sign, token: token } };
-  var req = { ...params, ...{ admin_id: "8318" } };
+  var req = { ...params, ...{ admin_id: "16582785096439314" } };
 
   var get_arr = [];
   //post请求参数

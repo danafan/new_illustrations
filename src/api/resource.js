@@ -40,12 +40,17 @@ let path = {
   delPainter: "painter/delpainter", //删除画师
   uploadFile: "common/upload", //上传文件
   deleteFile: "common/del_file", //删除文件
-  addPainter: "painter/addpainter", //上传/编辑画师
+  editPainter: "painter/editpainter", //编辑画师
+  addPainterGet: "painter/editshowpainter", //修改时获取画师信息
+  checkPainter: "painter/checkpainter", //查看画师
   getPainter: "painter/getpainter", //所有插画师列表
-  addPicture: "picture/addpicture", //上传插画
+  editPicture: "picture/editpicture", //修改插画
   delPicture: "picture/delpicture", //删除插画
   soldoutPicture: "picture/soldoutpicture", //下架插画
   groundingPicture: "picture/groundingpicture", //上架插画
+  addPictureGet: "picture/editshowpicture", //获取插画详情
+  addPicturePost: "picture/addpicture", //上传插画
+  addPainterPost: "painter/addpainter", //上传画师
   picDetail: "index/pic_detail", //首页插画详情接口
   ajaxPurposes: "common/ajax_purposes", //获取插画用途列表
   indexSelect: "index/select", //提交创建插画接口
@@ -231,13 +236,21 @@ export default {
   deleteFile(params) {
     return http.post(path.deleteFile, params);
   },
-  //上传/编辑画师
+  //上传画师
   addPainterPost(params) {
-    return http.post(path.addPainter, params);
+    return http.post(path.addPainterPost, params);
+  },
+  //编辑画师
+  editPainter(params) {
+    return http.post(path.editPainter, params);
   },
   //获取画师详情
   addPainterGet(params) {
-    return http.get(path.addPainter, params);
+    return http.get(path.addPainterGet, params);
+  },
+  //查看画师
+  checkPainter(params) {
+    return http.get(path.checkPainter, params);
   },
   //所有插画师列表
   getPainter(params) {
@@ -245,11 +258,15 @@ export default {
   },
   //上传/编辑插画
   addPicturePost(params) {
-    return http.post(path.addPicture, params);
+    return http.post(path.addPicturePost, params);
   },
   //获取插画详情
   addPictureGet(params) {
-    return http.get(path.addPicture, params);
+    return http.get(path.addPictureGet, params);
+  },
+  //修改插画
+  editPicture(params) {
+    return http.post(path.editPicture, params);
   },
   //删除插画
   delPicture(params) {
