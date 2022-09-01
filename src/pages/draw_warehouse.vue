@@ -279,27 +279,25 @@ export default {
         this.$router.push(`/warehouse_add_edit?type=${type}&id=${id}`);
       }
     },
-
-    activated() {
-      if (!this.$route.meta.isBack) {
-        this.getData = [];
-        this.pageNum = 1;
-        this.getData();
-      }
-      this.$route.meta.isBack = false;
-    },
-
-    beforeRouteLeave(to, from, next) {
-      if (to.path == "/warehouse_add_edit") {
-        from.meta.isBack = true;
-      } else {
-        from.meta.isBack = false;
-      }
-      next();
-    },
   },
   components: {
     TableTitle,
+  },
+  activated() {
+    if (!this.$route.meta.isBack) {
+      //不许要缓存的话
+      this.getData();
+    }
+    this.$route.meta.isBack = false;
+  },
+  deactivated() {},
+  beforeRouteLeave(to, from, next) {
+    if (to.path == "/warehouse_add_edit") {
+      from.meta.isBack = true;
+    } else {
+      from.meta.isBack = false;
+    }
+    next();
   },
 };
 </script>

@@ -66,11 +66,17 @@ const router = new Router({
           path: "/warehouse_add_edit",
           name: "画库上传或编辑",
           component: warehouse_add_edit,
+          // meta: {
+          //   keepAlive: true,
+          // },
         },
         {
           path: "/warehouse_detail",
           name: "插画详情",
           component: warehouse_detail,
+          // meta: {
+          //   keepAlive: true,
+          // },
         },
         {
           path: "/draw_master",
