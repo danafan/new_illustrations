@@ -9,22 +9,32 @@
           </div>
           <div class="search_button" @click="searchlist">搜索</div>
         </div>
-        <div class="show_list">
-          <div class="show_item" @click="btnClick(item)" v-for="(item,index) in cateList" :key="index">{{item.cate_name}}</div>
-        </div>
       </div>
     </div>
-    <div class="goods_list" v-if="this.total !==0">
+    <div class="cate_row">
+      <div class="cate_item" :class="{'active_cate':active_index == index}" v-for="(item,index) in cateList" :key="index"
+        @click="active_index = index">
+        <div class="cate_icon_box" :class="{'active_cate_icon_box':active_index == index}">
+          <img class="cate_icon" src="../static/logo_icon.png">
+        </div>
+        <div class="cate_name">{{item.cate_name}}</div>
+      </div>
+    </div>
+
+    <div class="goods_list">
       <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
         @mouseleave="enter_index = null" :key="index">
+        <div class="img_box" :class="{'active_img':enter_index == index}">
+          <el-image :src="item.domain + item.preview_images" fit="contain"></el-image>
+        </div>
+        <img class="shadow_top" src="../static/shadow_top.png">
+        <img class="shadow_bottom" src="../static/shadow_bottom.png">
         <div class="title">{{item.title}}</div>
-        <img class="goods_item_icon" :src="item.domain + item.preview_images">
         <div class="look_button" v-if="enter_index == index && button_list.detail==1"
           @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">
           查看</div>
       </div>
     </div>
-    <div class="goods_text" v-else>暂无数据</div>
     <div class="page index_page">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page" :pager-count="11"
         :page-sizes="[5, 10, 15, 20]" layout="total, sizes, prev, pager, next, jumper" :total="dataObj.total">
@@ -38,7 +48,7 @@
   .home_banner {
     position: relative;
     width: 100%;
-    height: 600rem;
+    height: 360rem;
     .banner {
       position: absolute;
       width: 100%;
@@ -58,16 +68,16 @@
       align-items: center;
       justify-content: center;
       .input_box {
-        width: 1200rem;
-        height: 80rem;
+        width: 654rem;
+        height: 60rem;
         display: flex;
         .box_left {
           background-color: #ffffff;
-          border-radius: 40rem 0 0 40rem;
-          padding-left: 48rem;
-          padding-right: 48rem;
+          border-radius: 30rem 0 0 30rem;
+          padding-left: 28rem;
+          padding-right: 28rem;
           flex: 1;
-          height: 80rem;
+          height: 60rem;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -75,42 +85,71 @@
             width: 100%;
             border: none;
             outline: none;
-            font-size: 24rem;
+            font-size: 18rem;
             color: #333333;
           }
         }
         .search_button {
-          border-radius: 0 40rem 40rem 0;
+          border-radius: 0 30rem 30rem 0;
           background-color: #f36478;
-          width: 166rem;
+          width: 80rem;
           text-align: center;
-          height: 80rem;
-          line-height: 80rem;
-          font-size: 24rem;
+          height: 60rem;
+          line-height: 60rem;
+          font-size: 18rem;
           color: #ffffff;
           font-weight: 500;
           cursor: pointer;
         }
       }
-      .show_list {
-        margin-top: 16rem;
-        width: 1200rem;
+    }
+  }
+  .cate_row {
+    border-bottom: 1px solid #e8e8e8;
+    width: 100%;
+    height: 68rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 48rem;
+    padding-right: 48rem;
+    .cate_item {
+      background: #fafafa;
+      border-radius: 24rem;
+      width: 240rem;
+      height: 48rem;
+      display: flex;
+      align-items: center;
+      .cate_icon_box {
+        border-radius: 24rem;
+        width: 48rem;
+        height: 48rem;
+        background: #ffffff;
+        box-shadow: 0px 2rem 8rem 0rem #e9e9e9;
         display: flex;
-        .show_item {
-          margin-right: 8px;
-          cursor: pointer;
-        }
-        .show_item {
-          border-radius: 15rem;
-          height: 30rem;
-          line-height: 30rem;
-          background: rgba(0, 0, 0, 0.4);
-          padding-left: 16rem;
-          padding-right: 16rem;
-          font-size: 14rem;
-          color: #ffffff;
+        align-items: center;
+        justify-content: center;
+        .cate_icon {
+          width: 33rem;
+          height: 33rem;
         }
       }
+      .active_cate_icon_box {
+        box-shadow: 0px 2rem 8rem 0rem #fab8c1;
+      }
+      .cate_name {
+        flex: 1;
+        text-align: center;
+        height: 48rem;
+        line-height: 48rem;
+        font-size: 20rem;
+        color: #666666;
+        font-weight: 500;
+      }
+    }
+
+    .active_cate {
+      background: #ffebee;
     }
   }
   .goods_list {
@@ -119,31 +158,58 @@
     display: flex;
     flex-wrap: wrap;
     .goods_item {
+      background: #f9f8f9;
       margin-right: 24rem;
       margin-bottom: 36rem;
       position: relative;
-      width: 345rem;
+      width: 344rem;
       height: 535rem;
-      .title {
-        position: absolute;
-        top: 30rem;
-        left: 0;
-        right: 0;
-        margin: auto;
-        width: 144rem;
-        height: 24rem;
-        font-size: 24rem;
-        font-weight: 500;
-        color: #ffffff;
-        line-height: 24rem;
+      .img_box {
+        background: #ffffff;
+        margin: 64rem auto 0;
+        width: 280rem;
+        height: 452rem;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-      .goods_item_icon {
+      .active_img {
+        box-shadow: 0 5rem 19rem 0 #bfbdbe, 0 5rem 19rem 0 #bfbdbe;
+      }
+      .shadow_top {
+        position: absolute;
         top: 0;
         left: 0;
-        max-width: 345rem;
-        max-height: 100%;
+        width: 100%;
+        height: 123rem;
+      }
+      .shadow_bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 158rem;
+      }
+      .title {
+        position: absolute;
+        top: 24rem;
+        left: 50%;
+        transform: translate(-50%);
+        width: 280rem;
+        text-align: center;
+        font-size: 22rem;
+        font-weight: 500;
+        color: #ffffff;
+        word-break: break-all;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
       }
       .look_button {
+        border: 2px solid #ffffff;
         border-radius: 27rem;
         background: #f36478;
         position: absolute;
@@ -160,11 +226,6 @@
       }
     }
   }
-  .goods_text {
-    text-align: center;
-    margin-top: 50rem;
-    font-size: 15rem;
-  }
   .index_page {
     padding-right: 48rem;
   }
@@ -176,6 +237,7 @@ export default {
   data() {
     return {
       cateList: [], //分类列表
+      active_index: 0,
       search_value: "", //输入的搜索内容
       enter_index: null, //当前鼠标悬浮的下标
       page: 1,
@@ -192,6 +254,13 @@ export default {
     //获取列表
     this.getData();
     this.getCateList();
+  },
+  watch: {
+    active_index: function (n, o) {
+      this.cate_id = this.cateList[n].cate_id;
+      this.search_value = "";
+      this.getData();
+    },
   },
   methods: {
     inputChange() {
@@ -219,7 +288,16 @@ export default {
       this.getData();
     },
     //获取列表
-    getData(obj) {
+    getData() {
+      let obj = {
+        page: this.page,
+        pagesize: this.pagesize,
+      };
+      if (this.cate_id) {
+        obj.cate_id = this.cate_id;
+      } else {
+        obj.search = this.search_value;
+      }
       resource.goodsList(obj).then((res) => {
         if (res.data.code == 1) {
           this.dataObj = res.data.data;
@@ -235,20 +313,8 @@ export default {
       });
     },
     searchlist() {
-      let obj = {
-        page: this.page,
-        pagesize: this.pagesize,
-      };
-      if (this.cate_id) {
-        obj.cate_id = this.cate_id;
-      } else {
-        obj.search = this.search_value;
-      }
-      this.getData(obj);
-    },
-    btnClick(text) {
-      this.cate_id = text.cate_id;
-      this.searchlist();
+      this.page = 1;
+      this.getData();
     },
   },
 };

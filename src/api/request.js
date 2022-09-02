@@ -93,4 +93,9 @@ export default {
     var str = middleWare(params, "get");
     return axios.get(`${path}?${str}`);
   },
+  //下载专用
+  downLoad(path, params = {}) {
+    var str = middleWare(params, "get");
+    window.open(`${location.origin}/api/${path}?${str}`);
+  },
 };

@@ -44,6 +44,7 @@
 <script>
 import resource from "../../api/resource.js";
 import TableTitle from "../../components/table_title.vue";
+import http from '../../api/request.js'
 export default {
   data() {
     return {
@@ -80,11 +81,11 @@ export default {
     },
     // 点击下载源文件
     downFile() {
-      let id = this.id;
-      let admin_id = localStorage.getItem("admin_id");
-      window.open(
-        `${location.origin}/api/record/source_down?record_id=${id}&type=2`
-      );
+      let params = {
+        type:2,
+        record_id:this.id
+      }
+      http.downLoad('record/source_down',params);
     },
   },
   components: {

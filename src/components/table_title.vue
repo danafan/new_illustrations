@@ -17,7 +17,7 @@
 	padding-right: 20rem;
 	.title_text{
 		color: #333333;
-		font-size: 16rem;
+		font-size: 14rem;
 		font-weight: 500;
 	}
 }

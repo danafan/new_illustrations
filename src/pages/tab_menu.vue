@@ -10,7 +10,7 @@
       </div>
       <div class="header_right">
         <div class="user_box">
-          <img class="user_img" src="../static/home_back.png">
+          <img class="user_img" src="../static/user_img.png">
           <div class="user_name">{{username}}</div>
         </div>
         <div class="login_out" @click="loginOut">退出登录</div>
@@ -36,7 +36,7 @@
     padding-left: 48px;
     padding-right: 28px;
     width: 100%;
-    height: 70px;
+    height: 60px;
     background-color: #ffffff;
     display: flex;
     align-items: center;
@@ -54,7 +54,7 @@
         align-items: center;
         .tab_item {
           margin-right: 34px;
-          font-size: 18px;
+          font-size: 14px;
           color: #333333;
           font-weight: 500;
           cursor: pointer;
@@ -72,19 +72,19 @@
         align-items: center;
         .user_img {
           border-radius: 50%;
-          width: 42px;
-          height: 42px;
+          width: 24px;
+          height: 24px;
         }
         .user_name {
           margin-left: 8px;
-          font-size: 18px;
+          font-size: 14px;
           color: #333333;
           font-weight: 500;
         }
       }
       .login_out {
         margin-left: 32px;
-        font-size: 16px;
+        font-size: 14px;
         color: #f36478;
         cursor: pointer;
       }
@@ -102,8 +102,8 @@
     height: 70px;
   }
   .display {
-    padding-top: 48rem;
-    padding-bottom: 48rem;
+    padding-top: 20rem;
+    padding-bottom: 20rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -189,26 +189,10 @@ export default {
     //页面切换
     toPage(web_url, index) {
       this.$router.push(web_url);
-      localStorage.setItem(
-        "activeMenu",
-        JSON.stringify({ url: web_url, index })
-      );
+      localStorage.setItem("activeMenu", { url: web_url, index });
+      this.active_index = index;
+      console.log(this.active_index);
     },
-    //获取用户信息
-    // getUserInfo() {
-    //   resource.loginUser().then((res) => {
-    //     if (res.data.code == 1) {
-    //       this.username = res.data.data.ding_user_name;
-    //       this.id = res.data.data.ding_user_id;
-    //       localStorage.setItem("ding_user_id", res.data.data.ding_user_id);
-    //       localStorage.setItem("ding_user_name", res.data.data.ding_user_name);
-    //       localStorage.setItem("secret_key", res.data.data.secret_key);
-    //       localStorage.setItem("login_token", res.data.data.login_token);
-    //     } else {
-    //       this.$message.warning(res.data.msg);
-    //     }
-    //   });
-    // },
     //获取菜单列表
     getMenuList() {
       resource.getMenu().then((res) => {
@@ -225,11 +209,10 @@ export default {
           // } else {
           // }
           const activeMenu = localStorage.getItem("activeMenu");
-          console.log(activeMenu);
-          console.log(this.menulist);
           this.menulist.map((item, index) => {
             if (activeMenu.indexOf(item.web_url) > -1) {
               this.active_index = index;
+              console.log(index);
             }
           });
         } else {

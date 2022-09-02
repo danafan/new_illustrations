@@ -28,13 +28,12 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 18rem;
+  font-size: 14rem;
   font-weight: 500;
   .page_title_text {
     color: #000000;
   }
   .go_back {
-    font-size: 18px;
     font-weight: 500;
     color: #333333;
   }
