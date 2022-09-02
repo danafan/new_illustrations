@@ -132,6 +132,8 @@ router.beforeEach((to, from, next) => {
     "detail",
     "index_detail",
     "tab_menu",
+    "role_setting",
+    "user_list",
   ];
   const pathlist = localStorage.getItem("pathlist");
   if (

@@ -266,7 +266,7 @@ export default {
         this.input_placeholder = "同意备注";
       } else if (type == "3") {
         this.dialog_title = "拒绝";
-        this.input_placeholder = "拒绝备注";
+        this.input_placeholder = "拒绝备注（必填）";
       }
       this.show_dialog = true;
     },
@@ -317,13 +317,15 @@ export default {
           }
         });
       } else if (this.type == "3") {
+        if (this.input_value == "") {
+          this.$message.warning("请输入拒绝备注！");
+          return;
+        }
         //拒绝
         let arg = {
           record_id: this.record_id,
+          remark:this.input_value
         };
-        if (this.input_value != "") {
-          arg.remark = this.input_value;
-        }
         resource.recordRefuse(arg).then((res) => {
           if (res.data.code == 1) {
             this.$message.success(res.data.msg);

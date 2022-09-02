@@ -41,7 +41,13 @@
 </template>
 <style lang="less" scoped>
 .index_container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: #ffffff;
+  overflow-y: scroll;
   .home_banner {
     position: relative;
     width: 100%;
