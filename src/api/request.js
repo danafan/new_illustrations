@@ -5,7 +5,10 @@ import md5 from "js-md5";
 export function middleWare(params, type) {
   for (let k in params) {
     if (typeof params[k] == "string" && params[k] != "") {
-      params[k] = params[k].toString().replace(/(^\s*)|(\s*$)/g, "");
+      //去掉所有空格
+      params[k] = params[k].toString().replace(/\s+/g, "");
+      //去掉#
+      params[k] = params[k].toString().replace(/[#]/g, "");
     }
   }
 
@@ -46,11 +49,7 @@ export function middleWare(params, type) {
       key != "image" &&
       key != "file" &&
       key.indexOf("remark") == -1 &&
-      key != "refuse_reason" &&
-      key != "version_describe" &&
-      key != "without_describe" &&
-      key != "special_content" &&
-      key != "operation_remark"
+      key != "introduction"
     ) {
       sign_arr.push(`${key}=${sort_obj[key]}`);
     }

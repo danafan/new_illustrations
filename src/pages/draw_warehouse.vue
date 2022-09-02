@@ -56,7 +56,12 @@
       </el-table>
       <div class="page" id="el_pagination">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page"
-          :pager-count="11" :page-sizes="[5, 10, 15, 20]" layout="total, sizes, prev, pager, next, jumper" :total="dataObj.total">
+          :pager-count="11" :page-sizes="[5, 10, 15, 20]" layout="slot, sizes, prev, pager, next, jumper" :total="dataObj.total">
+          <slot>
+            <span>共</span>
+            <span style="color:#F36478">{{total}}</span>
+            <span>条</span>
+          </slot>
         </el-pagination>
       </div>
     </el-card>
@@ -108,6 +113,7 @@ export default {
       dataObj: {},
       button_list: {},
       status: "", //状态
+      total: "",
     };
   },
   beforeRouteLeave(to, from, next) {

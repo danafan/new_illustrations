@@ -4,7 +4,7 @@
       <div class="title" id="title">{{detailInfo.title}}</div>
       <div class="img_list" :style="{height:list_height}">
         <div class="img_content">
-          <el-image :src="item" v-for="(item,index) in preview_images" :key="index" fit="contain" :preview-src-list="preview_images">
+          <el-image class="view_img" :src="item" v-for="(item,index) in preview_images" :key="index" fit="contain" :preview-src-list="preview_images">
           </el-image>
         </div>
       </div>
@@ -226,6 +226,9 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        .view_img{
+          margin-bottom: 10rem;
+        }
       }
     }
   }

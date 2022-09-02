@@ -34,7 +34,9 @@
         <div class="row">
           <div class="lable">图片：</div>
           <div class="image_list">
-            <img class="image" :src="recoedInfo.domain + item" v-for="(item,index) in recoedInfo.preview_images" :key="index">
+            <!-- <img class="image" :src="recoedInfo.domain + item" v-for="(item,index) in recoedInfo.preview_images" :key="index"> -->
+            <el-image :src="recoedInfo.domain + item" v-for="(item,index) in recoedInfo.preview_images" :key="index"
+              fit="contain"></el-image>
           </div>
         </div>
       </div>

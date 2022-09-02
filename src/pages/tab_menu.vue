@@ -5,7 +5,7 @@
         <img class="logo_icon" src="../static/logo_icon.png">
         <div class="tab_list">
           <div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in menulist"
-            @click="toPage(item.web_url,index)" :key="index">{{item.menu_name}} </div>
+            @click="toPage(item.web_url,index)" :key="item.menu_name">{{item.menu_name}} </div>
         </div>
       </div>
       <div class="header_right">
@@ -17,14 +17,18 @@
       </div>
     </div>
     <PageTitle :page_title="page_title" v-if="show_page_title" />
-    <div class="content" :class="{'display':is_center == true}">
-      <!-- <div class="content display"> -->
-      <router-view></router-view>
+    <div class="content">
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive">
+        </router-view>
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
     </div>
     <div class="page_foot"></div>
   </div>
 </template>
-  <style lang="less" scoped>
+
+<style lang="less" scoped>
 .container {
   position: absolute;
   top: 0;
@@ -95,14 +99,7 @@
     background-color: #f6f6f6;
     width: 100%;
     flex: 1;
-    overflow-y: scroll;
-  }
-  .display {
-    padding-top: 20rem;
-    padding-bottom: 20rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative;
   }
   .page_foot {
     background-color: #ffffff;
@@ -117,7 +114,6 @@ import PageTitle from "../components/page_title.vue";
 export default {
   data() {
     return {
-      is_center: false,
       username: "", //用户名
       menulist: [], //导航列表
       active_index: 0, //当前选中的导航下标
@@ -130,9 +126,8 @@ export default {
     $route(to, from) {
       let router = this.$route;
       let path = router.path;
-      this.current_path = path;
+      localStorage.setItem("fullPath", router.fullPath);
       if (path != "/index") {
-        this.is_center = true;
         // 权限
         if (path == "/role_setting") {
           if (router.query.type == "1") {
@@ -177,21 +172,19 @@ export default {
           this.show_page_title = false;
         }
       } else {
-        this.is_center = false;
         this.show_page_title = false;
       }
     },
   },
   created() {
+    this.username = localStorage.getItem("ding_user_name");
     this.getMenuList();
   },
   methods: {
     //页面切换
     toPage(web_url, index) {
       this.$router.push(web_url);
-      localStorage.setItem("activeMenu", { url: web_url, index });
       this.active_index = index;
-      console.log(this.active_index);
     },
     //获取菜单列表
     getMenuList() {
@@ -202,13 +195,16 @@ export default {
           this.findResult(this.menulist);
           localStorage.setItem("menulist", JSON.stringify(res.data.data));
           localStorage.setItem("pathlist", JSON.stringify(this.list));
-          const activeMenu = localStorage.getItem("activeMenu");
-          this.menulist.map((item, index) => {
-            if (activeMenu.indexOf(item.web_url) > -1) {
-              this.active_index = index;
-              console.log(index);
-            }
-          });
+          const fullPath = localStorage.getItem("fullPath");
+          if (!fullPath) {
+            this.$router.push(this.menulist[0].web_url);
+          } else {
+            this.menulist.map((item, index) => {
+              if (fullPath.indexOf(item.web_url) > -1) {
+                this.active_index = index;
+              }
+            });
+          }
         } else {
           this.$message.warning(res.data.msg);
         }
