@@ -114,6 +114,7 @@
   export default {
     data() {
       return {
+<<<<<<< HEAD
         username: "", //用户名
         menulist: [], //导航列表
         active_index: 0, //当前选中的导航下标
@@ -128,6 +129,49 @@
         let path = router.path;
         this.current_path = path;
         if (path != "/index") {
+=======
+        is_center: false,
+      username: "", //用户名
+<<<<<<< HEAD
+      menulist: [], //导航列表
+=======
+      menulist: [
+      {
+        menu_name: "首页",
+        web_url: "/index",
+      },
+      {
+        menu_name: "画库",
+        web_url: "/draw_warehouse",
+      },
+      {
+        menu_name: "画师",
+        web_url: "/draw_master",
+      },
+      {
+        menu_name: "选中",
+        web_url: "/selected",
+      },
+      {
+        menu_name: "权限",
+        web_url: "/permissions",
+      },
+      ], //导航列表
+>>>>>>> 4ead0bf6b9ef3833477f04ab696a0c11874e75d3
+      active_index: 0, //当前选中的导航下标
+      show_page_title: false,
+      page_title: "", //页面标题
+      list: [],
+    };
+  },
+  watch: {
+    $route(to, from) {
+      let router = this.$route;
+      let path = router.path;
+      this.current_path = path;
+      if (path != "/index") {
+        this.is_center = true;
+>>>>>>> 7ef9e8957ce06dce2db60cffb78f26ab0ee3f0f1
         // 权限
         if (path == "/role_setting") {
           if (router.query.type == "1") {
@@ -183,10 +227,16 @@
     //页面切换
     toPage(web_url, index) {
       this.$router.push(web_url);
+<<<<<<< HEAD
+      localStorage.setItem("activeMenu", { url: web_url, index });
+      this.active_index = index;
+      console.log(this.active_index);
+=======
       localStorage.setItem(
         "activeMenu",
         JSON.stringify({ url: web_url, index })
         );
+>>>>>>> 4ead0bf6b9ef3833477f04ab696a0c11874e75d3
     },
     //获取菜单列表
     getMenuList() {
@@ -198,13 +248,12 @@
           localStorage.setItem("menulist", JSON.stringify(res.data.data));
           localStorage.setItem("pathlist", JSON.stringify(this.list));
           const activeMenu = localStorage.getItem("activeMenu");
-          if (!activeMenu) {
-            const firstUrl = this.menulist[0].web_url;
-            this.toPage(firstUrl, 0);
-          } else {
-            const { url, index } = JSON.parse(activeMenu);
-            this.toPage(url, index);
-          }
+          this.menulist.map((item, index) => {
+            if (activeMenu.indexOf(item.web_url) > -1) {
+              this.active_index = index;
+              console.log(index);
+            }
+          });
         } else {
           this.$message.warning(res.data.msg);
         }

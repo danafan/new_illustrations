@@ -109,19 +109,39 @@ export default {
       status: "", //状态
     };
   },
-  created() {
-    //获取插画分类列表
-    this.getCate();
-    //获取画库列表
-    this.getData();
+  beforeRouteLeave(to, from, next) {
+    if (to.path == "/warehouse_add_edit") {
+      from.meta.isBack = true;
+    } else {
+      from.meta.isBack = false;
+    }
+    next();
+  },
+  activated() {
+    if (!this.$route.meta.isBack) {
+      //不许要缓存的话
+      this.page = 1;
+      this.search = ""; //输入的搜索内容
+      this.cate_list = []; //插画分类列表
+      this.cate = ""; //选中的插画id
+      this.pagesize = 10;
+      this.dataObj = {};
+      //获取插画分类列表
+      this.getCate();
+      this.getData();
+    } else {
+      //返回之后重新调接口
+      this.getData();
+    }
+    this.$route.meta.isBack = false;
+  },
+  destroyed() {
+    window.removeEventListener("resize", () => {});
   },
   mounted() {
     //获取表格最大高度
     this.onResize();
     window.addEventListener("resize", this.onResize());
-  },
-  destroyed() {
-    window.removeEventListener("resize", () => {});
   },
   methods: {
     //监听屏幕大小变化
@@ -283,6 +303,7 @@ export default {
   components: {
     TableTitle,
   },
+<<<<<<< HEAD
   // activated() {
   //   if (!this.$route.meta.isBack) {
   //     //不许要缓存的话
@@ -299,6 +320,8 @@ export default {
   //   }
   //   next();
   // },
+=======
+>>>>>>> 7ef9e8957ce06dce2db60cffb78f26ab0ee3f0f1
 };
 </script>
 

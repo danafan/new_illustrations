@@ -62,9 +62,25 @@ export default {
       button_list: {},
     };
   },
-  created() {
-    //获取列表
-    this.getData();
+  beforeRouteLeave(to, from, next) {
+    if (to.path == "/master_add_edit") {
+      from.meta.isBack = true;
+    } else {
+      from.meta.isBack = false;
+    }
+    next();
+  },
+  activated() {
+    if (!this.$route.meta.isBack) {
+      //不许要缓存的话
+      this.page = 1;
+      this.dataObj = {};
+      //获取列表
+      this.getData();
+    } else {
+      this.getData();
+    }
+    this.$route.meta.isBack = false;
   },
   mounted() {
     //获取表格最大高度
