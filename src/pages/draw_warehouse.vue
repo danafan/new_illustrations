@@ -25,42 +25,48 @@
         <div class="add_button" @click="settingFn('1')" v-if="button_list.add==1">上传</div>
       </TableTitle>
       <el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}"
-        :max-height="max_height" v-loading="loading">
-        <el-table-column prop="picture_id" label="编号" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column width="100" label="插画图片" align="center">
-          <template slot-scope="scope">
-            <img class="image" :src="scope.row.domain + scope.row.images[0]">
-          </template>
-        </el-table-column>
-        <el-table-column prop="title" label="插画标题" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column prop="cate_id" label="插画分类" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column prop="labels" label="插画标签" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column prop="painter_name" label="插画师" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column prop="download_num" label="下载量" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column prop="add_time" label="上传时间" show-overflow-tooltip align="center" width="160"></el-table-column>
-        <el-table-column label="操作" align="center" width="200" fixed="right">
-          <template slot-scope="scope">
-            <el-button class="button_theme" type="text" size="small"
-              @click="$router.push(`/warehouse_detail?id=${scope.row.picture_id}`)" v-if="button_list.check==1">查看</el-button>
-            <el-button class="button_theme" type="text" size="small" @click="settingFn('2',scope.row.picture_id)"
-              v-if="button_list.edit==1">编辑
-            </el-button>
-            <el-button class="button_theme" type="text" size="small" @click="groundingPicture(scope.row.picture_id)"
-              v-if="scope.row.status == 2 && button_list.input==1">上架</el-button>
-            <el-button class="button_theme" type="text" size="small" @click="soldoutPicture(scope.row.picture_id)"
-              v-if="scope.row.status == 1 && button_list.output==1">下架</el-button>
-            <el-button class="button_theme" type="text" size="small" @click="delPicture(scope.row.picture_id)"
-              v-if="button_list.delete==1">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="page" id="el_pagination">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page"
-          :pager-count="11" :page-sizes="[5, 10, 15, 20]" layout="total, sizes, prev, pager, next, jumper" :total="dataObj.total">
-        </el-pagination>
-      </div>
-    </el-card>
-  </div>
+      :max-height="max_height" v-loading="loading">
+      <el-table-column prop="picture_id" label="编号" show-overflow-tooltip align="center"></el-table-column>
+      <el-table-column width="100" label="插画图片" align="center">
+        <template slot-scope="scope">
+          <img class="image" :src="scope.row.domain + scope.row.images[0]">
+        </template>
+      </el-table-column>
+      <el-table-column prop="title" label="插画标题" show-overflow-tooltip align="center"></el-table-column>
+      <el-table-column prop="cate_id" label="插画分类" show-overflow-tooltip align="center"></el-table-column>
+      <el-table-column prop="labels" label="插画标签" show-overflow-tooltip align="center"></el-table-column>
+      <el-table-column prop="painter_name" label="插画师" show-overflow-tooltip align="center"></el-table-column>
+      <el-table-column prop="download_num" label="下载量" show-overflow-tooltip align="center"></el-table-column>
+      <el-table-column prop="add_time" label="上传时间" show-overflow-tooltip align="center" width="160"></el-table-column>
+      <el-table-column label="操作" align="center" width="200" fixed="right">
+        <template slot-scope="scope">
+          <el-button class="button_theme" type="text" size="small"
+          @click="$router.push(`/warehouse_detail?id=${scope.row.picture_id}`)" v-if="button_list.check==1">查看</el-button>
+          <el-button class="button_theme" type="text" size="small" @click="settingFn('2',scope.row.picture_id)"
+          v-if="button_list.edit==1">编辑
+        </el-button>
+        <el-button class="button_theme" type="text" size="small" @click="groundingPicture(scope.row.picture_id)"
+        v-if="scope.row.status == 2 && button_list.input==1">上架</el-button>
+        <el-button class="button_theme" type="text" size="small" @click="soldoutPicture(scope.row.picture_id)"
+        v-if="scope.row.status == 1 && button_list.output==1">下架</el-button>
+        <el-button class="button_theme" type="text" size="small" @click="delPicture(scope.row.picture_id)"
+        v-if="button_list.delete==1">删除</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+  <div class="page" id="el_pagination">
+    <el-pagination
+    small
+    @current-change="handleCurrentChange"
+    :current-page="page"
+    :page-size="10"
+    layout="slot, prev, pager, next,jumper"
+    :total="dataObj.total">
+    <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据</div>
+  </el-pagination>
+</div>
+</el-card>
+</div>
 </template>
 <style lang="less" scoped>
 .image {
@@ -91,17 +97,18 @@
 }
 </style>
 <script>
-import { Button } from "element-ui";
-import resource from "../api/resource.js";
-import TableTitle from "../components/table_title.vue";
-export default {
-  data() {
-    return {
+  import { Button } from "element-ui";
+  import resource from "../api/resource.js";
+  import TableTitle from "../components/table_title.vue";
+  export default {
+    data() {
+      return {
       search: "", //输入的搜索内容
       cate_list: [], //插画分类列表
       cate: "", //选中的插画id
       pagesize: 10,
       page: 1,
+      total_pages:0,
       loading: false,
       max_height: 0,
       dataObj: {},
@@ -149,17 +156,17 @@ export default {
       this.$nextTick(() => {
         let box_card_height = document.getElementById("box_card").offsetHeight;
         let table_title_height =
-          document.getElementById("table_title").offsetHeight;
+        document.getElementById("table_title").offsetHeight;
         let el_form_height = document.getElementById("el_form").offsetHeight;
         let el_pagination_height =
-          document.getElementById("el_pagination").offsetHeight;
+        document.getElementById("el_pagination").offsetHeight;
         this.max_height =
-          box_card_height -
-          el_form_height -
-          table_title_height -
-          el_pagination_height -
-          40 +
-          "px";
+        box_card_height -
+        el_form_height -
+        table_title_height -
+        el_pagination_height -
+        40 +
+        "px";
       });
     },
     //获取插画分类列表
@@ -171,12 +178,6 @@ export default {
           this.$mesage.warning(res.data.msg);
         }
       });
-    },
-    //分页
-    handleSizeChange(val) {
-      this.pagesize = val;
-      //获取列表
-      this.getData();
     },
     handleCurrentChange(val) {
       this.page = val;
@@ -201,6 +202,7 @@ export default {
             item.images = item.preview_images.split(",");
           });
           this.dataObj = dataObj;
+          this.total_pages = this.dataObj.total && this.dataObj.total%10 == 0?parseInt(this.dataObj.total/10):parseInt(this.dataObj.total/10) + 1;
           this.button_list = res.data.data.button_list;
         } else {
           this.$mesage.warning(res.data.msg);
@@ -214,26 +216,26 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {
-          let arg = {
-            id: id,
-          };
-          resource.delPicture(arg).then((res) => {
-            if (res.data.code == 1) {
-              this.$message.success(res.data.msg);
+      .then(() => {
+        let arg = {
+          id: id,
+        };
+        resource.delPicture(arg).then((res) => {
+          if (res.data.code == 1) {
+            this.$message.success(res.data.msg);
               //获取列表
               this.getData();
             } else {
               this.$message.warning(res.data.msg);
             }
           });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消",
-          });
+      })
+      .catch(() => {
+        this.$message({
+          type: "info",
+          message: "已取消",
         });
+      });
     },
     //下架插画
     soldoutPicture(id) {
@@ -242,26 +244,26 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {
-          let arg = {
-            id: id,
-          };
-          resource.soldoutPicture(arg).then((res) => {
-            if (res.data.code == 1) {
-              this.$message.success(res.data.msg);
+      .then(() => {
+        let arg = {
+          id: id,
+        };
+        resource.soldoutPicture(arg).then((res) => {
+          if (res.data.code == 1) {
+            this.$message.success(res.data.msg);
               //获取列表
               this.getData();
             } else {
               this.$message.warning(res.data.msg);
             }
           });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消",
-          });
+      })
+      .catch(() => {
+        this.$message({
+          type: "info",
+          message: "已取消",
         });
+      });
     },
     //上架插画
     groundingPicture(id) {
@@ -270,26 +272,26 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {
-          let arg = {
-            id: id,
-          };
-          resource.groundingPicture(arg).then((res) => {
-            if (res.data.code == 1) {
-              this.$message.success(res.data.msg);
+      .then(() => {
+        let arg = {
+          id: id,
+        };
+        resource.groundingPicture(arg).then((res) => {
+          if (res.data.code == 1) {
+            this.$message.success(res.data.msg);
               //获取列表
               this.getData();
             } else {
               this.$message.warning(res.data.msg);
             }
           });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消",
-          });
+      })
+      .catch(() => {
+        this.$message({
+          type: "info",
+          message: "已取消",
         });
+      });
     },
     //点击上传或编辑
     settingFn(type, id) {

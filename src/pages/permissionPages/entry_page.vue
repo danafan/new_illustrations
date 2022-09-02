@@ -15,61 +15,68 @@
 			</el-table-column>
 		</el-table>
 		<div class="page" id="el_pagination">
-			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page" :pager-count="11" :page-sizes="[5, 10, 15, 20]" layout="total, sizes, prev, pager, next, jumper" :total="dataObj.total">
-			</el-pagination>
-		</div>
-		<el-dialog :title="`${type == '1'?'添加':'编辑'}权限`" center width="50%" @close="closeDialog" :visible.sync="show_dialog" :close-on-click-modal="false">
-			<el-form size="small" label-width="150px">
-				<el-form-item label="权限资源名称：">
-					<el-input v-model="access_name" style="width:192px" placeholder="请输入权限资源名称"></el-input>
-				</el-form-item>
-				<el-form-item label="所属菜单：">
-					<el-cascader
-					v-model="menu_id"
-					:show-all-levels="false"
-					:options="menu_list"
-					:props="props"
-					@change="changeMenu"
-					></el-cascader>
-				</el-form-item>
-				<el-form-item label="添加权限码：">
-					<el-select v-model="selController" placeholder="请选择">
-						<el-option v-for="item in controller" :key="item" :label="item" :value="item">
-						</el-option>
-					</el-select> / 
-					<el-select v-model="selMethod" placeholder="请选择">
-						<el-option v-for="item in methodList" :key="item" :label="item" :value="item">
-						</el-option>
-					</el-select>
-					<el-button style="margin-left: 20px" type="success" icon="el-icon-plus" circle @click="addAccessCode"></el-button>
-					<div style="margin-top: 10px;">
-						<el-tag style="margin-right: 20px;margin-bottom: 10px" closable v-for="(item,index) in accessCodes" :key="index" type="success" effect="dark" @close="handleClose(index)"> {{ item }}
-						</el-tag>
-					</div>
-				</el-form-item>
-				<el-form-item label="是否按钮：">
-					<el-switch
-					v-model="is_button"
-					:active-value="1"
-					:inactive-value="0"
-					active-color="#F36478"
-					inactive-color="#778899">
-				</el-switch>
+			<el-pagination
+			small
+			@current-change="handleCurrentChange"
+			:current-page="page"
+			:page-size="10"
+			layout="slot, prev, pager, next,jumper"
+			:total="dataObj.total">
+			<div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据</div>
+		</el-pagination>
+	</div>
+	<el-dialog :title="`${type == '1'?'添加':'编辑'}权限`" center width="50%" @close="closeDialog" :visible.sync="show_dialog" :close-on-click-modal="false">
+		<el-form size="small" label-width="150px">
+			<el-form-item label="权限资源名称：">
+				<el-input v-model="access_name" style="width:192px" placeholder="请输入权限资源名称"></el-input>
 			</el-form-item>
-			<el-form-item label="按钮名称：" v-if="is_button == 1">
-				<el-input v-model="button_name" style='width: 300px;' placeholder="请输入按钮名称"></el-input>
+			<el-form-item label="所属菜单：">
+				<el-cascader
+				v-model="menu_id"
+				:show-all-levels="false"
+				:options="menu_list"
+				:props="props"
+				@change="changeMenu"
+				></el-cascader>
 			</el-form-item>
-			<el-form-item label="选择按钮："  v-if="is_button == 0">
-				<el-checkbox-group v-model="button_access_ids">
-					<el-checkbox :label="item.id" :key="item.id" border v-for="item in access_buts">{{item.access_name}}</el-checkbox>
-				</el-checkbox-group>
+			<el-form-item label="添加权限码：">
+				<el-select v-model="selController" placeholder="请选择">
+					<el-option v-for="item in controller" :key="item" :label="item" :value="item">
+					</el-option>
+				</el-select> / 
+				<el-select v-model="selMethod" placeholder="请选择">
+					<el-option v-for="item in methodList" :key="item" :label="item" :value="item">
+					</el-option>
+				</el-select>
+				<el-button style="margin-left: 20px" type="success" icon="el-icon-plus" circle @click="addAccessCode"></el-button>
+				<div style="margin-top: 10px;">
+					<el-tag style="margin-right: 20px;margin-bottom: 10px" closable v-for="(item,index) in accessCodes" :key="index" type="success" effect="dark" @close="handleClose(index)"> {{ item }}
+					</el-tag>
+				</div>
 			</el-form-item>
-		</el-form>
-		<span slot="footer" class="dialog-footer">
-			<el-button size="small" @click="show_dialog = false">取消</el-button>
-			<el-button size="small" type="primary" @click="submitFn">确 定</el-button>
-		</span>
-	</el-dialog>
+			<el-form-item label="是否按钮：">
+				<el-switch
+				v-model="is_button"
+				:active-value="1"
+				:inactive-value="0"
+				active-color="#F36478"
+				inactive-color="#778899">
+			</el-switch>
+		</el-form-item>
+		<el-form-item label="按钮名称：" v-if="is_button == 1">
+			<el-input v-model="button_name" style='width: 300px;' placeholder="请输入按钮名称"></el-input>
+		</el-form-item>
+		<el-form-item label="选择按钮："  v-if="is_button == 0">
+			<el-checkbox-group v-model="button_access_ids">
+				<el-checkbox :label="item.id" :key="item.id" border v-for="item in access_buts">{{item.access_name}}</el-checkbox>
+			</el-checkbox-group>
+		</el-form-item>
+	</el-form>
+	<span slot="footer" class="dialog-footer">
+		<el-button size="small" @click="show_dialog = false">取消</el-button>
+		<el-button size="small" type="primary" @click="submitFn">确 定</el-button>
+	</span>
+</el-dialog>
 </div>
 </template>
 <script>
@@ -82,6 +89,7 @@
 				loading:false,
 				pagesize:10,
 				page:1,
+				total_pages:0,
 				dataObj:{},
 				button_list:{},
 				show_dialog:false,			//弹窗
@@ -139,12 +147,6 @@
 					this.max_height = box_card_height - table_title_height - el_pagination_height - 40 + 'px';
 				})
 			},
-			//分页
-			handleSizeChange(val) {
-				this.pagesize = val;
-				//获取列表
-				this.getData();
-			},
 			handleCurrentChange(val) {
 				this.page = val;
 				//获取列表
@@ -161,6 +163,7 @@
 					if(res.data.code == 1){
 						this.loading = false;
 						this.dataObj = res.data.data;
+						this.total_pages = this.dataObj.total && this.dataObj.total%10 == 0?parseInt(this.dataObj.total/10):parseInt(this.dataObj.total/10) + 1;
 						this.button_list = this.dataObj.button_list;
 					}else{
 						this.$mesage.warning(res.data.msg);
