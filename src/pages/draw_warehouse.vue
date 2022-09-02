@@ -55,13 +55,10 @@
         </el-table-column>
       </el-table>
       <div class="page" id="el_pagination">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page"
-          :pager-count="11" :page-sizes="[5, 10, 15, 20]" layout="slot, sizes, prev, pager, next, jumper" :total="dataObj.total">
-          <slot>
-            <span>共</span>
-            <span style="color:#F36478">{{total}}</span>
-            <span>条</span>
-          </slot>
+        <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10"
+          layout="slot, prev, pager, next,jumper" :total="dataObj.total">
+          <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据
+          </div>
         </el-pagination>
       </div>
     </el-card>
@@ -108,6 +105,7 @@ export default {
       cate: "", //选中的插画id
       pagesize: 10,
       page: 1,
+      total_pages: 0,
       loading: false,
       max_height: 0,
       dataObj: {},
@@ -179,12 +177,6 @@ export default {
         }
       });
     },
-    //分页
-    handleSizeChange(val) {
-      this.pagesize = val;
-      //获取列表
-      this.getData();
-    },
     handleCurrentChange(val) {
       this.page = val;
       //获取列表
@@ -208,6 +200,10 @@ export default {
             item.images = item.preview_images.split(",");
           });
           this.dataObj = dataObj;
+          this.total_pages =
+            this.dataObj.total && this.dataObj.total % 10 == 0
+              ? parseInt(this.dataObj.total / 10)
+              : parseInt(this.dataObj.total / 10) + 1;
           this.button_list = res.data.data.button_list;
         } else {
           this.$mesage.warning(res.data.msg);

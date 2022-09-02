@@ -36,13 +36,10 @@
       </div>
     </div>
     <div class="page index_page">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page" :pager-count="11"
-        :page-sizes="[5, 10, 15, 20]" layout="slot, sizes, prev, pager, next, jumper" :total="dataObj.total">
-        <slot>
-          <span>共</span>
-          <span style="color:#F36478">{{total}}</span>
-          <span>条</span>
-        </slot>
+      <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10"
+        layout="slot, prev, pager, next,jumper" :total="dataObj.total">
+        <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据
+        </div>
       </el-pagination>
     </div>
   </div>
@@ -253,12 +250,12 @@ export default {
       enter_index: null, //当前鼠标悬浮的下标
       page: 1,
       pagesize: 10,
+      total_pages: 0,
       dataObj: {},
       cate_name: "",
       cate_id: "",
       button_list: {},
       title: "", //标题
-      total: "",
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -313,12 +310,6 @@ export default {
         }
       });
     },
-    //分页
-    handleSizeChange(val) {
-      this.pagesize = val;
-      //获取列表
-      this.getData();
-    },
     handleCurrentChange(val) {
       this.page = val;
       //获取列表
@@ -335,15 +326,13 @@ export default {
       } else {
         obj.cate_id = this.cate_id;
       }
-      // if (this.cate_id) {
-      //   obj.cate_id = this.cate_id;
-      // } else {
-      //   obj.search = this.search_value;
-      // }
       resource.goodsList(obj).then((res) => {
         if (res.data.code == 1) {
           this.dataObj = res.data.data;
-          this.total = res.data.data.total;
+          this.total_pages =
+            this.dataObj.total && this.dataObj.total % 10 == 0
+              ? parseInt(this.dataObj.total / 10)
+              : parseInt(this.dataObj.total / 10) + 1;
           this.button_list = res.data.data.button_list;
           this.title = this.dataObj.data.map((item) => item.title);
           if (this.dataObj.length == 0) {

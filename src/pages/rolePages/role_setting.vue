@@ -148,6 +148,7 @@ export default {
         resource.menuroleEditPost(req).then((res) => {
           if (res.data.code == 1) {
             this.$message.success(res.data.msg);
+            this.$router.go(-1);
           } else {
             this.$message.warning(res.data.msg);
           }

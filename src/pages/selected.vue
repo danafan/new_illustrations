@@ -68,8 +68,14 @@
   </el-table-column>
 </el-table>
 <div class="page" id="el_pagination">
-  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page"
-  :pager-count="11" :page-sizes="[5, 10, 15, 20]" layout="total, sizes, prev, pager, next, jumper" :total="dataObj.total">
+  <el-pagination
+  small
+  @current-change="handleCurrentChange"
+  :current-page="page"
+  :page-size="10"
+  layout="slot, prev, pager, next,jumper"
+  :total="dataObj.total">
+  <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据</div>
 </el-pagination>
 </div>
 <!-- 同意/拒绝/绑定sku -->
@@ -136,6 +142,7 @@
       }, //时间区间
       pagesize: 10,
       page: 1,
+      total_pages:0,
       dataObj: {},
       show_dialog: false, //同意/拒绝/绑定弹窗
       dialog_title: "", //同意/拒绝/绑定弹窗标题
@@ -266,6 +273,7 @@
         if (res.data.code == 1) {
           this.loading = false;
           this.dataObj = res.data.data;
+          this.total_pages = this.dataObj.total && this.dataObj.total%10 == 0?parseInt(this.dataObj.total/10):parseInt(this.dataObj.total/10) + 1;
           this.button_list = res.data.data.button_list;
         } else {
           this.$message.warning(res.data.msg);

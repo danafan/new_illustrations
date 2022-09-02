@@ -1,4 +1,5 @@
 <template>
+
   <div>
     <TableTitle title_text="数据列表" id="table_title">
       <div class="add_button" @click="accessSetting('1')" v-if="button_list.add == 1">添加</div>
@@ -18,8 +19,10 @@
       </el-table-column>
     </el-table>
     <div class="page" id="el_pagination">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page" :pager-count="11"
-        :page-sizes="[5, 10, 15, 20]" layout="total, sizes, prev, pager, next, jumper" :total="dataObj.total">
+      <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10"
+        layout="slot, prev, pager, next,jumper" :total="dataObj.total">
+        <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据
+        </div>
       </el-pagination>
     </div>
     <el-dialog :title="`${type == '1'?'添加':'编辑'}权限`" center width="50%" @close="closeDialog" :visible.sync="show_dialog"
@@ -78,6 +81,7 @@ export default {
       loading: false,
       pagesize: 10,
       page: 1,
+      total_pages: 0,
       dataObj: {},
       button_list: {},
       show_dialog: false, //弹窗
@@ -142,12 +146,6 @@ export default {
           "px";
       });
     },
-    //分页
-    handleSizeChange(val) {
-      this.pagesize = val;
-      //获取列表
-      this.getData();
-    },
     handleCurrentChange(val) {
       this.page = val;
       //获取列表
@@ -164,6 +162,10 @@ export default {
         if (res.data.code == 1) {
           this.loading = false;
           this.dataObj = res.data.data;
+          this.total_pages =
+            this.dataObj.total && this.dataObj.total % 10 == 0
+              ? parseInt(this.dataObj.total / 10)
+              : parseInt(this.dataObj.total / 10) + 1;
           this.button_list = this.dataObj.button_list;
         } else {
           this.$mesage.warning(res.data.msg);
