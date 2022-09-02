@@ -173,21 +173,22 @@ export default {
 .query {
   border-radius: 2rem;
   background: #f36478;
-  width: 64rem;
   text-align: center;
-  height: 32rem;
   font-size: 14rem;
   color: #ffffff;
+  border: none;
 }
 .add_button {
   border-radius: 2rem;
   background: #f36478;
-  width: 64rem;
+  min-width: 64rem;
   text-align: center;
-  height: 32rem;
+  min-height: 32rem;
   line-height: 32rem;
   font-size: 14rem;
   color: #ffffff;
+  border: none;
+  cursor: pointer;
 }
 .button_theme {
   color: #f36478;

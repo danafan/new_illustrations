@@ -37,7 +37,7 @@
     </div>
     <div class="page index_page">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page" :pager-count="11"
-        :page-sizes="[5, 10, 15, 20]" layout="total, sizes, prev, pager, next, jumper" :total="dataObj.total">
+        :page-sizes="[5, 10, 15, 20]" layout="slot, sizes, prev, pager, next, jumper" :total="dataObj.total">
       </el-pagination>
     </div>
   </div>
@@ -145,9 +145,9 @@
         font-size: 20rem;
         color: #666666;
         font-weight: 500;
+        cursor: pointer;
       }
     }
-
     .active_cate {
       background: #ffebee;
     }

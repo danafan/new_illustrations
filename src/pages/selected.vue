@@ -283,8 +283,8 @@ export default {
           sku_ids = this.input_value.replaceAll("\n", ",");
         } else if (this.input_value.indexOf(" ") > -1) {
           sku_ids = this.input_value.replaceAll(" ", ",");
-        }else{
-          sku_ids = this.input_value
+        } else {
+          sku_ids = this.input_value;
         }
         let arg = {
           record_id: this.record_id,
@@ -339,10 +339,10 @@ export default {
     // 点击下载源文件
     downFile(record_id) {
       let params = {
-        type:1,
-        record_id:record_id
-      }
-      http.downLoad('record/source_down',params);
+        type: 1,
+        record_id: record_id,
+      };
+      http.downLoad("record/source_down", params);
     },
   },
   components: {
@@ -354,21 +354,22 @@ export default {
 .query {
   border-radius: 2rem;
   background: #f36478;
-  width: 64rem;
   text-align: center;
-  height: 32rem;
   font-size: 14rem;
   color: #ffffff;
+  border: none;
 }
 .add_button {
   border-radius: 2rem;
   background: #f36478;
-  width: 64rem;
+  min-width: 64rem;
   text-align: center;
-  height: 32rem;
+  min-height: 32rem;
   line-height: 32rem;
   font-size: 14rem;
   color: #ffffff;
+  border: none;
+  cursor: pointer;
 }
 .button_theme {
   color: #f36478;

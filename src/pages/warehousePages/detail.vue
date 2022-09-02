@@ -44,7 +44,7 @@
 <script>
 import resource from "../../api/resource.js";
 import TableTitle from "../../components/table_title.vue";
-import http from '../../api/request.js'
+import http from "../../api/request.js";
 export default {
   data() {
     return {
@@ -82,10 +82,10 @@ export default {
     // 点击下载源文件
     downFile() {
       let params = {
-        type:2,
-        record_id:this.id
-      }
-      http.downLoad('record/source_down',params);
+        type: 2,
+        record_id: this.id,
+      };
+      http.downLoad("record/source_down", params);
     },
   },
   components: {
@@ -118,6 +118,7 @@ export default {
     }
     .down {
       color: #f36478;
+      cursor: pointer;
     }
     .image_list {
       flex: 1;

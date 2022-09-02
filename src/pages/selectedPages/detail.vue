@@ -155,6 +155,7 @@ export default {
     }
     .down {
       color: #f36478;
+      cursor: pointer;
     }
     .image_list {
       flex: 1;

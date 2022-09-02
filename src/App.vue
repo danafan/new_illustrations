@@ -7,7 +7,23 @@
     <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
-
+ <style lang="less" scoped>
+/deep/ .el-pagination {
+  color: #666666;
+}
+/deep/ .el-pager li:not(.disabled).active {
+  color: #f36478;
+}
+/deep/ .el-pager li:hover {
+  color: #666666;
+}
+/deep/ .el-pagination__total {
+  color: #666666;
+}
+/deep/ .el-pagination__jump {
+  color: #666666;
+}
+</style>
 <script>
 import resource from "./api/resource";
 export default {
@@ -35,7 +51,7 @@ export default {
           localStorage.setItem("login_token", res.data.data.login_token);
           const activeMenu = localStorage.getItem("activeMenu");
           if (!activeMenu) {
-            this.$router.push("/tab_menu");
+            this.$router.push("/login");
           } else {
             this.$router.push("/tab_menu");
           }

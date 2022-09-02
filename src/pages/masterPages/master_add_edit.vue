@@ -223,6 +223,7 @@ export default {
     line-height: 32rem;
     font-size: 14rem;
     color: #ffffff;
+    cursor: pointer;
   }
 }
 </style>
