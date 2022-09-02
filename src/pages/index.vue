@@ -5,42 +5,42 @@
       <div class="banner_content">
         <div class="input_box">
           <div class="box_left">
-            <input class="search_input" v-model="search_value" @change="inputChange" placeholder="请输入您要查找的关键词">
+            <input class="search_input" autofocus v-model="search_value" placeholder="请输入您要查找的关键词" @keyup.enter="searchlist()">
           </div>
           <div class="search_button" @click="searchlist">搜索</div>
         </div>
       </div>
     </div>
     <div class="cate_row">
-      <div class="cate_item" :class="{'active_cate':active_index == index}" v-for="(item,index) in cateList" :key="index"
-        @click="active_index = index">
-        <div class="cate_icon_box" :class="{'active_cate_icon_box':active_index == index}">
-          <img class="cate_icon" src="../static/logo_icon.png">
-        </div>
-        <div class="cate_name">{{item.cate_name}}</div>
+      <div class="cate_item" :class="{'active_cate':active_index === index}" v-for="(item,index) in cateList" :key="index"
+      @click="active_index = index">
+      <div class="cate_icon_box" :class="{'active_cate_icon_box':active_index === index}">
+        <img class="cate_icon" src="../static/logo_icon.png">
       </div>
-    </div>
-
-    <div class="goods_list">
-      <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
-        @mouseleave="enter_index = null" :key="index">
-        <div class="img_box" :class="{'active_img':enter_index == index}">
-          <el-image :src="item.domain + item.preview_images" fit="contain"></el-image>
-        </div>
-        <img class="shadow_top" src="../static/shadow_top.png">
-        <img class="shadow_bottom" src="../static/shadow_bottom.png">
-        <div class="title">{{item.title}}</div>
-        <div class="look_button" v-if="enter_index == index && button_list.detail==1"
-          @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">
-          查看</div>
-      </div>
-    </div>
-    <div class="page index_page">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page" :pager-count="11"
-        :page-sizes="[5, 10, 15, 20]" layout="total, sizes, prev, pager, next, jumper" :total="dataObj.total">
-      </el-pagination>
+      <div class="cate_name">{{item.cate_name}}</div>
     </div>
   </div>
+
+  <div class="goods_list">
+    <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
+    @mouseleave="enter_index = null" :key="index">
+    <div class="img_box" :class="{'active_img':enter_index == index}">
+      <el-image :src="item.domain + item.preview_images" fit="contain"></el-image>
+    </div>
+    <img class="shadow_top" src="../static/shadow_top.png">
+    <img class="shadow_bottom" src="../static/shadow_bottom.png">
+    <div class="title">{{item.title}}</div>
+    <div class="look_button" v-if="enter_index == index && button_list.detail==1"
+    @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">
+  查看</div>
+</div>
+</div>
+<div class="page index_page">
+  <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="page" :pager-count="11"
+  :page-sizes="[5, 10, 15, 20]" layout="total, sizes, prev, pager, next, jumper" :total="dataObj.total">
+</el-pagination>
+</div>
+</div>
 </template>
 <style lang="less" scoped>
 .index_container {
@@ -238,10 +238,10 @@
 }
 </style>
 <script>
-import resource from "../api/resource.js";
-export default {
-  data() {
-    return {
+  import resource from "../api/resource.js";
+  export default {
+    data() {
+      return {
       cateList: [], //分类列表
       active_index: 0,
       search_value: "", //输入的搜索内容
@@ -256,10 +256,29 @@ export default {
       total: "",
     };
   },
-  created() {
-    //获取列表
-    this.getData();
-    this.getCateList();
+  beforeRouteLeave(to, from, next) {
+    if (to.path == "/index_detail") {
+      from.meta.isBack = true;
+    } else {
+      from.meta.isBack = false;
+    }
+    next();
+  },
+  activated() {
+    if (!this.$route.meta.isBack) {
+      //不许要缓存的话
+      this.page = 1;
+      this.pagesize = 10;
+      this.cate_id = "";
+      this.active_index = 0;
+      this.search_value = ""; 
+      this.dataObj = {};
+      this.getCateList();
+    } else {
+      //返回之后重新调接口
+      this.getData();
+    }
+    this.$route.meta.isBack = false;
   },
   watch: {
     active_index: function (n, o) {
@@ -269,14 +288,21 @@ export default {
     },
   },
   methods: {
-    inputChange() {
-      this.cate_id = null;
+    //回车或点击搜索
+    searchlist() {
+      this.page = 1;
+      this.active_index = null;
+      this.cate_id = "";
+      this.getData();
     },
     //获取分类列表
     getCateList() {
       resource.ajaxCates().then((res) => {
         if (res.data.code == 1) {
           this.cateList = res.data.data;
+          this.cate_id = this.cateList[0].cate_id;
+          //获取列表
+          this.getData();
         } else {
           this.$mesage.warning(res.data.msg);
         }
@@ -299,11 +325,16 @@ export default {
         page: this.page,
         pagesize: this.pagesize,
       };
-      if (this.cate_id) {
-        obj.cate_id = this.cate_id;
-      } else {
+      if (this.search_value != "") {
         obj.search = this.search_value;
+      } else {
+        obj.cate_id = this.cate_id;
       }
+      // if (this.cate_id) {
+      //   obj.cate_id = this.cate_id;
+      // } else {
+      //   obj.search = this.search_value;
+      // }
       resource.goodsList(obj).then((res) => {
         if (res.data.code == 1) {
           this.dataObj = res.data.data;
@@ -317,11 +348,8 @@ export default {
           this.$mesage.warning(res.data.msg);
         }
       });
-    },
-    searchlist() {
-      this.page = 1;
-      this.getData();
-    },
+    }
+    
   },
 };
 </script>

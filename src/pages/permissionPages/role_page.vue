@@ -52,6 +52,7 @@ import TableTitle from "../../components/table_title.vue";
 export default {
   data() {
     return {
+      to_path:"",
       max_height: 0, //表格最大高度
       loading: false,
       role_name: "",
@@ -60,6 +61,10 @@ export default {
       dataObj: {},
       button_list: {},
     };
+  },
+  activated() {
+    //获取列表
+    this.getData();
   },
   created() {
     //获取列表

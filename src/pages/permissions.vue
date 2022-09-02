@@ -48,6 +48,7 @@
   }
 }
 .menu_card {
+  width: 100%;
   flex: 1;
 }
 </style>

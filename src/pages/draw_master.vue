@@ -72,8 +72,8 @@ export default {
   },
   activated() {
     if (!this.$route.meta.isBack) {
-      //不许要缓存的话
       this.page = 1;
+      this.name = "";
       this.dataObj = {};
       //获取列表
       this.getData();

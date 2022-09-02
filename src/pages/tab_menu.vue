@@ -5,7 +5,7 @@
         <img class="logo_icon" src="../static/logo_icon.png">
         <div class="tab_list">
           <div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in menulist"
-          @click="toPage(item.web_url,index)" :key="index">{{item.menu_name}} </div>
+          @click="toPage(item.web_url,index)" :key="item.menu_name">{{item.menu_name}} </div>
         </div>
       </div>
       <div class="header_right">
@@ -18,7 +18,11 @@
     </div>
     <PageTitle :page_title="page_title" v-if="show_page_title" />
     <div class="content">
-      <router-view></router-view>
+      <keep-alive>
+        <router-view v-if="$route.meta.keepAlive">
+        </router-view>
+      </keep-alive>
+      <router-view v-if="!$route.meta.keepAlive"></router-view>
     </div>
     <div class="page_foot"></div>
   </div>
@@ -95,11 +99,6 @@
     width: 100%;
     flex: 1;
     position: relative;
-    padding-top: 20rem;
-    padding-bottom: 20rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
   .page_foot {
     background-color: #ffffff;
@@ -114,7 +113,6 @@
   export default {
     data() {
       return {
-<<<<<<< HEAD
         username: "", //用户名
         menulist: [], //导航列表
         active_index: 0, //当前选中的导航下标
@@ -124,54 +122,11 @@
       };
     },
     watch: {
-      $route(to, from) {
+      $route(to,from){
         let router = this.$route;
         let path = router.path;
-        this.current_path = path;
+        localStorage.setItem("fullPath", router.fullPath);
         if (path != "/index") {
-=======
-        is_center: false,
-      username: "", //用户名
-<<<<<<< HEAD
-      menulist: [], //导航列表
-=======
-      menulist: [
-      {
-        menu_name: "首页",
-        web_url: "/index",
-      },
-      {
-        menu_name: "画库",
-        web_url: "/draw_warehouse",
-      },
-      {
-        menu_name: "画师",
-        web_url: "/draw_master",
-      },
-      {
-        menu_name: "选中",
-        web_url: "/selected",
-      },
-      {
-        menu_name: "权限",
-        web_url: "/permissions",
-      },
-      ], //导航列表
->>>>>>> 4ead0bf6b9ef3833477f04ab696a0c11874e75d3
-      active_index: 0, //当前选中的导航下标
-      show_page_title: false,
-      page_title: "", //页面标题
-      list: [],
-    };
-  },
-  watch: {
-    $route(to, from) {
-      let router = this.$route;
-      let path = router.path;
-      this.current_path = path;
-      if (path != "/index") {
-        this.is_center = true;
->>>>>>> 7ef9e8957ce06dce2db60cffb78f26ab0ee3f0f1
         // 权限
         if (path == "/role_setting") {
           if (router.query.type == "1") {
@@ -221,22 +176,14 @@
     },
   },
   created() {
+    this.username = localStorage.getItem("ding_user_name");
     this.getMenuList();
   },
   methods: {
     //页面切换
-    toPage(web_url, index) {
+    toPage(web_url,index) {
       this.$router.push(web_url);
-<<<<<<< HEAD
-      localStorage.setItem("activeMenu", { url: web_url, index });
       this.active_index = index;
-      console.log(this.active_index);
-=======
-      localStorage.setItem(
-        "activeMenu",
-        JSON.stringify({ url: web_url, index })
-        );
->>>>>>> 4ead0bf6b9ef3833477f04ab696a0c11874e75d3
     },
     //获取菜单列表
     getMenuList() {
@@ -247,13 +194,16 @@
           this.findResult(this.menulist);
           localStorage.setItem("menulist", JSON.stringify(res.data.data));
           localStorage.setItem("pathlist", JSON.stringify(this.list));
-          const activeMenu = localStorage.getItem("activeMenu");
-          this.menulist.map((item, index) => {
-            if (activeMenu.indexOf(item.web_url) > -1) {
-              this.active_index = index;
-              console.log(index);
-            }
-          });
+          const fullPath = localStorage.getItem("fullPath");
+          if (!fullPath) {
+            this.$router.push(this.menulist[0].web_url);
+          } else {
+            this.menulist.map((item, index) => {
+              if (fullPath.indexOf(item.web_url) > -1) {
+                this.active_index = index;
+              }
+            });
+          }
         } else {
           this.$message.warning(res.data.msg);
         }
