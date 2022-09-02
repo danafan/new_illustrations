@@ -188,21 +188,6 @@
         JSON.stringify({ url: web_url, index })
         );
     },
-    //获取用户信息
-    // getUserInfo() {
-    //   resource.loginUser().then((res) => {
-    //     if (res.data.code == 1) {
-    //       this.username = res.data.data.ding_user_name;
-    //       this.id = res.data.data.ding_user_id;
-    //       localStorage.setItem("ding_user_id", res.data.data.ding_user_id);
-    //       localStorage.setItem("ding_user_name", res.data.data.ding_user_name);
-    //       localStorage.setItem("secret_key", res.data.data.secret_key);
-    //       localStorage.setItem("login_token", res.data.data.login_token);
-    //     } else {
-    //       this.$message.warning(res.data.msg);
-    //     }
-    //   });
-    // },
     //获取菜单列表
     getMenuList() {
       resource.getMenu().then((res) => {
@@ -212,12 +197,6 @@
           this.findResult(this.menulist);
           localStorage.setItem("menulist", JSON.stringify(res.data.data));
           localStorage.setItem("pathlist", JSON.stringify(this.list));
-          // this.toPage(this.menulist[0].web_url, 0);
-          // if (localStorage.getItem("")) {
-          //   this.toPage(this.menulist[0].web_url, 0);
-          //   localStorage.setItem();
-          // } else {
-          // }
           const activeMenu = localStorage.getItem("activeMenu");
           if (!activeMenu) {
             const firstUrl = this.menulist[0].web_url;

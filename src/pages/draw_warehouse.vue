@@ -283,22 +283,22 @@ export default {
   components: {
     TableTitle,
   },
-  activated() {
-    if (!this.$route.meta.isBack) {
-      //不许要缓存的话
-      this.getData();
-    }
-    this.$route.meta.isBack = false;
-  },
-  deactivated() {},
-  beforeRouteLeave(to, from, next) {
-    if (to.path == "/warehouse_add_edit") {
-      from.meta.isBack = true;
-    } else {
-      from.meta.isBack = false;
-    }
-    next();
-  },
+  // activated() {
+  //   if (!this.$route.meta.isBack) {
+  //     //不许要缓存的话
+  //     this.getData();
+  //   }
+  //   this.$route.meta.isBack = false;
+  // },
+  // deactivated() {},
+  // beforeRouteLeave(to, from, next) {
+  //   if (to.path == "/warehouse_add_edit") {
+  //     from.meta.isBack = true;
+  //   } else {
+  //     from.meta.isBack = false;
+  //   }
+  //   next();
+  // },
 };
 </script>
 
