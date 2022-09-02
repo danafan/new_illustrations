@@ -283,6 +283,8 @@ export default {
           sku_ids = this.input_value.replaceAll("\n", ",");
         } else if (this.input_value.indexOf(" ") > -1) {
           sku_ids = this.input_value.replaceAll(" ", ",");
+        }else{
+          sku_ids = this.input_value
         }
         let arg = {
           record_id: this.record_id,

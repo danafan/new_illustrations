@@ -5,7 +5,7 @@
         <img class="logo_icon" src="../static/logo_icon.png">
         <div class="tab_list">
           <div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in menulist"
-            @click="toPage(item.web_url,index)" :key="index">{{item.menu_name}} </div>
+          @click="toPage(item.web_url,index)" :key="index">{{item.menu_name}} </div>
         </div>
       </div>
       <div class="header_right">
@@ -18,127 +18,128 @@
     </div>
     <PageTitle :page_title="page_title" v-if="show_page_title" />
     <div class="content" :class="{'display':is_center == true}">
-      <router-view></router-view>
+      <!-- <div class="content display"> -->
+        <router-view></router-view>
+      </div>
+      <div class="page_foot"></div>
     </div>
-    <div class="page_foot"></div>
-  </div>
-</template>
-<style lang="less" scoped>
-.container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  .page_header {
-    padding-left: 48px;
-    padding-right: 28px;
+  </template>
+  <style lang="less" scoped>
+  .container {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 60px;
-    background-color: #ffffff;
+    height: 100%;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    .header_left {
+    flex-direction: column;
+    .page_header {
+      padding-left: 48px;
+      padding-right: 28px;
+      width: 100%;
+      height: 60px;
+      background-color: #ffffff;
       display: flex;
       align-items: center;
-      .logo_icon {
-        margin-right: 25px;
-        width: 134px;
-        height: 48px;
-      }
-      .tab_list {
+      justify-content: space-between;
+      .header_left {
         display: flex;
         align-items: center;
-        .tab_item {
-          margin-right: 34px;
+        .logo_icon {
+          margin-right: 25px;
+          width: 134px;
+          height: 48px;
+        }
+        .tab_list {
+          display: flex;
+          align-items: center;
+          .tab_item {
+            margin-right: 34px;
+            font-size: 14px;
+            color: #333333;
+            font-weight: 500;
+            cursor: pointer;
+          }
+          .active_item {
+            color: #f36478;
+          }
+        }
+      }
+      .header_right {
+        display: flex;
+        align-items: center;
+        .user_box {
+          display: flex;
+          align-items: center;
+          .user_img {
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+          }
+          .user_name {
+            margin-left: 8px;
+            font-size: 14px;
+            color: #333333;
+            font-weight: 500;
+          }
+        }
+        .login_out {
+          margin-left: 32px;
           font-size: 14px;
-          color: #333333;
-          font-weight: 500;
+          color: #f36478;
           cursor: pointer;
         }
-        .active_item {
-          color: #f36478;
-        }
       }
     }
-    .header_right {
+    .content {
+      background-color: #f6f6f6;
+      width: 100%;
+      flex: 1;
+      overflow-y: scroll;
+    }
+    .display {
+      padding-top: 20rem;
+      padding-bottom: 20rem;
       display: flex;
       align-items: center;
-      .user_box {
-        display: flex;
-        align-items: center;
-        .user_img {
-          border-radius: 50%;
-          width: 24px;
-          height: 24px;
-        }
-        .user_name {
-          margin-left: 8px;
-          font-size: 14px;
-          color: #333333;
-          font-weight: 500;
-        }
-      }
-      .login_out {
-        margin-left: 32px;
-        font-size: 14px;
-        color: #f36478;
-        cursor: pointer;
-      }
+      justify-content: center;
+    }
+    .page_foot {
+      background-color: #ffffff;
+      width: 100%;
+      height: 70px;
     }
   }
-  .content {
-    background-color: #f6f6f6;
-    width: 100%;
-    flex: 1;
-    overflow-y: scroll;
-  }
-  .page_foot {
-    background-color: #ffffff;
-    width: 100%;
-    height: 70px;
-  }
-  .display {
-    padding-top: 20rem;
-    padding-bottom: 20rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
 </style>
 <script>
-import resource from "../api/resource";
-import PageTitle from "../components/page_title.vue";
-export default {
-  data() {
-    return {
-      is_center: false,
+  import resource from "../api/resource";
+  import PageTitle from "../components/page_title.vue";
+  export default {
+    data() {
+      return {
+        is_center: false,
       username: "", //用户名
       menulist: [
-        {
-          menu_name: "首页",
-          web_url: "/index",
-        },
-        {
-          menu_name: "画库",
-          web_url: "/draw_warehouse",
-        },
-        {
-          menu_name: "画师",
-          web_url: "/draw_master",
-        },
-        {
-          menu_name: "选中",
-          web_url: "/selected",
-        },
-        {
-          menu_name: "权限",
-          web_url: "/permissions",
-        },
+      {
+        menu_name: "首页",
+        web_url: "/index",
+      },
+      {
+        menu_name: "画库",
+        web_url: "/draw_warehouse",
+      },
+      {
+        menu_name: "画师",
+        web_url: "/draw_master",
+      },
+      {
+        menu_name: "选中",
+        web_url: "/selected",
+      },
+      {
+        menu_name: "权限",
+        web_url: "/permissions",
+      },
       ], //导航列表
       active_index: 0, //当前选中的导航下标
       show_page_title: false,
@@ -203,7 +204,6 @@ export default {
     },
   },
   created() {
-    // this.getUserInfo();
     this.getMenuList();
   },
   methods: {
@@ -213,7 +213,7 @@ export default {
       localStorage.setItem(
         "activeMenu",
         JSON.stringify({ url: web_url, index })
-      );
+        );
     },
     //获取用户信息
     // getUserInfo() {
@@ -275,26 +275,26 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {
-          resource.loginOut({ id: this.id }).then((res) => {
-            if (res.data.code == 1) {
-              localStorage.clear();
-              this.$message({
-                type: "success",
-                message: "已退出",
-              });
-              this.$router.replace("/login");
-            } else {
-              this.$message.warning(res.data.msg);
-            }
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "取消退出",
-          });
+      .then(() => {
+        resource.loginOut({ id: this.id }).then((res) => {
+          if (res.data.code == 1) {
+            localStorage.clear();
+            this.$message({
+              type: "success",
+              message: "已退出",
+            });
+            this.$router.replace("/login");
+          } else {
+            this.$message.warning(res.data.msg);
+          }
         });
+      })
+      .catch(() => {
+        this.$message({
+          type: "info",
+          message: "取消退出",
+        });
+      });
     },
   },
   components: {
