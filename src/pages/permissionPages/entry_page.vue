@@ -26,7 +26,7 @@
       </el-pagination>
     </div>
     <el-dialog :title="`${type == '1'?'添加':'编辑'}权限`" center width="50%" @close="closeDialog" :visible.sync="show_dialog"
-      :close-on-click-modal="false">
+      :append-to-body='true' :close-on-click-modal="false">
       <el-form size="small" label-width="150px">
         <el-form-item label="权限资源名称：">
           <el-input v-model="access_name" style="width:192px" placeholder="请输入权限资源名称"></el-input>

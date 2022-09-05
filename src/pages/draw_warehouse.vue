@@ -29,7 +29,8 @@
         <el-table-column prop="picture_id" label="编号" show-overflow-tooltip align="center"></el-table-column>
         <el-table-column width="100" label="插画图片" align="center">
           <template slot-scope="scope">
-            <img class="image" :src="scope.row.domain + scope.row.images[0]">
+            <el-image class="image" :src="scope.row.images[0]" fit="contain" :preview-src-list="scope.row.images">
+            </el-image>
           </template>
         </el-table-column>
         <el-table-column prop="title" label="插画标题" show-overflow-tooltip align="center"></el-table-column>
@@ -197,7 +198,12 @@ export default {
           this.loading = false;
           let dataObj = res.data.data;
           dataObj.data.map((item) => {
-            item.images = item.preview_images.split(",");
+            let arr = [];
+            let preview_images = item.preview_images.split(",");
+            preview_images.map((i) => {
+              arr.push(item.domain + i);
+            });
+            item.images = arr;
           });
           this.dataObj = dataObj;
           this.total_pages =

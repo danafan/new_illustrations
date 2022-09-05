@@ -16,7 +16,7 @@
         <div class="login_out" @click="loginOut">退出登录</div>
       </div>
     </div>
-    <PageTitle :page_title="page_title" v-if="show_page_title" />
+    <PageTitle :page_title="$store.state.page_title" v-if="$store.state.show_page_title" />
     <div class="content">
       <keep-alive>
         <router-view v-if="$route.meta.keepAlive">
@@ -117,64 +117,8 @@ export default {
       username: "", //用户名
       menulist: [], //导航列表
       active_index: 0, //当前选中的导航下标
-      show_page_title: false,
-      page_title: "", //页面标题
       list: [],
     };
-  },
-  watch: {
-    $route(to, from) {
-      let router = this.$route;
-      let path = router.path;
-      localStorage.setItem("fullPath", router.fullPath);
-      if (path != "/index") {
-        // 权限
-        if (path == "/role_setting") {
-          if (router.query.type == "1") {
-            //添加角色
-            this.page_title = "添加角色";
-          } else if (router.query.type == "2") {
-            //查看权限
-            this.page_title = "查看权限";
-          } else if (router.query.type == "3") {
-            //权限设置
-            this.page_title = "权限设置";
-          }
-          this.show_page_title = true;
-        } else if (path == "/user_list") {
-          this.page_title = "角色数量";
-          this.show_page_title = true;
-        } else if (path == "/index_detail") {
-          this.page_title = "查看插画";
-          this.show_page_title = true;
-        } else if (path == "/detail" || path == "/warehouse_detail") {
-          this.page_title = "插画详情";
-          this.show_page_title = true;
-        } else if (path == "/master_add_edit") {
-          if (router.query.type == "1") {
-            //添加画师
-            this.page_title = "上传画师资料";
-          } else if (router.query.type == "2") {
-            //编辑画师
-            this.page_title = "编辑画师资料";
-          }
-          this.show_page_title = true;
-        } else if (path == "/warehouse_add_edit") {
-          if (router.query.type == "1") {
-            //上传插画
-            this.page_title = "上传插画";
-          } else if (router.query.type == "2") {
-            //编辑插画
-            this.page_title = "编辑插画";
-          }
-          this.show_page_title = true;
-        } else {
-          this.show_page_title = false;
-        }
-      } else {
-        this.show_page_title = false;
-      }
-    },
   },
   created() {
     this.username = localStorage.getItem("ding_user_name");

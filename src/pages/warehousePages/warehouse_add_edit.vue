@@ -9,7 +9,7 @@
           </el-form-item>
           <el-form-item>
             <el-input type="textarea" :rows="5" size="small" clearable v-model="introduction"
-            placeholder="（必填）有了作品简历，大家对您的作品更感兴趣了"></el-input>
+              placeholder="（必填）有了作品简历，大家对您的作品更感兴趣了"></el-input>
           </el-form-item>
           <el-form-item label="插画师：" required>
             <el-select v-model="painter_id" clearable :popper-append-to-body="false" placeholder="请选择插画师">
@@ -20,7 +20,7 @@
           <el-form-item label="插画分类：">
             <div class="cate_list">
               <div class="cate_item" :class="{'active_cate':item.is_checked == true}" v-for="(item,index) in cate_list"
-              @click="checkCate(index)" :key="index">{{item.cate_name}}</div>
+                @click="checkCate(index)" :key="index">{{item.cate_name}}</div>
             </div>
           </el-form-item>
           <el-form-item label="插画标签：">
@@ -29,7 +29,7 @@
                 {{tag}}
               </el-tag>
               <el-input class="input-new-tag" v-if="is_input" v-model="input_value" ref="saveTagInput" size="small"
-              @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm"></el-input>
+                @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm"></el-input>
               <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加</el-button>
             </div>
           </el-form-item>
@@ -50,34 +50,34 @@
           <el-form-item label="上传图片：" required>
             <div class="cate_list">
               <div class="view_card_img" @mouseenter="item.show_icon = true" @mouseleave="item.show_icon = false"
-              v-for="(item,index) in preview_images" :key="index">
-              <img class="card_img" :src='item.domain + item.urls'>
-              <div class="delete_img" v-if="item.show_icon == true">
-                <img class="delete_icon" src="../../static/delete_icon.png" @click="deleteFile(item.urls,index)">
+                v-for="(item,index) in preview_images" :key="index">
+                <img class="card_img" :src='item.domain + item.urls'>
+                <div class="delete_img" v-if="item.show_icon == true">
+                  <img class="delete_icon" src="../../static/delete_icon.png" @click="deleteFile(item.urls,index)">
+                </div>
               </div>
+              <UploadFile :is_multiple="true" :current_num="preview_images.length" :max_num="3" @callbackFn="callbackFn"
+                v-if="preview_images.length < 3" />
             </div>
-            <UploadFile :is_multiple="true" :current_num="preview_images.length" :max_num="3" @callbackFn="callbackFn"
-            v-if="preview_images.length < 3" />
-          </div>
-        </el-form-item>
-        <el-form-item>
-          <div class="toast bottom">请上传完整精选作品预览图</div>
-          <div class="toast">请确保插画正版原创，以免引起诉讼。</div>
-          <div class="toast">请确保图片清晰无误，以此提高运营的关注率</div>
-        </el-form-item>
-      </el-form>
-      <div class="save" @click="saveFn">保存</div>
-    </div>
-  </el-card>
-</div>
+          </el-form-item>
+          <el-form-item>
+            <div class="toast bottom">请上传完整精选作品预览图</div>
+            <div class="toast">请确保插画正版原创，以免引起诉讼。</div>
+            <div class="toast">请确保图片清晰无误，以此提高运营的关注率</div>
+          </el-form-item>
+        </el-form>
+        <div class="save" @click="saveFn">保存</div>
+      </div>
+    </el-card>
+  </div>
 </template>
 <script>
-  import resource from "../../api/resource.js";
-  import TableTitle from "../../components/table_title.vue";
-  import UploadFile from "../../components/upload_file.vue";
-  export default {
-    data() {
-      return {
+import resource from "../../api/resource.js";
+import TableTitle from "../../components/table_title.vue";
+import UploadFile from "../../components/upload_file.vue";
+export default {
+  data() {
+    return {
       type: "", //1:添加；2:编辑
       title_text: "", //页面标题
       title: "", //插画标题
@@ -256,6 +256,8 @@
           sku_ids = this.sku_id.replaceAll("\n", ",");
         } else if (this.sku_id.indexOf(" ") > -1) {
           sku_ids = this.sku_id.replaceAll(" ", ",");
+        } else {
+          sku_ids = this.sku_id;
         }
         //图片
         let preview_images = [];

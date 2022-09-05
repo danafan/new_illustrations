@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div class="goods_list">
+    <div class="goods_list" v-if="this.total">
       <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
         @mouseleave="enter_index = null" :key="index">
         <div class="img_box" :class="{'active_img':enter_index == index}">
@@ -35,6 +35,7 @@
           查看</div>
       </div>
     </div>
+    <div class="text" v-else>暂无数据</div>
     <div class="page index_page">
       <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10"
         layout="slot, prev, pager, next,jumper" :total="dataObj.total">
@@ -234,6 +235,11 @@
       }
     }
   }
+  .text {
+    font-size: 15rem;
+    text-align: center;
+    margin-top: 100rem;
+  }
   .index_page {
     padding-right: 48rem;
   }
@@ -256,6 +262,7 @@ export default {
       cate_id: "",
       button_list: {},
       title: "", //标题
+      total: "",
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -333,6 +340,7 @@ export default {
             this.dataObj.total && this.dataObj.total % 10 == 0
               ? parseInt(this.dataObj.total / 10)
               : parseInt(this.dataObj.total / 10) + 1;
+          this.total = res.data.data.total;
           this.button_list = res.data.data.button_list;
           this.title = this.dataObj.data.map((item) => item.title);
           if (this.dataObj.length == 0) {

@@ -34,9 +34,10 @@
         <div class="row">
           <div class="lable">图片：</div>
           <div class="image_list">
-            <!-- <img class="image" :src="detailInfo.domain + item" v-for="(item,index) in detailInfo.preview_images" :key="index"> -->
-            <el-image :src="detailInfo.domain + item" v-for="(item,index) in detailInfo.preview_images" :key="index"
-              fit="contain"></el-image>
+            <el-image class="image" :src="item" v-for="(item,index) in preview_images" :key="index" fit="contain"
+              :preview-src-list="preview_images"></el-image>
+            <!-- <el-image :src="detailInfo.domain + item" v-for="(item,index) in detailInfo.preview_images" :key="index"
+              fit="contain"></el-image> -->
           </div>
         </div>
       </div>
@@ -52,6 +53,7 @@ export default {
     return {
       id: "",
       detailInfo: {}, //详情
+      preview_images: [],
     };
   },
   created() {
@@ -68,6 +70,7 @@ export default {
       resource.addPictureGet(arg).then((res) => {
         if (res.data.code == 1) {
           this.detailInfo = res.data.data;
+          console.log(this.detailInfo);
           this.detailInfo.cate_name =
             this.detailInfo.cate_name.length == 0
               ? ""
@@ -76,6 +79,11 @@ export default {
             this.detailInfo.sku_id.length == 0
               ? ""
               : this.detailInfo.sku_id.join(",");
+          let preview_images = [];
+          this.detailInfo.preview_images.map((item) => {
+            preview_images.push(this.detailInfo.domain + item);
+          });
+          this.preview_images = preview_images;
         } else {
           this.$message.warning(res.data.msg);
         }

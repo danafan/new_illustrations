@@ -1,24 +1,24 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from "vue";
+import Vuex from "vuex";
 import axios from "axios";
 
-
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const store = new Vuex.Store({
-  state: {  
-    menu_list:[],           //所有菜单列表
+  state: {
+    show_page_title: false, //是否展示页面返回标题
+    page_title: "", //页面返回标题
   },
   mutations: {
-    // 导航列表
-    menuList (state, list) {  
-      state.menu_list = list;
+    // 是否展示页面返回标题
+    checkStatus(state, status) {
+      state.show_page_title = status;
+    },
+    // 页面返回标题
+    checkTitle(state, title) {
+      state.page_title = title;
     },
   },
-  actions: {
-    
-  }
-
-})
+  actions: {},
+});
 export default store;
-

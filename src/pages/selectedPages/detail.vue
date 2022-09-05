@@ -35,8 +35,8 @@
           <div class="lable">图片：</div>
           <div class="image_list">
             <!-- <img class="image" :src="recoedInfo.domain + item" v-for="(item,index) in recoedInfo.preview_images" :key="index"> -->
-            <el-image :src="recoedInfo.domain + item" v-for="(item,index) in recoedInfo.preview_images" :key="index"
-              fit="contain"></el-image>
+            <el-image class="image" :src="item" v-for="(item,index) in preview_images" :key="index" fit="contain"
+              :preview-src-list="preview_images"></el-image>
           </div>
         </div>
       </div>
@@ -88,12 +88,14 @@
   </div>
 </template>
 <script>
+import http from "../../api/request.js";
 import resource from "../../api/resource.js";
 import TableTitle from "../../components/table_title.vue";
 export default {
   data() {
     return {
       recoedInfo: {}, //详情
+      preview_images: [], //图片列表
     };
   },
   created() {
@@ -113,6 +115,11 @@ export default {
             this.recoedInfo.sku_ids.length > 0
               ? this.recoedInfo.sku_ids.join(",")
               : "无";
+          let preview_images = [];
+          this.detailInfo.preview_images.map((item) => {
+            preview_images.push(this.detailInfo.domain + item);
+          });
+          this.preview_images = preview_images;
         } else {
           this.$message.warning(res.data.msg);
         }
@@ -120,11 +127,16 @@ export default {
     },
     // 点击下载源文件
     downFile() {
-      let record_id = this.recoedInfo.record_id;
-      let admin_id = localStorage.getItem("admin_id");
-      window.open(
-        `${location.origin}/api/record/source_down?record_id=${record_id}&type=1`
-      );
+      let params = {
+        type: 1,
+        record_id: this.recoedInfo.record_id,
+      };
+      http.downLoad("record/source_down", params);
+      // let record_id = this.recoedInfo.record_id;
+      // let admin_id = localStorage.getItem("admin_id");
+      // window.open(
+      //   `${location.origin}/api/record/source_down?record_id=${record_id}&type=1`
+      // );
     },
   },
   components: {
