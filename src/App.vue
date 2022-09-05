@@ -3,7 +3,7 @@
     <router-view></router-view>
   </div>
 </template>
- <style lang="less" scoped>
+<style lang="less" scoped>
 /deep/ .el-pagination {
   color: #666666;
 }
@@ -21,17 +21,23 @@
 }
 </style>
 <script>
-import resource from "./api/resource";
-export default {
-  created() {
-    this.getUserInfo();
-  },
-  watch: {
-    $route(to, from) {
-      let router = this.$route;
-      let path = router.path;
-      localStorage.setItem("fullPath", router.fullPath);
-      if (path != "/index") {
+  import resource from "./api/resource";
+  export default {
+    created() {
+      let login_token = localStorage.getItem("login_token");
+      if(login_token){
+        //获取用户信息
+        this.getUserInfo()
+      }else{
+        this.$router.push("/login");
+      }
+    },
+    watch: {
+      $route(to, from) {
+        let router = this.$route;
+        let path = router.path;
+        localStorage.setItem("fullPath", router.fullPath);
+        if (path != "/index") {
         // 权限
         if (path == "/role_setting") {
           if (router.query.type == "1") {
