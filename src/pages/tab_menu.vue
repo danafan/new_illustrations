@@ -5,7 +5,7 @@
         <img class="logo_icon" src="../static/logo_icon.png">
         <div class="tab_list">
           <div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in menulist"
-            @click="toPage(item.web_url,index)" :key="item.menu_name">{{item.menu_name}} </div>
+          @click="toPage(item.web_url,index)" :key="item.menu_name">{{item.menu_name}} </div>
         </div>
       </div>
       <div class="header_right">
@@ -109,11 +109,11 @@
 }
 </style>
 <script>
-import resource from "../api/resource";
-import PageTitle from "../components/page_title.vue";
-export default {
-  data() {
-    return {
+  import resource from "../api/resource";
+  import PageTitle from "../components/page_title.vue";
+  export default {
+    data() {
+      return {
       username: "", //用户名
       menulist: [], //导航列表
       active_index: 0, //当前选中的导航下标
@@ -135,6 +135,24 @@ export default {
       resource.getMenu().then((res) => {
         if (res.data.code == 1) {
           this.menulist = res.data.data;
+          this.menulist.map(item => {
+            if(item.web_url == 'index'){
+              let list_arr = [{web_url:'index_detail'}];
+              item.list = [...item.list,...list_arr];
+            }else if(item.web_url == 'draw_warehouse'){
+              let list_arr = [{web_url:'warehouse_add_edit'},{web_url:'warehouse_detail'}];
+              item.list = [...item.list,...list_arr];
+            }else if(item.web_url == 'draw_master'){
+              let list_arr = [{web_url:'master_add_edit'}];
+              item.list = [...item.list,...list_arr];
+            }else if(item.web_url == 'selected'){
+              let list_arr = [{web_url:'detail'}];
+              item.list = [...item.list,...list_arr];
+            }else if(item.web_url == 'permissions'){
+              let list_arr = [{web_url:'role_setting'},{web_url:'user_list'}];
+              item.list = [...item.list,...list_arr];
+            }
+          })
           //找到所有web_url
           this.findResult(this.menulist);
           localStorage.setItem("menulist", JSON.stringify(res.data.data));
@@ -143,9 +161,16 @@ export default {
           if (!fullPath) {
             this.$router.push(this.menulist[0].web_url);
           } else {
+            let path = this.$route.path.split('/')[1];
             this.menulist.map((item, index) => {
-              if (fullPath.indexOf(item.web_url) > -1) {
+              if (path == item.web_url) {
                 this.active_index = index;
+              }else{
+                item.list.map(ii => {
+                  if (path == ii.web_url) {
+                    this.active_index = index;
+                  }
+                })
               }
             });
           }
@@ -171,26 +196,26 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {
-          resource.loginOut({ id: this.id }).then((res) => {
-            if (res.data.code == 1) {
-              localStorage.clear();
-              this.$message({
-                type: "success",
-                message: "已退出",
-              });
-              this.$router.replace("/login");
-            } else {
-              this.$message.warning(res.data.msg);
-            }
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "取消退出",
-          });
+      .then(() => {
+        resource.loginOut({ id: this.id }).then((res) => {
+          if (res.data.code == 1) {
+            localStorage.clear();
+            this.$message({
+              type: "success",
+              message: "已退出",
+            });
+            this.$router.replace("/login");
+          } else {
+            this.$message.warning(res.data.msg);
+          }
         });
+      })
+      .catch(() => {
+        this.$message({
+          type: "info",
+          message: "取消退出",
+        });
+      });
     },
   },
   components: {

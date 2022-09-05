@@ -48,7 +48,8 @@ let path = {
   delPicture: "picture/delpicture", //删除插画
   soldoutPicture: "picture/soldoutpicture", //下架插画
   groundingPicture: "picture/groundingpicture", //上架插画
-  addPictureGet: "picture/checkpicture", //获取插画详情
+  addPictureGet: "picture/editshowpicture", //获取插画详情
+  checkPicture: "picture/checkpicture", //画库查看
   addPicturePost: "picture/addpicture", //上传插画
   addPainterPost: "painter/addpainter", //上传画师
   picDetail: "index/pic_detail", //首页插画详情接口
@@ -263,6 +264,10 @@ export default {
   //获取插画详情
   addPictureGet(params) {
     return http.get(path.addPictureGet, params);
+  },
+  //获取画库详情
+  checkPicture(params) {
+    return http.get(path.checkPicture, params);
   },
   //修改插画
   editPicture(params) {
