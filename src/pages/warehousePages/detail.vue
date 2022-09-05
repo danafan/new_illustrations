@@ -36,8 +36,6 @@
           <div class="image_list">
             <el-image class="image" :src="item" v-for="(item,index) in preview_images" :key="index" fit="contain"
               :preview-src-list="preview_images"></el-image>
-            <!-- <el-image :src="detailInfo.domain + item" v-for="(item,index) in detailInfo.preview_images" :key="index"
-              fit="contain"></el-image> -->
           </div>
         </div>
       </div>
@@ -67,10 +65,9 @@ export default {
       let arg = {
         id: this.id,
       };
-      resource.addPictureGet(arg).then((res) => {
+      resource.checkPicture(arg).then((res) => {
         if (res.data.code == 1) {
           this.detailInfo = res.data.data;
-          console.log(this.detailInfo);
           this.detailInfo.cate_name =
             this.detailInfo.cate_name.length == 0
               ? ""

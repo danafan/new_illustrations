@@ -35,7 +35,7 @@
           <el-button class="button_theme" type="text" size="small" @click="roleSetting('3',scope.row.menu_role_id)"
             v-if="button_list.edit == 1 && scope.row.is_disable == 0">权限设置</el-button>
           <el-button class="button_theme" type="text" size="small" @click="deleteRole(scope.row.menu_role_id)"
-            v-if="button_list.del == 1">删除</el-button>
+            v-if="button_list.del == 1 && scope.row.is_disable == 0">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
