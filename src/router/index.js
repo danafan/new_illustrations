@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import Store from '../store/index.js'
 
 const tab_menu = (resolve) => require(["@/pages/tab_menu"], resolve);
 const login = (resolve) => require(["@/pages/login"], resolve);
@@ -129,25 +130,34 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  const login_token = localStorage.getItem("login_token");
-  if (!login_token) {
-    next("/login");
+  if (to.path == "/") {
+    let menulist = Store.state.menu_list;
+    Store.commit('setActiveIndex',0);
+    next(`/${menulist[0].web_url}`);
   }else{
-    const pathlist = localStorage.getItem("pathlist");
-    if (JSON.parse(pathlist) != null && JSON.parse(pathlist).indexOf(to.path.split("/")[1]) > -1
-      ) {
-      next();
-  } else if (to.path == "/") {
-    let menulist = localStorage.getItem("menulist");
-    next(`/${JSON.parse(menulist)[0].web_url}`);
-  } else if (to.path == "/login") {
     next();
-  } else if (to.path == "/notfound") {
-    next();
-  } else {
-    next("/notfound");
   }
-}
+  // const login_token = localStorage.getItem("login_token");
+  // if (!login_token) {
+  //   next("/login");
+  // }else{
+  //   const pathlist = localStorage.getItem("pathlist");
+  //   if (JSON.parse(pathlist) != null && JSON.parse(pathlist).indexOf(to.path.split("/")[1]) > -1
+  //     ) {
+  //     next();
+  // } else if (to.path == "/") {
+  //   let menulist = localStorage.getItem("menulist");
+  //   next(`/${JSON.parse(menulist)[0].web_url}`);
+  // } else if (to.path == "/tab_menu") {
+  //   next();
+  // } else if (to.path == "/login") {
+  //   next();
+  // } else if (to.path == "/notfound") {
+  //   next();
+  // } else {
+  //   next("/notfound");
+  // }
+// }
 
 
 });
