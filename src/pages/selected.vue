@@ -276,7 +276,7 @@ export default {
           if (dataObj.data) {
             dataObj.data.map((item) => {
               let arr = [];
-              let preview_images = item.preview_images.split(",");
+              let preview_images = item.image.split(",");
               preview_images.map((i) => {
                 arr.push(item.domain + i);
               });
@@ -284,9 +284,9 @@ export default {
             });
 
             this.total_pages =
-              this.dataObj.total && this.dataObj.total % 10 == 0
-                ? parseInt(this.dataObj.total / 10)
-                : parseInt(this.dataObj.total / 10) + 1;
+              dataObj.total && dataObj.total % 10 == 0
+                ? parseInt(dataObj.total / 10)
+                : parseInt(dataObj.total / 10) + 1;
           } else {
             dataObj.data = [];
           }

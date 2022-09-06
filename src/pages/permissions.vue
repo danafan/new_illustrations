@@ -3,16 +3,16 @@
     <div class="top_menu">
       <div class="menu_item" :class="{'active_style':active_index == index}" v-for="(item,index) in permissionLists"
       @click="active_index = index" :key="index">
-        <div>{{item.menu_name}}</div>
-        <div class="active_line" v-if="active_index == index"></div>
-      </div>
+      <div>{{item.menu_name}}</div>
+      <div class="active_line" v-if="active_index == index"></div>
     </div>
-    <el-card id="menu_card" class="menu_card">
-      <RolePage v-if="name == 'role'" />
-      <UserPage v-if="name == 'members'" />
-      <EntryPage v-if="name == 'entry'" />
-    </el-card>
   </div>
+  <el-card id="menu_card" class="menu_card">
+    <RolePage v-if="name == 'role'" />
+    <UserPage v-if="name == 'members'" />
+    <EntryPage v-if="name == 'entry'" />
+  </el-card>
+</div>
 </template>
 <style lang="less" scoped>
 .per_container{
@@ -60,32 +60,28 @@
   export default {
     data() {
       return {
-      permissionLists: [], //左侧导航列表
-      active_index: 0, //当前选中的导航下标
-      name: "",
-    };
-  },
-  watch: {
-    active_index: function (n, o) {
-      this.name = this.permissionLists[n].web_url;
+        active_index: 0, //当前选中的导航下标
+        name: "",
+      };
     },
-  },
-  created() {
-    const menulist = localStorage.getItem("menulist");
-    let menulists = JSON.parse(menulist);
-
-    menulists.map((item) => {
-      if ((item.web_url = "permissions")) {
-        this.permissionLists = item.list;
+    computed:{
+      permissionLists(){
+        let permission_menu = this.$store.state.permission_menu;
+        if(permission_menu.length > 0){
+          this.name = this.$store.state.permission_menu[0].web_url;
+        }
+        return this.$store.state.permission_menu;
       }
-    });
-    this.name = this.permissionLists[0].web_url;
-  },
-
-  components: {
-    RolePage,
-    UserPage,
-    EntryPage,
-  },
-};
+    },
+    watch: {
+      active_index: function (n, o) {
+        this.name = this.permissionLists[n].web_url;
+      },
+    },
+    components: {
+      RolePage,
+      UserPage,
+      EntryPage,
+    },
+  };
 </script>
