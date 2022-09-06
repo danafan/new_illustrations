@@ -35,8 +35,8 @@ export default {
     },
     ddLoginInit(appKey) {
       //钉钉扫码流程：扫码成功登录后会自动跳到这个url页面，url路径会携带code，你拿到这个code，调用登录接口成功就跳转。
-      let url = `${location.origin}/api/scancodes/ewmlogin`;
-      // let url = "http://producttest.92nu.com/api/scancodes/ewmlogin";
+      // let url = `${location.origin}/api/scancodes/ewmlogin`;
+      let url = "http://producttest.92nu.com/api/scancodes/ewmlogin";
       // appid 找后端要
       // let appid = "dingkqqsqmlpwlffofe2";
       // let appid = appKey;

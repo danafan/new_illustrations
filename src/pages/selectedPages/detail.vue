@@ -116,8 +116,8 @@ export default {
               ? this.recoedInfo.sku_ids.join(",")
               : "无";
           let preview_images = [];
-          this.detailInfo.preview_images.map((item) => {
-            preview_images.push(this.detailInfo.domain + item);
+          this.recoedInfo.preview_images.map((item) => {
+            preview_images.push(this.recoedInfo.domain + item);
           });
           this.preview_images = preview_images;
         } else {
