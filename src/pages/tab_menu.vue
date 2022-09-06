@@ -114,80 +114,25 @@
   export default {
     data() {
       return {
-      username: "", //用户名
-      menulist: [], //导航列表
-      active_index: 0, //当前选中的导航下标
-      list: [],
-    };
-  },
-  created() {
-    this.username = localStorage.getItem("ding_user_name");
-    this.getMenuList();
-  },
-  methods: {
+        username: "", //用户名
+      };
+    },
+    computed:{
+      menulist(){
+        return this.$store.state.menu_list;
+      },
+      active_index(){
+        return this.$store.state.active_index;
+      },
+    },
+    created() {
+      this.username = localStorage.getItem("ding_user_name");
+    },
+    methods: {
     //页面切换
     toPage(web_url, index) {
       this.$router.push(web_url);
-      this.active_index = index;
-    },
-    //获取菜单列表
-    getMenuList() {
-      resource.getMenu().then((res) => {
-        if (res.data.code == 1) {
-          this.menulist = res.data.data;
-          this.menulist.map(item => {
-            if(item.web_url == 'index'){
-              let list_arr = [{web_url:'index_detail'}];
-              item.list = [...item.list,...list_arr];
-            }else if(item.web_url == 'draw_warehouse'){
-              let list_arr = [{web_url:'warehouse_add_edit'},{web_url:'warehouse_detail'}];
-              item.list = [...item.list,...list_arr];
-            }else if(item.web_url == 'draw_master'){
-              let list_arr = [{web_url:'master_add_edit'}];
-              item.list = [...item.list,...list_arr];
-            }else if(item.web_url == 'selected'){
-              let list_arr = [{web_url:'detail'}];
-              item.list = [...item.list,...list_arr];
-            }else if(item.web_url == 'permissions'){
-              let list_arr = [{web_url:'role_setting'},{web_url:'user_list'}];
-              item.list = [...item.list,...list_arr];
-            }
-          })
-          //找到所有web_url
-          this.findResult(this.menulist);
-          localStorage.setItem("menulist", JSON.stringify(res.data.data));
-          localStorage.setItem("pathlist", JSON.stringify(this.list));
-          const fullPath = localStorage.getItem("fullPath");
-          if (!fullPath) {
-            this.$router.push(this.menulist[0].web_url);
-          } else {
-            let path = this.$route.path.split('/')[1];
-            this.menulist.map((item, index) => {
-              if (path == item.web_url) {
-                this.active_index = index;
-              }else{
-                item.list.map(ii => {
-                  if (path == ii.web_url) {
-                    this.active_index = index;
-                  }
-                })
-              }
-            });
-          }
-        } else {
-          this.$message.warning(res.data.msg);
-        }
-      });
-    },
-    //找到所有web_url
-    findResult(menulist) {
-      for (let index = 0; index < menulist.length; index++) {
-        const element = menulist[index];
-        this.list.push(element.web_url);
-        if (element.list && element.list.length > 0) {
-          this.findResult(element.list);
-        }
-      }
+      this.$store.commit('setActiveIndex',index);
     },
     //退出登录
     loginOut() {
