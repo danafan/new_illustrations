@@ -60,28 +60,24 @@ import EntryPage from "./permissionPages/entry_page.vue";
 export default {
   data() {
     return {
-      permissionLists: [], //左侧导航列表
       active_index: 0, //当前选中的导航下标
       name: "",
     };
+  },
+  computed: {
+    permissionLists() {
+      let permission_menu = this.$store.state.permission_menu;
+      if (permission_menu.length > 0) {
+        this.name = this.$store.state.permission_menu[0].web_url;
+      }
+      return this.$store.state.permission_menu;
+    },
   },
   watch: {
     active_index: function (n, o) {
       this.name = this.permissionLists[n].web_url;
     },
   },
-  created() {
-    const menulist = localStorage.getItem("menulist");
-    let menulists = JSON.parse(menulist);
-
-    (menulists || []).map((item) => {
-      if ((item.web_url = "permissions")) {
-        this.permissionLists = item.list;
-      }
-    });
-    this.name = this.permissionLists[0].web_url;
-  },
-
   components: {
     RolePage,
     UserPage,

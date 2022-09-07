@@ -33,7 +33,7 @@
       </TableTitle>
       <el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}"
         :max-height="max_height" v-loading="loading">
-        <el-table-column prop="picture_id" label="编号" show-overflow-tooltip align="center"></el-table-column>
+        <el-table-column prop="record_id" label="编号" show-overflow-tooltip align="center"></el-table-column>
         <el-table-column label="插画图片" align="center">
           <template slot-scope="scope">
             <!-- <img style="width: 40px;height: 40px" :src="scope.row.domain + scope.row.image"> -->
@@ -61,9 +61,9 @@
             <el-button class="button_theme" type="text" size="small" @click="setDialog(scope.row.record_id,'1')"
               v-if="scope.row.status == 1 && button_list.binding==1">绑定</el-button>
             <el-button class="button_theme" type="text" size="small" @click="setDialog(scope.row.record_id,'2')"
-              v-if="scope.row.status == 0 && scope.row.audit == 1">同意</el-button>
+              v-if="scope.row.status == 0 && button_list.audit == 1">同意</el-button>
             <el-button class="button_theme" type="text" size="small" @click="setDialog(scope.row.record_id,'3')"
-              v-if="scope.row.status == 0 && scope.row.audit == 1">拒绝</el-button>
+              v-if="scope.row.status == 0 && button_list.audit == 1">拒绝</el-button>
             <el-button class="button_theme" type="text" size="small" @click="downFile(scope.row.record_id)"
               v-if="button_list.download==1">下载</el-button>
           </template>
@@ -276,17 +276,16 @@ export default {
           if (dataObj.data) {
             dataObj.data.map((item) => {
               let arr = [];
-              let preview_images = item.preview_images.split(",");
+              let preview_images = item.image.split(",");
               preview_images.map((i) => {
                 arr.push(item.domain + i);
               });
               item.images = arr;
             });
-
             this.total_pages =
-              this.dataObj.total && this.dataObj.total % 10 == 0
-                ? parseInt(this.dataObj.total / 10)
-                : parseInt(this.dataObj.total / 10) + 1;
+              dataObj.total && dataObj.total % 10 == 0
+                ? parseInt(dataObj.total / 10)
+                : parseInt(dataObj.total / 10) + 1;
           } else {
             dataObj.data = [];
           }

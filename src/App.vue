@@ -118,6 +118,7 @@
               let list_arr = [{web_url:'detail'}];
               item.list = [...item.list,...list_arr];
             }else if(item.web_url == 'permissions'){
+              this.$store.commit("setPermissionMenu", item.list);
               let list_arr = [{web_url:'role_setting'},{web_url:'user_list'}];
               item.list = [...item.list,...list_arr];
             }

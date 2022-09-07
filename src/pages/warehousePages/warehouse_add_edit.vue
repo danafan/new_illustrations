@@ -8,8 +8,8 @@
             <el-input size="small" clearable v-model="title" placeholder="插画标题"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-input type="textarea" :rows="5" size="small" clearable v-model="introduction"
-              placeholder="（必填）有了作品简历，大家对您的作品更感兴趣了"></el-input>
+            <el-input type="textarea" :rows="5" size="small" clearable v-model="introduction" placeholder="有了作品简历，大家对您的作品更感兴趣了">
+            </el-input>
           </el-form-item>
           <el-form-item label="插画师：" required>
             <el-select v-model="painter_id" clearable :popper-append-to-body="false" placeholder="请选择插画师">

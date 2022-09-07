@@ -20,6 +20,14 @@ instance.interceptors.response.use(
     switch (response.data.code) {
       case 1:
       return response;
+      case 9999:
+      localStorage.clear();
+      Message({
+        type: "warning",
+        message: response.data.msg,
+      });
+      router.replace("/login");
+      return;
       case 10000:
       localStorage.clear();
       //除了获取用户信息其他接口都提示
@@ -32,7 +40,11 @@ instance.interceptors.response.use(
       router.replace("/login");
       return;
       default:
-      return response;
+      Message({
+        type: "warning",
+        message: response.data.msg,
+      });
+      return;
     }
   },
   function (error) {

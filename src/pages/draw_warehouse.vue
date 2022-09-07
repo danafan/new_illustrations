@@ -116,7 +116,7 @@ export default {
     };
   },
   beforeRouteLeave(to, from, next) {
-    if (to.path == "/warehouse_add_edit") {
+    if (to.path == "/warehouse_add_edit" || to.path == "/warehouse_detail") {
       from.meta.isBack = true;
     } else {
       from.meta.isBack = false;
