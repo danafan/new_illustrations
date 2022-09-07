@@ -76,7 +76,7 @@
           <div class="value" v-if="recoedInfo.status == 2">已拒绝</div>
         </div>
         <div class="row">
-          <div class="lable">确认备注：</div>
+          <div class="lable">备注：</div>
           <div class="value">{{recoedInfo.audit_remark}}</div>
         </div>
         <div class="row">

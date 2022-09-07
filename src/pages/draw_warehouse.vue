@@ -25,7 +25,7 @@
         <div class="add_button" @click="settingFn('1')" v-if="button_list.add==1">上传</div>
       </TableTitle>
       <el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}"
-        :max-height="max_height" v-loading="loading">
+        :max-height="max_height" v-loading="loading" @sort-change="sortChange">
         <el-table-column prop="picture_id" label="编号" show-overflow-tooltip align="center"></el-table-column>
         <el-table-column width="100" label="插画图片" align="center">
           <template slot-scope="scope">
@@ -37,8 +37,9 @@
         <el-table-column prop="cate_id" label="插画分类" show-overflow-tooltip align="center"></el-table-column>
         <el-table-column prop="labels" label="插画标签" show-overflow-tooltip align="center"></el-table-column>
         <el-table-column prop="painter_name" label="插画师" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column prop="download_num" label="下载量" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column prop="add_time" label="上传时间" show-overflow-tooltip align="center" width="160"></el-table-column>
+        <el-table-column prop="download_num" label="下载量" sortable="custom" show-overflow-tooltip align="center"></el-table-column>
+        <el-table-column prop="add_time" label="上传时间" show-overflow-tooltip align="center" width="160">
+        </el-table-column>
         <el-table-column label="操作" align="center" width="200" fixed="right">
           <template slot-scope="scope">
             <el-button class="button_theme" type="text" size="small"
@@ -112,7 +113,7 @@ export default {
       dataObj: {},
       button_list: {},
       status: "", //状态
-      total: "",
+      sort: "",
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -189,6 +190,7 @@ export default {
         page: this.page,
         pagesize: this.pagesize,
         status: this.status,
+        download_num: this.sort,
       };
       this.loading = true;
       resource.pictureIndex(arg).then((res) => {
@@ -213,6 +215,15 @@ export default {
           this.$mesage.warning(res.data.msg);
         }
       });
+    },
+    //下载量排序
+    sortChange(column, prop, order) {
+      if (column.order === "ascending") {
+        this.sort = column.prop + "-asc";
+      } else if (column.order === "descending") {
+        this.sort = column.prop + "-desc";
+      }
+      this.getData();
     },
     //删除
     delPicture(id) {

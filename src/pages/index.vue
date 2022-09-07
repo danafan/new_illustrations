@@ -14,37 +14,40 @@
     </div>
     <div class="cate_row">
       <div class="cate_item" :class="{'active_cate':active_index === index}" v-for="(item,index) in cateList" :key="index"
-      @click="active_index = index">
-      <div class="cate_icon_box" :class="{'active_cate_icon_box':active_index === index}">
-        <img class="cate_icon" src="../static/logo_icon.png">
-      </div>
-      <div class="cate_name">{{item.cate_name}}</div>
-    </div>
-  </div>
-  <div v-loading="loading">
-    <div class="goods_list" v-if="dataObj.total > 0">
-      <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index" @mouseleave="enter_index = null" :key="index">
-        <div class="img_box" :class="{'active_img':enter_index == index}">
-          <el-image :src="item.domain + item.preview_images" fit="contain"></el-image>
+        @click="active_index = index">
+        <div class="cate_icon_box" :class="{'active_cate_icon_box':active_index === index}">
+          <img class="cate_icon" src="../static/logo_icon.png">
         </div>
-        <img class="shadow_top" src="../static/shadow_top.png">
-        <img class="shadow_bottom" src="../static/shadow_bottom.png">
-        <div class="title">{{item.title}}</div>
-        <div class="look_button" v-if="enter_index == index && button_list.detail==1"
-        @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">查看</div>
+        <div class="cate_name">{{item.cate_name}}</div>
       </div>
     </div>
-    <div class="page index_page" v-if="dataObj.total > 0">
-      <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10" layout="slot, prev, pager, next,jumper" :total="dataObj.total">
-        <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据</div>
-      </el-pagination>
-    </div>
-    <div class="null_list" v-if="dataObj.total === 0">
-      <img class="null_image" src="../static/list_null.png" />
-      <div class="null_text">什么都没有哦~</div>
+    <div v-loading="loading">
+      <div class="goods_list" v-if="dataObj.total > 0">
+        <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
+          @mouseleave="enter_index = null" :key="index">
+          <div class="img_box" :class="{'active_img':enter_index == index}">
+            <el-image :src="item.domain + item.preview_images" fit="contain"></el-image>
+          </div>
+          <img class="shadow_top" src="../static/shadow_top.png">
+          <img class="shadow_bottom" src="../static/shadow_bottom.png">
+          <div class="title">{{item.title}}</div>
+          <div class="look_button" v-if="enter_index == index && button_list.detail==1"
+            @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">查看</div>
+        </div>
+      </div>
+      <div class="page index_page" v-if="dataObj.total > 0">
+        <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10"
+          layout="slot, prev, pager, next,jumper" :total="dataObj.total">
+          <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据
+          </div>
+        </el-pagination>
+      </div>
+      <div class="null_list" v-if="dataObj.total === 0">
+        <img class="null_image" src="../static/list_null.png" />
+        <div class="null_text">什么都没有哦~</div>
+      </div>
     </div>
   </div>
-</div>
 </template>
 <style lang="less" scoped>
 .index_container {
@@ -78,9 +81,10 @@
       align-items: center;
       justify-content: center;
       .input_box {
-        width: 654rem;
+        width: 520rem;
         height: 60rem;
         display: flex;
+        justify-content: center;
         .box_left {
           background-color: #ffffff;
           border-radius: 30rem 0 0 30rem;
@@ -264,11 +268,11 @@
 }
 </style>
 <script>
-  import resource from "../api/resource.js";
-  export default {
-    data() {
-      return {
-      loading:false,
+import resource from "../api/resource.js";
+export default {
+  data() {
+    return {
+      loading: false,
       cateList: [], //分类列表
       active_index: 0,
       search_value: "", //输入的搜索内容
@@ -277,7 +281,7 @@
       pagesize: 10,
       total_pages: 0,
       dataObj: {
-        total:null
+        total: null,
       },
       cate_name: "",
       cate_id: "",
@@ -308,7 +312,7 @@
   watch: {
     active_index: function (n, o) {
       this.cate_id = n === null ? "" : this.cateList[n].cate_id;
-      if(n !== null){
+      if (n !== null) {
         this.search_value = "";
       }
       this.getData();
@@ -357,15 +361,15 @@
           this.loading = false;
           this.dataObj = res.data.data;
           this.total_pages =
-          this.dataObj.total && this.dataObj.total % 10 == 0
-          ? parseInt(this.dataObj.total / 10)
-          : parseInt(this.dataObj.total / 10) + 1;
+            this.dataObj.total && this.dataObj.total % 10 == 0
+              ? parseInt(this.dataObj.total / 10)
+              : parseInt(this.dataObj.total / 10) + 1;
           this.button_list = res.data.data.button_list;
         } else {
           this.$mesage.warning(res.data.msg);
         }
       });
-    }
+    },
   },
 };
 </script>

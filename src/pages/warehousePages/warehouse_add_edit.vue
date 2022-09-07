@@ -66,7 +66,7 @@
             <div class="toast">请确保图片清晰无误，以此提高运营的关注率</div>
           </el-form-item>
         </el-form>
-        <div class="save" @click="saveFn">保存</div>
+        <div class="save" @click="saveFn" v-loading="isLoading">保存</div>
       </div>
     </el-card>
   </div>
@@ -93,6 +93,7 @@ export default {
       picture_size: "", //文件大小
       show_img: false,
       preview_images: [], //已上传的图片列表
+      isLoading: false,
     };
   },
   created() {
@@ -234,6 +235,7 @@ export default {
     },
     //点击保存
     saveFn() {
+      if (this.isLoading) return;
       if (this.title == "") {
         this.$message.warning("请输入插画标题");
       } else if (this.painter_id == "") {
@@ -243,6 +245,7 @@ export default {
       } else if (this.preview_images.length == 0) {
         this.$message.warning("请上传图片");
       } else {
+        this.isLoading = true;
         //选中的分类
         let cate_ids = [];
         let cate_list = this.cate_list.map((item) => {
@@ -276,25 +279,35 @@ export default {
           preview_images: preview_images.join(","),
         };
         if (this.type == "1") {
-          resource.addPicturePost(arg).then((res) => {
-            if (res.data.code == 1) {
-              this.$message.success(res.data.msg);
-              this.$router.go(-1);
-            } else {
-              this.$message.warning(res.data.msg);
-            }
-          });
+          resource
+            .addPicturePost(arg)
+            .then((res) => {
+              if (res.data.code == 1) {
+                this.$message.success(res.data.msg);
+                this.$router.go(-1);
+              } else {
+                this.$message.warning(res.data.msg);
+              }
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
         } else {
           //编辑
           arg.id = this.id;
-          resource.editPicture(arg).then((res) => {
-            if (res.data.code == 1) {
-              this.$message.success(res.data.msg);
-              this.$router.go(-1);
-            } else {
-              this.$message.warning(res.data.msg);
-            }
-          });
+          resource
+            .editPicture(arg)
+            .then((res) => {
+              if (res.data.code == 1) {
+                this.$message.success(res.data.msg);
+                this.$router.go(-1);
+              } else {
+                this.$message.warning(res.data.msg);
+              }
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
         }
       }
     },
