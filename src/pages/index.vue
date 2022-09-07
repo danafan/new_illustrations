@@ -14,41 +14,37 @@
     </div>
     <div class="cate_row">
       <div class="cate_item" :class="{'active_cate':active_index === index}" v-for="(item,index) in cateList" :key="index"
-        @click="active_index = index">
-        <div class="cate_icon_box" :class="{'active_cate_icon_box':active_index === index}">
-          <img class="cate_icon" src="../static/logo_icon.png">
+      @click="active_index = index">
+      <div class="cate_icon_box" :class="{'active_cate_icon_box':active_index === index}">
+        <img class="cate_icon" src="../static/logo_icon.png">
+      </div>
+      <div class="cate_name">{{item.cate_name}}</div>
+    </div>
+  </div>
+  <div v-loading="loading">
+    <div class="goods_list" v-if="dataObj.total > 0">
+      <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index" @mouseleave="enter_index = null" :key="index">
+        <div class="img_box" :class="{'active_img':enter_index == index}">
+          <el-image :src="item.domain + item.preview_images" fit="contain"></el-image>
         </div>
-        <div class="cate_name">{{item.cate_name}}</div>
+        <img class="shadow_top" src="../static/shadow_top.png">
+        <img class="shadow_bottom" src="../static/shadow_bottom.png">
+        <div class="title">{{item.title}}</div>
+        <div class="look_button" v-if="enter_index == index && button_list.detail==1"
+        @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">查看</div>
       </div>
     </div>
-    <div v-if="this.total">
-      <div class="goods_list">
-        <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
-          @mouseleave="enter_index = null" :key="index">
-          <div class="img_box" :class="{'active_img':enter_index == index}">
-            <el-image :src="item.domain + item.preview_images" fit="contain"></el-image>
-          </div>
-          <img class="shadow_top" src="../static/shadow_top.png">
-          <img class="shadow_bottom" src="../static/shadow_bottom.png">
-          <div class="title">{{item.title}}</div>
-          <div class="look_button" v-if="enter_index == index && button_list.detail==1"
-            @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">
-            查看</div>
-        </div>
-      </div>
-      <div class="page index_page">
-        <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10"
-          layout="slot, prev, pager, next,jumper" :total="dataObj.total">
-          <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据
-          </div>
-        </el-pagination>
-      </div>
+    <div class="page index_page" v-if="dataObj.total > 0">
+      <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10" layout="slot, prev, pager, next,jumper" :total="dataObj.total">
+        <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据</div>
+      </el-pagination>
     </div>
-    <div class="null_list" v-else>
+    <div class="null_list" v-if="dataObj.total === 0">
       <img class="null_image" src="../static/list_null.png" />
       <div class="null_text">什么都没有哦~</div>
     </div>
   </div>
+</div>
 </template>
 <style lang="less" scoped>
 .index_container {
@@ -268,10 +264,11 @@
 }
 </style>
 <script>
-import resource from "../api/resource.js";
-export default {
-  data() {
-    return {
+  import resource from "../api/resource.js";
+  export default {
+    data() {
+      return {
+      loading:false,
       cateList: [], //分类列表
       active_index: 0,
       search_value: "", //输入的搜索内容
@@ -279,12 +276,12 @@ export default {
       page: 1,
       pagesize: 10,
       total_pages: 0,
-      dataObj: {},
+      dataObj: {
+        total:null
+      },
       cate_name: "",
       cate_id: "",
       button_list: {},
-      title: "", //标题
-      total: "",
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -302,8 +299,6 @@ export default {
       this.active_index = 0;
       this.search_value = "";
       this.getCateList();
-      //返回之后重新调接口
-      this.getData();
     } else {
       //返回之后重新调接口
       this.getData();
@@ -313,7 +308,9 @@ export default {
   watch: {
     active_index: function (n, o) {
       this.cate_id = n === null ? "" : this.cateList[n].cate_id;
-      this.search_value = "";
+      if(n !== null){
+        this.search_value = "";
+      }
       this.getData();
     },
   },
@@ -354,27 +351,21 @@ export default {
       } else {
         obj.cate_id = this.cate_id;
       }
+      this.loading = true;
       resource.goodsList(obj).then((res) => {
         if (res.data.code == 1) {
+          this.loading = false;
           this.dataObj = res.data.data;
           this.total_pages =
-            this.dataObj.total && this.dataObj.total % 10 == 0
-              ? parseInt(this.dataObj.total / 10)
-              : parseInt(this.dataObj.total / 10) + 1;
-          this.total = res.data.data.total;
+          this.dataObj.total && this.dataObj.total % 10 == 0
+          ? parseInt(this.dataObj.total / 10)
+          : parseInt(this.dataObj.total / 10) + 1;
           this.button_list = res.data.data.button_list;
-          this.title = this.dataObj.data.map((item) => item.title);
-          if (this.dataObj.length == 0) {
-            this.dataObj = {};
-          }
         } else {
           this.$mesage.warning(res.data.msg);
         }
       });
-    },
-    // search_delete() {
-    //   this.search_value = null;
-    // },
+    }
   },
 };
 </script>
