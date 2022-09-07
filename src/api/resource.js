@@ -49,7 +49,7 @@ let path = {
   soldoutPicture: "picture/soldoutpicture", //下架插画
   groundingPicture: "picture/groundingpicture", //上架插画
   addPictureGet: "picture/editshowpicture", //获取插画详情
-  checkPicture:'picture/checkpicture',
+  checkPicture: "picture/checkpicture", //画库查看
   addPicturePost: "picture/addpicture", //上传插画
   addPainterPost: "painter/addpainter", //上传画师
   picDetail: "index/pic_detail", //首页插画详情接口

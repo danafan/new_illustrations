@@ -6,6 +6,7 @@
         <div class="input_box">
           <div class="box_left">
             <input class="search_input" autofocus v-model="search_value" placeholder="请输入您要查找的关键词" @keyup.enter="searchlist()">
+            <img class="search_delete" @click="search_value = ''" src="../static/search_delete.png" v-if="search_value != ''" />
           </div>
           <div class="search_button" @click="searchlist">搜索</div>
         </div>
@@ -20,28 +21,32 @@
         <div class="cate_name">{{item.cate_name}}</div>
       </div>
     </div>
-
-    <div class="goods_list" v-if="this.total">
-      <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
-        @mouseleave="enter_index = null" :key="index">
-        <div class="img_box" :class="{'active_img':enter_index == index}">
-          <el-image :src="item.domain + item.preview_images" fit="contain"></el-image>
+    <div v-if="this.total">
+      <div class="goods_list">
+        <div class="goods_item" v-for="(item,index) in dataObj.data" @mouseenter="enter_index = index"
+          @mouseleave="enter_index = null" :key="index">
+          <div class="img_box" :class="{'active_img':enter_index == index}">
+            <el-image :src="item.domain + item.preview_images" fit="contain"></el-image>
+          </div>
+          <img class="shadow_top" src="../static/shadow_top.png">
+          <img class="shadow_bottom" src="../static/shadow_bottom.png">
+          <div class="title">{{item.title}}</div>
+          <div class="look_button" v-if="enter_index == index && button_list.detail==1"
+            @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">
+            查看</div>
         </div>
-        <img class="shadow_top" src="../static/shadow_top.png">
-        <img class="shadow_bottom" src="../static/shadow_bottom.png">
-        <div class="title">{{item.title}}</div>
-        <div class="look_button" v-if="enter_index == index && button_list.detail==1"
-          @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">
-          查看</div>
+      </div>
+      <div class="page index_page">
+        <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10"
+          layout="slot, prev, pager, next,jumper" :total="dataObj.total">
+          <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据
+          </div>
+        </el-pagination>
       </div>
     </div>
-    <div class="text" v-else>暂无数据</div>
-    <div class="page index_page">
-      <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10"
-        layout="slot, prev, pager, next,jumper" :total="dataObj.total">
-        <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据
-        </div>
-      </el-pagination>
+    <div class="null_list" v-else>
+      <img class="null_image" src="../static/list_null.png" />
+      <div class="null_text">什么都没有哦~</div>
     </div>
   </div>
 </template>
@@ -96,6 +101,11 @@
             outline: none;
             font-size: 18rem;
             color: #333333;
+          }
+          .search_delete {
+            margin-left: 28rem;
+            width: 18rem;
+            height: 18rem;
           }
         }
         .search_button {
@@ -235,10 +245,22 @@
       }
     }
   }
-  .text {
-    font-size: 15rem;
-    text-align: center;
-    margin-top: 100rem;
+  .null_list {
+    height: 1175rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .null_image {
+      width: 546rem;
+      height: 360rem;
+    }
+    .null_text {
+      margin-top: 24rem;
+      font-size: 12rem;
+      color: #999999;
+    }
   }
   .index_page {
     padding-right: 48rem;
@@ -290,7 +312,7 @@ export default {
   },
   watch: {
     active_index: function (n, o) {
-      this.cate_id = this.cateList[n].cate_id;
+      this.cate_id = n === null ? "" : this.cateList[n].cate_id;
       this.search_value = "";
       this.getData();
     },
@@ -350,6 +372,9 @@ export default {
         }
       });
     },
+    // search_delete() {
+    //   this.search_value = null;
+    // },
   },
 };
 </script>
