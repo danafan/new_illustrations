@@ -13,50 +13,50 @@
         <div class="add_button" @click="masterSetting('1')" v-if="button_list.add==1">添加</div>
       </TableTitle>
       <el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}"
-        :max-height="max_height" v-loading="loading">
-        <el-table-column prop="name" label="姓名" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column prop="phone" label="手机号码" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column prop="wechart_no" label="联系微信" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column prop="alipay_no" label="支付宝账号" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column prop="email" label="联系邮箱" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column label="身份证正面" width="120" align="center">
-          <template slot-scope="scope">
-            <el-image class="card_img" :src="scope.row.front_arr[0]" fit="contain" :preview-src-list="scope.row.front_arr">
-            </el-image>
-          </template>
-        </el-table-column>
-        <el-table-column label="身份证反面" width="120" align="center">
-          <template slot-scope="scope">
-            <el-image class="card_img" :src="scope.row.back_arr[0]" fit="contain" :preview-src-list="scope.row.back_arr">
-            </el-image>
-          </template>
-        </el-table-column>
-        <el-table-column prop="add_time" label="上传时间" show-overflow-tooltip align="center"></el-table-column>
-        <el-table-column label="操作" align="center" width="120" fixed="right">
-          <template slot-scope="scope">
-            <el-button class="button_theme" type="text" size="small" @click="masterSetting('2',scope.row.id)"
-              v-if="button_list.edit==1">编辑</el-button>
-            <el-button class="button_theme" type="text" size="small" @click="deleteMaster(scope.row.id)"
-              v-if="button_list.delete==1">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="page" id="el_pagination">
-        <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10"
-          layout="slot, prev, pager, next,jumper" :total="dataObj.total">
-          <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据
-          </div>
-        </el-pagination>
-      </div>
-    </el-card>
-  </div>
+      :max-height="max_height" v-loading="loading">
+      <el-table-column prop="name" label="姓名" show-overflow-tooltip align="center"></el-table-column>
+      <el-table-column prop="phone" label="手机号码" show-overflow-tooltip align="center"></el-table-column>
+      <el-table-column prop="wechart_no" label="联系微信" show-overflow-tooltip align="center"></el-table-column>
+      <el-table-column prop="alipay_no" label="支付宝账号" show-overflow-tooltip align="center"></el-table-column>
+      <el-table-column prop="email" label="联系邮箱" show-overflow-tooltip align="center"></el-table-column>
+      <el-table-column label="身份证正面" width="120" align="center">
+        <template slot-scope="scope">
+          <el-image class="card_img" :src="scope.row.front_arr[0]" fit="contain" :preview-src-list="scope.row.front_arr">
+          </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column label="身份证反面" width="120" align="center">
+        <template slot-scope="scope">
+          <el-image class="card_img" :src="scope.row.back_arr[0]" fit="contain" :preview-src-list="scope.row.back_arr">
+          </el-image>
+        </template>
+      </el-table-column>
+      <el-table-column prop="add_time" label="上传时间" show-overflow-tooltip align="center"></el-table-column>
+      <el-table-column label="操作" align="center" width="120" fixed="right">
+        <template slot-scope="scope">
+          <el-button class="button_theme" type="text" size="small" @click="masterSetting('2',scope.row.id)"
+          v-if="button_list.edit==1">编辑</el-button>
+          <el-button class="button_theme" type="text" size="small" @click="deleteMaster(scope.row.id)"
+          v-if="button_list.delete==1">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="page" id="el_pagination">
+      <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10"
+      layout="slot, prev, pager, next,jumper" :total="dataObj.total">
+      <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据
+    </div>
+  </el-pagination>
+</div>
+</el-card>
+</div>
 </template>
 <script>
-import resource from "../api/resource.js";
-import TableTitle from "../components/table_title.vue";
-export default {
-  data() {
-    return {
+  import resource from "../api/resource.js";
+  import TableTitle from "../components/table_title.vue";
+  export default {
+    data() {
+      return {
       max_height: 0, //表格最大高度
       loading: false,
       name: "",
@@ -79,7 +79,6 @@ export default {
     if (!this.$route.meta.isBack) {
       this.page = 1;
       this.name = "";
-      this.dataObj = {};
       //获取列表
       this.getData();
     } else {
@@ -102,16 +101,16 @@ export default {
         let box_card_height = document.getElementById("box_card").offsetHeight;
         let el_form_height = document.getElementById("el_form").offsetHeight;
         let table_title_height =
-          document.getElementById("table_title").offsetHeight;
+        document.getElementById("table_title").offsetHeight;
         let el_pagination_height =
-          document.getElementById("el_pagination").offsetHeight;
+        document.getElementById("el_pagination").offsetHeight;
         this.max_height =
-          box_card_height -
-          el_form_height -
-          table_title_height -
-          el_pagination_height -
-          40 +
-          "px";
+        box_card_height -
+        el_form_height -
+        table_title_height -
+        el_pagination_height -
+        40 +
+        "px";
       });
     },
     handleCurrentChange(val) {
@@ -140,9 +139,9 @@ export default {
             item.back_arr = back_arr;
           });
           this.total_pages =
-            this.dataObj.total && this.dataObj.total % 10 == 0
-              ? parseInt(this.dataObj.total / 10)
-              : parseInt(this.dataObj.total / 10) + 1;
+          this.dataObj.total && this.dataObj.total % 10 == 0
+          ? parseInt(this.dataObj.total / 10)
+          : parseInt(this.dataObj.total / 10) + 1;
           this.button_list = res.data.data.button_list;
         } else {
           this.$mesage.warning(res.data.msg);
@@ -165,16 +164,16 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {
+      .then(() => {
           //删除
           this.commitDelete(id);
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消",
-          });
+      .catch(() => {
+        this.$message({
+          type: "info",
+          message: "已取消",
         });
+      });
     },
     //删除
     commitDelete(id) {

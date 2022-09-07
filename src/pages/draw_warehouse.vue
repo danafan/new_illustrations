@@ -130,8 +130,6 @@ export default {
       this.search = ""; //输入的搜索内容
       this.cate_list = []; //插画分类列表
       this.cate = ""; //选中的插画id
-      this.pagesize = 10;
-      this.dataObj = {};
       //获取插画分类列表
       this.getCate();
       this.getData();

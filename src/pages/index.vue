@@ -275,14 +275,13 @@ export default {
   },
   activated() {
     if (!this.$route.meta.isBack) {
-      //不许要缓存的话
       this.page = 1;
-      this.pagesize = 10;
       this.cate_id = "";
       this.active_index = 0;
       this.search_value = "";
-      this.dataObj = {};
       this.getCateList();
+      //返回之后重新调接口
+      this.getData();
     } else {
       //返回之后重新调接口
       this.getData();

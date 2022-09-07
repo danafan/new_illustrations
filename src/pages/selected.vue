@@ -162,11 +162,11 @@ export default {
   },
   activated() {
     if (!this.$route.meta.isBack) {
+      this.page = 1;
       this.search = "";
       this.shop_code = [];
       this.status = "";
       this.dates = [];
-      this.dataObj = {};
       //获取所有店铺列表
       this.ajaxViewShop();
       //获取列表
