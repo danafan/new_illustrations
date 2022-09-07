@@ -18,6 +18,12 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     switch (response.data.code) {
+      case 0:
+      Message({
+        type: "warning",
+        message: response.data.msg,
+      });
+      return;
       case 1:
       return response;
       case 9999:
@@ -40,11 +46,7 @@ instance.interceptors.response.use(
       router.replace("/login");
       return;
       default:
-      Message({
-        type: "warning",
-        message: response.data.msg,
-      });
-      return;
+      return response;
     }
   },
   function (error) {
