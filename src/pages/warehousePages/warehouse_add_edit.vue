@@ -384,6 +384,7 @@ export default {
       line-height: 26rem;
       font-size: 14rem;
       color: #333333;
+      cursor: pointer;
     }
     .active_cate {
       border: 1px solid #f36478;
@@ -449,6 +450,7 @@ export default {
     line-height: 32rem;
     font-size: 14rem;
     color: #ffffff;
+    cursor: pointer;
   }
 }
 </style>

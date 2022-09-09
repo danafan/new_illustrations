@@ -38,10 +38,6 @@
         <div class="lable">文件大小：</div>
         <div class="value">{{detailInfo.picture_size}}</div>
       </div>
-      <!-- <div class="row">
-				<div class="lable">尺寸/分辨率：</div>
-				<div class="value">{{detailInfo.picture_size}}</div>
-			</div> -->
       <div class="row">
         <div class="lable">上传时间：</div>
         <div class="value">{{detailInfo.add_time}}</div>
@@ -279,6 +275,7 @@ export default {
       font-size: 18rem;
       color: #ffffff;
       font-weight: 500;
+      cursor: pointer;
     }
   }
 }

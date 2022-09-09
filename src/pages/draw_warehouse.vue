@@ -113,7 +113,7 @@ export default {
       dataObj: {},
       button_list: {},
       status: "", //状态
-      sort: "",
+      sort: "", //排序方式
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -218,10 +218,13 @@ export default {
     },
     //下载量排序
     sortChange(column, prop, order) {
+      console.log(column);
       if (column.order === "ascending") {
         this.sort = column.prop + "-asc";
       } else if (column.order === "descending") {
         this.sort = column.prop + "-desc";
+      } else if (column.order === null) {
+        this.sort = "";
       }
       this.getData();
     },

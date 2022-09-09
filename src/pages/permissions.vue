@@ -34,6 +34,7 @@
     font-size: 14rem;
     color: #666666;
     font-weight: bold;
+    cursor: pointer;
     .active_line {
       position: absolute;
       left: 0;

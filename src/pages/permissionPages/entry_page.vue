@@ -39,7 +39,7 @@
           <el-select v-model="selController" placeholder="请选择">
             <el-option v-for="item in controller" :key="item" :label="item" :value="item">
             </el-option>
-          </el-select> /
+          </el-select>
           <el-select v-model="selMethod" placeholder="请选择">
             <el-option v-for="item in methodList" :key="item" :label="item" :value="item">
             </el-option>

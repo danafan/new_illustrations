@@ -36,6 +36,7 @@ export default {
   .go_back {
     font-weight: 500;
     color: #333333;
+    cursor: pointer;
   }
 }
 </style>

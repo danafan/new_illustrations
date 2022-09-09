@@ -5,7 +5,7 @@
         <img class="logo_icon" src="../static/logo_icon.png">
         <div class="tab_list">
           <div class="tab_item" :class="{'active_item':active_index == index}" v-for="(item,index) in menulist"
-          @click="toPage(item.web_url,index)" :key="item.menu_name">{{item.menu_name}} </div>
+            @click="toPage(item.web_url,index)" :key="item.menu_name">{{item.menu_name}} </div>
         </div>
       </div>
       <div class="header_right">
@@ -85,6 +85,7 @@
           font-size: 14px;
           color: #333333;
           font-weight: 500;
+          cursor: pointer;
         }
       }
       .login_out {
@@ -109,30 +110,30 @@
 }
 </style>
 <script>
-  import resource from "../api/resource";
-  import PageTitle from "../components/page_title.vue";
-  export default {
-    data() {
-      return {
-        username: "", //用户名
-      };
+import resource from "../api/resource";
+import PageTitle from "../components/page_title.vue";
+export default {
+  data() {
+    return {
+      username: "", //用户名
+    };
+  },
+  computed: {
+    menulist() {
+      return this.$store.state.menu_list;
     },
-    computed:{
-      menulist(){
-        return this.$store.state.menu_list;
-      },
-      active_index(){
-        return this.$store.state.active_index;
-      },
+    active_index() {
+      return this.$store.state.active_index;
     },
-    created() {
-      this.username = localStorage.getItem("ding_user_name");
-    },
-    methods: {
+  },
+  created() {
+    this.username = localStorage.getItem("ding_user_name");
+  },
+  methods: {
     //页面切换
     toPage(web_url, index) {
       this.$router.push(web_url);
-      this.$store.commit('setActiveIndex',index);
+      this.$store.commit("setActiveIndex", index);
     },
     //退出登录
     loginOut() {
@@ -141,26 +142,26 @@
         cancelButtonText: "取消",
         type: "warning",
       })
-      .then(() => {
-        resource.loginOut({ id: this.id }).then((res) => {
-          if (res.data.code == 1) {
-            localStorage.clear();
-            this.$message({
-              type: "success",
-              message: "已退出",
-            });
-            this.$router.replace("/login");
-          } else {
-            this.$message.warning(res.data.msg);
-          }
+        .then(() => {
+          resource.loginOut({ id: this.id }).then((res) => {
+            if (res.data.code == 1) {
+              localStorage.clear();
+              this.$message({
+                type: "success",
+                message: "已退出",
+              });
+              this.$router.replace("/login");
+            } else {
+              this.$message.warning(res.data.msg);
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消退出",
+          });
         });
-      })
-      .catch(() => {
-        this.$message({
-          type: "info",
-          message: "取消退出",
-        });
-      });
     },
   },
   components: {

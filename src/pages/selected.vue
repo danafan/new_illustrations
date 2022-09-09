@@ -202,7 +202,7 @@ export default {
           el_form_height -
           table_title_height -
           el_pagination_height -
-          40 +
+          62 +
           "px";
       });
     },
