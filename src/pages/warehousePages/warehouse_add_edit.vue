@@ -1,6 +1,6 @@
 <template>
   <div class="other_container">
-    <el-card class="box_card scroll_y">
+    <el-card class="box_card scroll_y" v-loading="isLoading">
       <TableTitle :title_text="title_text" />
       <div class="card_content">
         <el-form size="small" label-width="150px">
@@ -66,7 +66,7 @@
             <div class="toast">请确保图片清晰无误，以此提高运营的关注率</div>
           </el-form-item>
         </el-form>
-        <div class="save" @click="saveFn" v-loading="isLoading">保存</div>
+        <div class="save" @click="saveFn">保存</div>
       </div>
     </el-card>
   </div>
@@ -145,7 +145,14 @@ export default {
           let data = res.data.data;
           this.title = data.title;
           this.introduction = data.introduction;
-          this.painter_id = data.painter_id == 0 ? "" : data.painter_id;
+          const painteridlist = this.painter_list.filter(
+            (item) => item.painter_id == data.painter_id
+          );
+          if (painteridlist.length == 0) {
+            this.painter_id = "";
+          } else {
+            this.painter_id = data.painter_id;
+          }
           if (data.cate_id != "") {
             this.cate_list.map((item) => {
               data.cate_id.map((i) => {
@@ -321,6 +328,9 @@ export default {
 <style lang="less" scoped>
 .scroll_y {
   overflow-y: scroll;
+}
+/deep/ .el-loading-mask {
+  height: 1016rem;
 }
 .card_content {
   display: flex;

@@ -1,6 +1,6 @@
 <template>
   <div class="other_container">
-    <el-card class="box_card scroll_y">
+    <el-card class="box_card scroll_y" v-loading="isLoading">
       <TableTitle title_text="画师资料" />
       <div class="card_content">
         <el-form size="small" label-width="150px">
@@ -61,6 +61,7 @@ export default {
       front_del: false,
       card_back: "", //反面地址
       back_del: false,
+      isLoading: false,
     };
   },
   created() {
@@ -108,7 +109,6 @@ export default {
       resource.addPainterGet(arg).then((res) => {
         if (res.data.code == 1) {
           let data = res.data.data;
-          console.log(data);
           this.id = data.painter_id;
           this.name = data.painter_name;
           this.phone = data.phone;
@@ -125,6 +125,7 @@ export default {
     },
     //点击保存
     saveFn() {
+      if (this.isLoading) return;
       if (this.name == "") {
         this.$message.warning("请输入真实姓名");
       } else if (this.phone == "") {
@@ -140,6 +141,7 @@ export default {
       } else if (this.card_back == "") {
         this.$message.warning("请上传身份证反面");
       } else {
+        this.isLoading = true;
         let arg = {
           name: this.name,
           phone: this.phone,
@@ -149,29 +151,35 @@ export default {
           card_front: this.card_front,
           card_back: this.card_back,
         };
-        // if (this.type == "2") {
-        //   //编辑
-        //   arg.id = this.id;
-        // }
         if (this.type == "1") {
-          resource.addPainterPost(arg).then((res) => {
-            if (res.data.code == 1) {
-              this.$message.success(res.data.msg);
-              this.$router.go(-1);
-            } else {
-              this.$message.warning(res.data.msg);
-            }
-          });
+          resource
+            .addPainterPost(arg)
+            .then((res) => {
+              if (res.data.code == 1) {
+                this.$message.success(res.data.msg);
+                this.$router.go(-1);
+              } else {
+                this.$message.warning(res.data.msg);
+              }
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
         } else {
           arg.id = this.id;
-          resource.editPainter(arg).then((res) => {
-            if (res.data.code == 1) {
-              this.$message.success(res.data.msg);
-              this.$router.go(-1);
-            } else {
-              this.$message.warning(res.data.msg);
-            }
-          });
+          resource
+            .editPainter(arg)
+            .then((res) => {
+              if (res.data.code == 1) {
+                this.$message.success(res.data.msg);
+                this.$router.go(-1);
+              } else {
+                this.$message.warning(res.data.msg);
+              }
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
         }
       }
     },

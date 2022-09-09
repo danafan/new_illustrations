@@ -32,7 +32,7 @@
           <img class="shadow_bottom" src="../static/shadow_bottom.png">
           <div class="title">{{item.title}}</div>
           <div class="look_button" v-if="enter_index == index && button_list.detail==1"
-            @click="$router.push(`/index_detail?picture_id=${item.picture_id}`)">查看</div>
+            @click="$router.push(`/index_detail?picture_id=${item.picture_id}&select=${button_list.select}`)">查看</div>
         </div>
       </div>
       <div class="page index_page" v-if="dataObj.total > 0">
@@ -86,6 +86,7 @@
         display: flex;
         justify-content: center;
         .box_left {
+          width: 446rem;
           background-color: #ffffff;
           border-radius: 30rem 0 0 30rem;
           padding-left: 28rem;

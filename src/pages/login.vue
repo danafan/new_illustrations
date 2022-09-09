@@ -56,7 +56,7 @@ export default {
           //判断是否来自ddLogin扫码事件。
           const loginTmpCode = event.data;
           //获取到loginTmpCode后就可以在这里构造跳转链接进行跳转了
-          console.log("loginTmpCode", loginTmpCode);
+          // console.log("loginTmpCode", loginTmpCode);
           //此步拿到临时loginTmpCode换取正式code
           window.location.href = `https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=${appKey}&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=${url}&loginTmpCode=${loginTmpCode}`;
         }

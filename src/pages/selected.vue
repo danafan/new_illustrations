@@ -219,7 +219,7 @@ export default {
     },
     //获取所有店铺列表
     ajaxViewShop() {
-      resource.ajaxViewShop().then((res) => {
+      resource.ajaxViewShop({ type: 1 }).then((res) => {
         if (res.data.code == 1) {
           this.store_list = res.data.data;
         } else {

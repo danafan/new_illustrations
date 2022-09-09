@@ -172,6 +172,11 @@ export default {
     window.removeEventListener("resize", () => {});
   },
   methods: {
+    //选择不同部门
+    // async shopChange(checked) {
+    //   this.stores = await this.getStore({ dept_name: checked });
+    //   console.log(this.stores);
+    // },
     //监听屏幕大小变化
     onResize() {
       this.$nextTick(() => {
@@ -293,18 +298,33 @@ export default {
       };
       resource.userBindingGet(arg).then((res) => {
         if (res.data.code == 1) {
-          this.shop_list = res.data.data.shop_list;
-          this.shop_codes = res.data.data.selected_shops;
-          this.dept_list = res.data.data.dept_list;
-          this.dept_names = res.data.data.selected_depts;
-          this.is_all_stores = res.data.data.is_all_stores;
-          this.view_type = res.data.data.view_type;
-          this.binding_store_dialog = true;
+          //获取所有店铺列表
+          // this.ajaxViewShop(res.data.data);
         } else {
           this.$mesage.warning(res.data.msg);
         }
       });
     },
+    //获取所有店铺列表
+    // ajaxViewShop(data) {
+    //   // let obj = {
+    //   //   type:2,
+    //   //   dept_name:
+    //   // }
+    //   resource.ajaxViewShop().then((res) => {
+    //     if (res.data.code == 1) {
+    //       this.shop_list = res.data.data;
+    //       this.shop_codes = data.selected_shops;
+    //       this.dept_list = data.dept_list;
+    //       this.dept_names = data.selected_depts;
+    //       this.is_all_stores = data.is_all_stores;
+    //       this.view_type = data.view_type;
+    //       this.binding_store_dialog = true;
+    //     } else {
+    //       this.$message.warning(res.data.msg);
+    //     }
+    //   });
+    // },
     //绑定店铺
     commitBind() {
       let arg = {

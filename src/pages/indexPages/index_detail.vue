@@ -46,7 +46,7 @@
         <div class="lable">上传时间：</div>
         <div class="value">{{detailInfo.add_time}}</div>
       </div>
-      <div class="selectFn" @click="show_dialog = true">立即选中</div>
+      <div class="selectFn" @click="show_dialog = true" v-if="select==1">立即选中</div>
     </el-card>
     <!-- 选中插画 -->
     <el-dialog title="选中信息" center width="50%" @close="closeDialog" :visible.sync="show_dialog" :close-on-click-modal="false"
@@ -88,6 +88,8 @@ import resource from "../../api/resource.js";
 export default {
   data() {
     return {
+      picture_id: "", //插画的id
+      select: "", //按钮的状态
       list_height: 0, //可滑动的高度
       detailInfo: {}, //详情
       show_dialog: false, //选中弹窗
@@ -98,10 +100,12 @@ export default {
       purpose_type: "", //选中的插画用途
       preview_images: [], //图片列表
       remark: "", //备注
+      button_list: {},
     };
   },
   created() {
     this.picture_id = this.$route.query.picture_id;
+    this.select = this.$route.query.select;
     //获取详情
     this.picDetail();
   },
@@ -139,13 +143,12 @@ export default {
       resource.picDetail(arg).then((res) => {
         if (res.data.code == 1) {
           this.detailInfo = res.data.data;
-          console.log(this.detailInfo);
           let preview_images = [];
           this.detailInfo.preview_images.map((item) => {
             preview_images.push(this.detailInfo.domain + item);
           });
           this.preview_images = preview_images;
-          console.log(this.preview_images);
+          this.button_list = res.data.data.button_list;
         } else {
           this.$mesage.warning(res.data.msg);
         }
@@ -153,7 +156,7 @@ export default {
     },
     //获取所有店铺列表
     ajaxViewShop() {
-      resource.ajaxViewShop().then((res) => {
+      resource.ajaxViewShop({ type: 1 }).then((res) => {
         if (res.data.code == 1) {
           this.store_list = res.data.data;
         } else {
