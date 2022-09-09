@@ -12,126 +12,126 @@
       <div class="add_button" @click="createUser" v-if="button_list.add == 1">添加</div>
     </TableTitle>
     <el-table size="small" :data="dataObj.data" tooltip-effect="dark" :header-cell-style="{'background':'#f4f4f4'}"
-      :max-height="max_height" v-loading="loading">
-      <el-table-column prop="main_dept_name" label="所属部门" show-overflow-tooltip align="center"></el-table-column>
-      <el-table-column prop="binding_stores" label="绑定店铺" show-overflow-tooltip align="center"></el-table-column>
-      <el-table-column label="是否查看记录" align="center" width="100">
-        <template slot-scope="scope">
-          <div>{{scope.row.view_type == 1?'否':'是'}}</div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="ding_user_name" label="姓名" show-overflow-tooltip align="center"></el-table-column>
-      <el-table-column prop="job_no" label="工号" show-overflow-tooltip align="center"></el-table-column>
-      <el-table-column prop="position" label="岗位名称" show-overflow-tooltip align="center"></el-table-column>
-      <el-table-column label="是否启用" align="center" width="100">
-        <template slot-scope="scope">
-          <div>{{scope.row.status == 1?'启用':'禁用'}}</div>
-        </template>
-      </el-table-column>
-      <el-table-column prop="menu_role_name" label="所属角色" show-overflow-tooltip align="center"></el-table-column>
-      <el-table-column label="操作" align="center" width="200" fixed="right">
-        <template slot-scope="scope">
-          <el-button class="button_theme" type="text" size="small" @click="bindStore(scope.row.user_id)"
-            v-if="button_list.binding_store == 1">绑定店铺</el-button>
-          <el-button class="button_theme" type="text" size="small" @click="userSet(scope.row.user_id)"
-            v-if="button_list.setting == 1">权限设置</el-button>
-          <el-button class="button_theme" type="text" size="small" @click="deleteUser(scope.row.user_id)"
-            v-if="button_list.del == 1">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="page" id="el_pagination">
-      <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10"
-        layout="slot, prev, pager, next,jumper" :total="dataObj.total">
-        <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据
-        </div>
-      </el-pagination>
-    </div>
-    <!-- 添加成员 -->
-    <el-dialog title="添加成员" center width="30%" :visible.sync="add_user_dialog" @close="closeDialog" :append-to-body='true'>
-      <el-form>
-        <el-form-item label="选择成员：" required>
-          <el-select size="mini" v-model="user_id" clearable :popper-append-to-body="false" filterable placeholder="请选择成员">
-            <el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.user_id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="选择角色：" required>
-          <el-select size="mini" v-model="role_id" clearable :popper-append-to-body="false" filterable placeholder="请选择成员">
-            <el-option v-for="item in role_list" :key="item.menu_role_id" :label="item.menu_role_name" :value="item.menu_role_id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="add_user_dialog = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="commitCreate">确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- 绑定店铺 -->
-    <el-dialog title="绑定店铺" center width="30%" :visible.sync="binding_store_dialog" :append-to-body='true'>
-      <el-form>
-        <el-form-item label="店铺权限：">
-          <el-radio-group v-model="is_all_stores">
-            <el-radio :label="1">全部店铺权限</el-radio>
-            <el-radio :label="0">设置店铺权限</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="选择部门：" required v-if="is_all_stores == 0">
-          <el-select size="mini" v-model="dept_names" clearable :popper-append-to-body="false" multiple filterable collapse-tags
-            placeholder="选择部门">
-            <el-option v-for="item in dept_list" :key="item.dept_name" :label="item.dept_name" :value="item.dept_name">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="选择店铺：" required v-if="is_all_stores == 0">
-          <el-select size="mini" v-model="shop_codes" clearable :popper-append-to-body="false" multiple filterable collapse-tags
-            placeholder="选择店铺">
-            <el-option v-for="item in shop_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否查看记录：">
-          <el-radio-group v-model="view_type">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="binding_store_dialog = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="commitBind">确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- 权限设置 -->
-    <el-dialog title="权限设置" center width="30%" :visible.sync="permission_dialog" :append-to-body='true'>
-      <el-form>
-        <el-form-item label="角色名称：" required>
-          <el-select size="mini" v-model="menu_role_ids" clearable :popper-append-to-body="false" multiple filterable
-            collapse-tags placeholder="选择角色">
-            <el-option v-for="item in menu_role_list" :key="item.menu_role_id" :label="item.menu_role_name"
-              :value="item.menu_role_id">
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否启用：">
-          <el-switch v-model="status" :active-value="1" :inactive-value="0" active-color="#F36478" inactive-color="#778899">
-          </el-switch>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="mini" @click="permission_dialog = false">取 消</el-button>
-        <el-button size="mini" type="primary" @click="commitSetting">确 定</el-button>
-      </div>
-    </el-dialog>
+    :max-height="max_height" v-loading="loading">
+    <el-table-column prop="main_dept_name" label="所属部门" show-overflow-tooltip align="center"></el-table-column>
+    <el-table-column prop="binding_stores" label="绑定店铺" show-overflow-tooltip align="center"></el-table-column>
+    <el-table-column label="是否查看记录" align="center" width="100">
+      <template slot-scope="scope">
+        <div>{{scope.row.view_type == 1?'否':'是'}}</div>
+      </template>
+    </el-table-column>
+    <el-table-column prop="ding_user_name" label="姓名" show-overflow-tooltip align="center"></el-table-column>
+    <el-table-column prop="job_no" label="工号" show-overflow-tooltip align="center"></el-table-column>
+    <el-table-column prop="position" label="岗位名称" show-overflow-tooltip align="center"></el-table-column>
+    <el-table-column label="是否启用" align="center" width="100">
+      <template slot-scope="scope">
+        <div>{{scope.row.status == 1?'启用':'禁用'}}</div>
+      </template>
+    </el-table-column>
+    <el-table-column prop="menu_role_name" label="所属角色" show-overflow-tooltip align="center"></el-table-column>
+    <el-table-column label="操作" align="center" width="200" fixed="right">
+      <template slot-scope="scope">
+        <el-button class="button_theme" type="text" size="small" @click="bindStore(scope.row.user_id)"
+        v-if="button_list.binding_store == 1">绑定店铺</el-button>
+        <el-button class="button_theme" type="text" size="small" @click="userSet(scope.row.user_id)"
+        v-if="button_list.setting == 1">权限设置</el-button>
+        <el-button class="button_theme" type="text" size="small" @click="deleteUser(scope.row.user_id)"
+        v-if="button_list.del == 1">删除</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+  <div class="page" id="el_pagination">
+    <el-pagination small @current-change="handleCurrentChange" :current-page="page" :page-size="10"
+    layout="slot, prev, pager, next,jumper" :total="dataObj.total">
+    <div class="page_row">共<div class="theme_page">{{total_pages}}</div>页/<div class="theme_page">{{dataObj.total}}</div>条数据
   </div>
+</el-pagination>
+</div>
+<!-- 添加成员 -->
+<el-dialog title="添加成员" center width="30%" :visible.sync="add_user_dialog" @close="closeDialog" :append-to-body='true'>
+  <el-form>
+    <el-form-item label="选择成员：" required>
+      <el-select size="mini" v-model="user_id" clearable :popper-append-to-body="false" filterable placeholder="请选择成员">
+        <el-option v-for="item in user_list" :key="item.user_id" :label="item.real_name" :value="item.user_id">
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="选择角色：" required>
+      <el-select size="mini" v-model="role_id" clearable :popper-append-to-body="false" filterable placeholder="请选择成员">
+        <el-option v-for="item in role_list" :key="item.menu_role_id" :label="item.menu_role_name" :value="item.menu_role_id">
+        </el-option>
+      </el-select>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button size="mini" @click="add_user_dialog = false">取 消</el-button>
+    <el-button size="mini" type="primary" @click="commitCreate">确 定</el-button>
+  </div>
+</el-dialog>
+<!-- 绑定店铺 -->
+<el-dialog title="绑定店铺" center width="30%" :visible.sync="binding_store_dialog" :append-to-body='true'>
+  <el-form>
+    <el-form-item label="店铺权限：">
+      <el-radio-group v-model="is_all_stores">
+        <el-radio :label="1">全部店铺权限</el-radio>
+        <el-radio :label="0">设置店铺权限</el-radio>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item label="选择部门：" required v-if="is_all_stores == 0">
+      <el-select size="mini" v-model="dept_names" clearable :popper-append-to-body="false" multiple filterable collapse-tags placeholder="选择部门" @change="ajaxViewShop">
+        <el-option v-for="item in dept_list" :key="item.dept_name" :label="item.dept_name" :value="item.dept_name">
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="选择店铺：" required v-if="is_all_stores == 0">
+      <el-select size="mini" v-model="shop_codes" clearable :popper-append-to-body="false" multiple filterable collapse-tags placeholder="选择店铺" @change="selectedStore">
+        <el-option v-for="item in shop_list" :key="item.shop_code" :label="item.shop_name" :value="item.shop_code">
+        </el-option>
+      </el-select>
+      &nbsp
+      <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="checkAllStore"></el-checkbox>
+    </el-form-item>
+    <el-form-item label="是否查看记录：">
+      <el-radio-group v-model="view_type">
+        <el-radio :label="1">是</el-radio>
+        <el-radio :label="0">否</el-radio>
+      </el-radio-group>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button size="mini" @click="binding_store_dialog = false">取 消</el-button>
+    <el-button size="mini" type="primary" @click="commitBind">确 定</el-button>
+  </div>
+</el-dialog>
+<!-- 权限设置 -->
+<el-dialog title="权限设置" center width="30%" :visible.sync="permission_dialog" :append-to-body='true'>
+  <el-form>
+    <el-form-item label="角色名称：" required>
+      <el-select size="mini" v-model="menu_role_ids" clearable :popper-append-to-body="false" multiple filterable
+      collapse-tags placeholder="选择角色">
+      <el-option v-for="item in menu_role_list" :key="item.menu_role_id" :label="item.menu_role_name"
+      :value="item.menu_role_id">
+    </el-option>
+  </el-select>
+</el-form-item>
+<el-form-item label="是否启用：">
+  <el-switch v-model="status" :active-value="1" :inactive-value="0" active-color="#F36478" inactive-color="#778899">
+  </el-switch>
+</el-form-item>
+</el-form>
+<div slot="footer" class="dialog-footer">
+  <el-button size="mini" @click="permission_dialog = false">取 消</el-button>
+  <el-button size="mini" type="primary" @click="commitSetting">确 定</el-button>
+</div>
+</el-dialog>
+</div>
 </template>
 <script>
-import resource from "../../api/resource.js";
-import TableTitle from "../../components/table_title.vue";
-export default {
-  data() {
-    return {
+  import resource from "../../api/resource.js";
+  import TableTitle from "../../components/table_title.vue";
+  export default {
+    data() {
+      return {
       max_height: 0, //表格最大高度
       loading: false,
       search: "",
@@ -148,6 +148,8 @@ export default {
       binding_store_dialog: false, //绑定店铺弹窗
       shop_list: [], //店铺列表
       shop_codes: [], //选中的店铺列表
+      isIndeterminate:false,
+      checkAll: false,
       dept_list: [], //部门列表
       dept_names: [], //选中的部门列表
       is_all_stores: 1, //店铺权限
@@ -172,27 +174,22 @@ export default {
     window.removeEventListener("resize", () => {});
   },
   methods: {
-    //选择不同部门
-    // async shopChange(checked) {
-    //   this.stores = await this.getStore({ dept_name: checked });
-    //   console.log(this.stores);
-    // },
     //监听屏幕大小变化
     onResize() {
       this.$nextTick(() => {
         let box_card_height = document.getElementById("menu_card").offsetHeight;
         let el_form_height = document.getElementById("el_form").offsetHeight;
         let table_title_height =
-          document.getElementById("table_title").offsetHeight;
+        document.getElementById("table_title").offsetHeight;
         let el_pagination_height =
-          document.getElementById("el_pagination").offsetHeight;
+        document.getElementById("el_pagination").offsetHeight;
         this.max_height =
-          box_card_height -
-          el_form_height -
-          table_title_height -
-          el_pagination_height -
-          40 +
-          "px";
+        box_card_height -
+        el_form_height -
+        table_title_height -
+        el_pagination_height -
+        40 +
+        "px";
       });
     },
     handleCurrentChange(val) {
@@ -213,9 +210,9 @@ export default {
           this.loading = false;
           this.dataObj = res.data.data;
           this.total_pages =
-            this.dataObj.total && this.dataObj.total % 10 == 0
-              ? parseInt(this.dataObj.total / 10)
-              : parseInt(this.dataObj.total / 10) + 1;
+          this.dataObj.total && this.dataObj.total % 10 == 0
+          ? parseInt(this.dataObj.total / 10)
+          : parseInt(this.dataObj.total / 10) + 1;
           this.button_list = this.dataObj.button_list;
         } else {
           this.$mesage.warning(res.data.msg);
@@ -264,16 +261,16 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-        .then(() => {
+      .then(() => {
           //删除
           this.commitDelete(user_id);
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消",
-          });
+      .catch(() => {
+        this.$message({
+          type: "info",
+          message: "已取消",
         });
+      });
     },
     //提交删除
     commitDelete(user_id) {
@@ -298,33 +295,60 @@ export default {
       };
       resource.userBindingGet(arg).then((res) => {
         if (res.data.code == 1) {
+          let data = res.data.data;
+          this.dept_list = data.dept_list;
+          this.dept_names = data.selected_depts;
+          this.is_all_stores = data.is_all_stores;
+          this.view_type = data.view_type;
+          this.binding_store_dialog = true;
           //获取所有店铺列表
-          // this.ajaxViewShop(res.data.data);
+          this.ajaxViewShop(data.selected_depts,data.selected_shops);
         } else {
           this.$mesage.warning(res.data.msg);
         }
       });
     },
     //获取所有店铺列表
-    // ajaxViewShop(data) {
-    //   // let obj = {
-    //   //   type:2,
-    //   //   dept_name:
-    //   // }
-    //   resource.ajaxViewShop().then((res) => {
-    //     if (res.data.code == 1) {
-    //       this.shop_list = res.data.data;
-    //       this.shop_codes = data.selected_shops;
-    //       this.dept_list = data.dept_list;
-    //       this.dept_names = data.selected_depts;
-    //       this.is_all_stores = data.is_all_stores;
-    //       this.view_type = data.view_type;
-    //       this.binding_store_dialog = true;
-    //     } else {
-    //       this.$message.warning(res.data.msg);
-    //     }
-    //   });
-    // },
+    ajaxViewShop(selected_depts,selected_shops) {
+      let arg = {
+        type:2,
+        dept_name:selected_depts.join(',')
+      }
+      resource.ajaxViewShop(arg).then((res) => {
+        if (res.data.code == 1) {
+          this.shop_list = res.data.data;
+          if(!!selected_shops){
+            this.shop_codes = selected_shops;
+            this.isIndeterminate = selected_shops.length > 0 && selected_shops.length < this.shop_list.length; 
+            this.checkAll = selected_shops.length == this.shop_list.length;
+          }else{
+            this.shop_codes = [];
+            this.isIndeterminate = false;
+            this.checkAll = false;
+          }
+        } else {
+          this.$message.warning(res.data.msg);
+        }
+      });
+    },
+    //切换选中店铺
+    selectedStore(selected_shops){
+      this.isIndeterminate = selected_shops.length > 0 && selected_shops.length < this.shop_list.length; 
+      this.checkAll = selected_shops.length == this.shop_list.length;
+    },
+    //切换是否全选店铺
+    checkAllStore(val){
+      this.isIndeterminate = false;
+      if(val){
+        let arr = [];
+        this.shop_list.map(item => {
+          arr.push(item.shop_code)
+        })
+        this.shop_codes = arr;
+      }else{
+        this.shop_codes = [];
+      }
+    },
     //绑定店铺
     commitBind() {
       let arg = {
