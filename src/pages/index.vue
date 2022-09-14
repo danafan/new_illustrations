@@ -312,6 +312,7 @@ export default {
   },
   watch: {
     active_index: function (n, o) {
+      this.page = 1;
       this.cate_id = n === null ? "" : this.cateList[n].cate_id;
       if (n !== null) {
         this.search_value = "";
