@@ -16,7 +16,7 @@
       <div class="cate_item" :class="{'active_cate':active_index === index}" v-for="(item,index) in cateList" :key="index"
         @click="active_index = index">
         <div class="cate_icon_box" :class="{'active_cate_icon_box':active_index === index}">
-          <img class="cate_icon" src="../static/logo_icon.png">
+          <img class="cate_icon" :src="item.img">
         </div>
         <div class="cate_name">{{item.cate_name}}</div>
       </div>
@@ -333,6 +333,9 @@ export default {
       resource.ajaxCates().then((res) => {
         if (res.data.code == 1) {
           this.cateList = res.data.data;
+          this.cateList.map((item, index) => {
+            item.img = require(`../static/cate_icon_${index}.png`);
+          });
           this.cate_id = this.cateList[0].cate_id;
           //获取列表
           this.getData();

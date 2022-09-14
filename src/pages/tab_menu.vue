@@ -24,7 +24,12 @@
       </keep-alive>
       <router-view v-if="!$route.meta.keepAlive"></router-view>
     </div>
-    <div class="page_foot"></div>
+    <div class="page_foot">
+      <div class="line">网络文化经营许可证：浙网文[2013]0268-027号|增值电信业务经营许可证:浙B2-20080224|信息网络传播视听节目许可证:1109364号|互联网违法和不良信息举报电话:0571-81683755
+        blxxjb@alibaba-inc.com
+        网络文化经营许可证：浙网文[2013]0268-027号|增值电信业务经营许可证:浙B2-20080224|信息网络传播视听节目许可证:1109364号|互联网违法和不良信息举报电话:0571-81683755
+        blxxjb@alibaba-inc.com</div>
+    </div>
   </div>
 </template>
 
@@ -103,9 +108,20 @@
     position: relative;
   }
   .page_foot {
-    background-color: #ffffff;
+    background-color: #f6f6f6;
     width: 100%;
-    height: 70px;
+    height: 129rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .line {
+      width: 1440rem;
+      height: 40rem;
+      border-top: 1px solid #666666;
+      font-size: 12rem;
+      color: #666666;
+      line-height: 20rem;
+    }
   }
 }
 </style>

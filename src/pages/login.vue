@@ -1,9 +1,16 @@
 <template>
   <div>
     <div class="loginBox">
-      <div class="content">
-        <div class="text">钉钉扫码一键登录</div>
-        <div id="login_container"></div>
+      <div class="main">
+        <div class="main_left">
+          <img class="main_img" src="../static/background_icon.png" alt="">
+        </div>
+        <div class="main_right">
+          <div class="content">
+            <div class="text">钉钉扫码一键登录</div>
+            <div id="login_container"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -70,30 +77,53 @@ export default {
 <style lang="less" scoped>
 .loginBox {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  margin: 0px;
-  background: url(../static/home_back.png) no-repeat;
+  background: url(../static/login_icon.png) no-repeat;
   background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
-  .content {
-    position: absolute;
-    top: 20%;
-    left: 60%;
-    width: 300px;
-    height: 400px;
-    background: #ffffff;
-    border-radius: 8px;
-    border: 1px solid #ebebeb;
-  }
-  .text {
-    width: 192px;
-    height: 33px;
-    font-size: 24px;
-    font-weight: 500;
-    color: #f36478;
-    line-height: 33px;
-    margin: 42px auto 0px auto;
+  padding-top: 53rem;
+  padding-bottom: 52rem;
+  padding-left: 72rem;
+  padding-right: 71rem;
+  .main {
+    width: 1777rem;
+    height: 955rem;
+    background-color: #ffffff;
+    display: flex;
+    border-radius: 39rem;
+    .main_left {
+      height: 955rem;
+      background: url(../static/view_icon.png) no-repeat;
+      .main_img {
+        width: 1061rem;
+        height: 855rem;
+        margin-top: 100rem;
+      }
+    }
+    .content {
+      width: 400rem;
+      height: 500rem;
+      background: #ffffff;
+      border-radius: 8rem;
+      border: 1rem solid #ebebeb;
+      margin-left: 138rem;
+      margin-top: 212rem;
+    }
+    .text {
+      width: 192rem;
+      height: 33rem;
+      font-size: 24rem;
+      font-weight: 500;
+      color: #f36478;
+      line-height: 33rem;
+      margin: 42rem auto 0rem auto;
+    }
   }
 }
 </style>
