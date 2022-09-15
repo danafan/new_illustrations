@@ -117,7 +117,7 @@
     .line {
       width: 1440rem;
       height: 40rem;
-      border-top: 1px solid #666666;
+      border-top: 1px solid #dddddd;
       font-size: 12rem;
       color: #666666;
       line-height: 20rem;
