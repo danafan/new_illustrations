@@ -218,7 +218,6 @@ export default {
     },
     //下载量排序
     sortChange(column, prop, order) {
-      console.log(column);
       if (column.order === "ascending") {
         this.sort = column.prop + "-asc";
       } else if (column.order === "descending") {

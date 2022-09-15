@@ -21,20 +21,20 @@
 }
 </style>
 <script>
-  import resource from "./api/resource";
-  export default {
-    created() {
-      //获取用户信息
-      this.getUserInfo()
-    },
-    watch: {
-      $route(to, from) {
-        let router = this.$route;
-        let path = router.path;
-        if(path != '/login'){
-          localStorage.setItem("fullPath", router.fullPath);
-        }
-        if (path != "/index") {
+import resource from "./api/resource";
+export default {
+  created() {
+    //获取用户信息
+    this.getUserInfo();
+  },
+  watch: {
+    $route(to, from) {
+      let router = this.$route;
+      let path = router.path;
+      if (path != "/login") {
+        localStorage.setItem("fullPath", router.fullPath);
+      }
+      if (path != "/index") {
         // 权限
         if (path == "/role_setting") {
           if (router.query.type == "1") {
@@ -104,40 +104,46 @@
       resource.getMenu().then((res) => {
         if (res.data.code == 1) {
           let menu_list = res.data.data;
-          menu_list.map(item => {
-            if(item.web_url == 'index'){
-              let list_arr = [{web_url:'index_detail'}];
-              item.list = [...item.list,...list_arr];
-            }else if(item.web_url == 'draw_warehouse'){
-              let list_arr = [{web_url:'warehouse_add_edit'},{web_url:'warehouse_detail'}];
-              item.list = [...item.list,...list_arr];
-            }else if(item.web_url == 'draw_master'){
-              let list_arr = [{web_url:'master_add_edit'}];
-              item.list = [...item.list,...list_arr];
-            }else if(item.web_url == 'selected'){
-              let list_arr = [{web_url:'detail'}];
-              item.list = [...item.list,...list_arr];
-            }else if(item.web_url == 'permissions'){
+          menu_list.map((item) => {
+            if (item.web_url == "index") {
+              let list_arr = [{ web_url: "index_detail" }];
+              item.list = [...item.list, ...list_arr];
+            } else if (item.web_url == "draw_warehouse") {
+              let list_arr = [
+                { web_url: "warehouse_add_edit" },
+                { web_url: "warehouse_detail" },
+              ];
+              item.list = [...item.list, ...list_arr];
+            } else if (item.web_url == "draw_master") {
+              let list_arr = [{ web_url: "master_add_edit" }];
+              item.list = [...item.list, ...list_arr];
+            } else if (item.web_url == "selected") {
+              let list_arr = [{ web_url: "detail" }];
+              item.list = [...item.list, ...list_arr];
+            } else if (item.web_url == "permissions") {
               this.$store.commit("setPermissionMenu", item.list);
-              let list_arr = [{web_url:'role_setting'},{web_url:'user_list'}];
-              item.list = [...item.list,...list_arr];
+              let list_arr = [
+                { web_url: "role_setting" },
+                { web_url: "user_list" },
+              ];
+              item.list = [...item.list, ...list_arr];
             }
-          })
+          });
           this.$store.commit("setMenuList", menu_list);
           const fullPath = localStorage.getItem("fullPath");
           if (!fullPath) {
             this.$router.push(`/${menu_list[0].web_url}`);
           } else {
-            let path = this.$route.path.split('/')[1];
+            let path = this.$route.path.split("/")[1];
             menu_list.map((item, index) => {
               if (path == item.web_url) {
-                this.$store.commit('setActiveIndex',index);
-              }else{
-                item.list.map(ii => {
+                this.$store.commit("setActiveIndex", index);
+              } else {
+                item.list.map((ii) => {
                   if (path == ii.web_url) {
-                    this.$store.commit('setActiveIndex',index);
+                    this.$store.commit("setActiveIndex", index);
                   }
-                })
+                });
               }
             });
             this.$router.push(fullPath);

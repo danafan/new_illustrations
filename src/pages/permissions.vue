@@ -54,7 +54,6 @@
 }
 </style>
 <script>
-import resource from "../api/resource.js";
 import RolePage from "./permissionPages/role_page.vue";
 import UserPage from "./permissionPages/user_page.vue";
 import EntryPage from "./permissionPages/entry_page.vue";
@@ -77,6 +76,7 @@ export default {
   watch: {
     active_index: function (n, o) {
       this.name = this.permissionLists[n].web_url;
+      console.log(this.name);
     },
   },
   components: {
